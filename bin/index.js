@@ -4,6 +4,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import shell from 'shelljs';
 import { generateNodeProject } from '../lib/node-generator.js';
+import { checkForUpdates } from '../lib/update-checker.js';
 import { spawn } from 'child_process';
 import fs from 'fs';
 import ora from 'ora';
@@ -73,6 +74,9 @@ if (dirIndex !== -1 && process.argv[dirIndex + 1]) {
 console.log(chalk.blue.bold(logo));
 console.log(chalk.cyan.bold('⚡ Fast, opinionated CLI for modern development\n'));
 
+// Check for updates (async, non-blocking)
+checkForUpdates();
+
 // Handle command shortcuts
 const args = process.argv.slice(2).filter(arg => !arg.startsWith('--') && arg !== '-y');
 const command = args[0];
@@ -80,15 +84,19 @@ const projectName = args[1];
 
 async function quickCreate(type, name) {
   if (!name) {
-    console.log(chalk.red('Error: Please provide a project name.'));
-    console.log(chalk.yellow(`Usage: dasyl ${type} <project-name>`));
+    console.log(chalk.red('\n❌ Error: Please provide a project name.'));
+    console.log(chalk.yellow(`\n💡 Usage: ${chalk.cyan(`dasyl ${type} <project-name>`)}`));
+    console.log(chalk.gray(`\nExample: ${chalk.cyan(`dasyl ${type} my-awesome-app`)}`));
     process.exit(1);
   }
 
   const targetDir = cliFlags.customDir ? `${cliFlags.customDir}/${name}` : name;
   
   if (shell.test('-d', targetDir)) {
-    console.log(chalk.red(`Error: Directory '${targetDir}' already exists.`));
+    console.log(chalk.red(`\n❌ Error: Directory '${targetDir}' already exists.`));
+    console.log(chalk.yellow('\n💡 Suggestions:'));
+    console.log(chalk.cyan(`  1. Choose a different project name`));
+    console.log(chalk.cyan(`  2. Delete the existing directory: rm -rf ${targetDir}`));
     process.exit(1);
   }
 
@@ -115,12 +123,21 @@ async function quickCreate(type, name) {
       break;
     
     case 'laravel':
-      console.log(chalk.blue(`🚀 Creating Laravel project '${name}'...`));
       if (!shell.which('composer')) {
-        console.log(chalk.red('Error: Composer is not installed or not in PATH.'));
+        console.log(chalk.red('\n❌ Error: Composer is not installed or not in PATH.'));
+        console.log(chalk.yellow('\n💡 Install Composer:'));
+        console.log(chalk.cyan('  Visit: https://getcomposer.org/download/'));
         process.exit(1);
       }
-      await shell.exec(`composer create-project --prefer-dist laravel/laravel "${name}"`);
+      const spinner = ora({ text: chalk.blue(`Creating Laravel project '${name}'...`), color: 'blue' }).start();
+      const result = await shell.exec(`composer create-project --prefer-dist laravel/laravel "${targetDir}"`, { silent: true });
+      if (result.code === 0) {
+        spinner.succeed(chalk.green(`Laravel project '${name}' created successfully!`));
+      } else {
+        spinner.fail(chalk.red(`Failed to create Laravel project`));
+        process.exit(1);
+      }
+      break;
       break;
   }
 }
@@ -154,8 +171,40 @@ async function main() {
           message: chalk.cyan('Enter your project name:'),
           default: 'my-app',
           validate: (input) => {
-            if (/^([a-z0-9\-\_.])+$/.test(input)) return true;
-            return 'Project name may only include name, numbers, dashes and underscores.';
+            // Trim whitespace
+            const trimmed = input.trim();
+            
+            // Check if empty
+            if (!trimmed) {
+              return chalk.red('❌ Project name cannot be empty');
+            }
+            
+            // Check length
+            if (trimmed.length < 2) {
+              return chalk.red('❌ Project name must be at least 2 characters long');
+            }
+            
+            if (trimmed.length > 214) {
+              return chalk.red('❌ Project name must be less than 214 characters (npm limitation)');
+            }
+            
+            // Check for invalid characters
+            if (!/^([a-z0-9\-\_.])+$/.test(trimmed)) {
+              return chalk.red('❌ Project name may only include lowercase letters, numbers, dashes, underscores, and dots');
+            }
+            
+            // Check if starts with dot or underscore
+            if (trimmed.startsWith('.') || trimmed.startsWith('_')) {
+              return chalk.yellow('⚠️  Warning: Project names starting with . or _ are not recommended');
+            }
+            
+            // Check for reserved names
+            const reserved = ['node_modules', 'favicon.ico'];
+            if (reserved.includes(trimmed.toLowerCase())) {
+              return chalk.red(`❌ "${trimmed}" is a reserved name and cannot be used`);
+            }
+            
+            return true;
           }
         }
       ]);
@@ -169,7 +218,11 @@ async function main() {
   const targetDir = cliFlags.customDir ? `${cliFlags.customDir}/${projectName}` : projectName;
 
   if (shell.test('-d', targetDir)) {
-    console.log(chalk.red(`Error: Directory '${targetDir}' already exists.`));
+    console.log(chalk.red(`\n❌ Error: Directory '${targetDir}' already exists.`));
+    console.log(chalk.yellow('\n💡 Suggestions:'));
+    console.log(chalk.cyan(`  1. Choose a different project name`));
+    console.log(chalk.cyan(`  2. Delete the existing directory: rm -rf ${targetDir}`));
+    console.log(chalk.cyan(`  3. Use a different directory: dasyl --dir /path/to/directory`));
     process.exit(1);
   }
 
