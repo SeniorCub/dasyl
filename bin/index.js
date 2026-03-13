@@ -122,14 +122,17 @@ async function main() {
     {
       type: 'input',
       name: 'projectName',
-      message: 'Enter your project name:',
+      message: chalk.cyan('Enter your project name:'),
       default: 'my-app',
       validate: (input) => {
         if (/^([a-z0-9\-\_.])+$/.test(input)) return true;
         return 'Project name may only include name, numbers, dashes and underscores.';
       }
     }
-  ]);
+  ]).catch(() => {
+    console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+    process.exit(0);
+  });
 
   if (shell.test('-d', projectName)) {
     console.log(chalk.red(`Error: Directory '${projectName}' already exists.`));
@@ -141,16 +144,19 @@ async function main() {
     {
       type: 'list',
       name: 'stackChoice',
-      message: 'Choose your tech stack:',
+      message: chalk.magenta('Choose your tech stack:'),
       choices: [
-        { name: 'Frontend (React/Vue/etc via Vite)', value: 'frontend' },
-        { name: 'Backend (Node.js, Laravel)', value: 'backend' }
+        { name: chalk.blue('Frontend (React/Vue/etc via Vite)'), value: 'frontend' },
+        { name: chalk.green('Backend (Node.js, Laravel)'), value: 'backend' }
       ]
     }
-  ]);
+  ]).catch(() => {
+    console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+    process.exit(0);
+  });
 
   if (stackChoice === 'frontend') {
-    console.log(chalk.blue(`Setting up Frontend project '${projectName}'...`));
+    console.log(chalk.blue(`\n🎨 Setting up Frontend project '${projectName}'...`));
     // Run npm create vite
     await new Promise((resolve, reject) => {
       const command = 'npm';
@@ -176,31 +182,37 @@ async function main() {
       {
         type: 'list',
         name: 'backendType',
-        message: 'Choose Backend Framework:',
+        message: chalk.magenta('Choose Backend Framework:'),
         choices: [
-          { name: 'Node.js (Express API Boilerplate)', value: 'node' },
-          { name: 'Laravel (PHP)', value: 'laravel' }
+          { name: chalk.green('Node.js (Express API Boilerplate)'), value: 'node' },
+          { name: chalk.red('Laravel (PHP)'), value: 'laravel' }
         ]
       }
-    ]);
+    ]).catch(() => {
+      console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+      process.exit(0);
+    });
 
     if (backendType === 'node') {
       const { language } = await inquirer.prompt([
         {
           type: 'list',
           name: 'language',
-          message: 'Choose your language:',
+          message: chalk.magenta('Choose your language:'),
           choices: [
-            { name: 'JavaScript', value: 'javascript' },
-            { name: 'TypeScript', value: 'typescript' }
+            { name: chalk.yellow('JavaScript'), value: 'javascript' },
+            { name: chalk.blue('TypeScript'), value: 'typescript' }
           ]
         }
-      ]);
+      ]).catch(() => {
+        console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+        process.exit(0);
+      });
       const useTypeScript = language === 'typescript';
-      console.log(chalk.blue(`\n🚀 Setting up Node.js API in '${projectName}'...`));
+      console.log(chalk.green(`\n🚀 Setting up Node.js API in '${projectName}'...`));
       generateNodeProject(projectName, useTypeScript);
     } else {
-      console.log(chalk.blue(`\n🚀 Setting up Laravel project '${projectName}'...`));
+      console.log(chalk.red(`\n🚀 Setting up Laravel project '${projectName}'...`));
       if (!shell.which('composer')) {
         console.log(chalk.red('Error: Composer is not installed or not in PATH.'));
         process.exit(1);
