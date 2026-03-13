@@ -70,3 +70,7 @@ Contributions are welcome! Please see the [contributing guidelines](CONTRIBUTING
 ## License
 
 This project is licensed under the ISC License. See the [LICENSE](LICENSE) file for details.
+![npm](https://img.shields.io/npm/v/dasyl)
+![downloads](https://img.shields.io/npm/dw/dasyl)
+![license](https://img.shields.io/npm/l/dasyl)
+![build](https://img.shields.io/badge/status-active-brightgreen)

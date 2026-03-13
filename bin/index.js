@@ -104,8 +104,20 @@ async function main() {
     ]);
 
     if (backendType === 'node') {
+      const { language } = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'language',
+          message: 'Choose your language:',
+          choices: [
+            { name: 'JavaScript', value: 'javascript' },
+            { name: 'TypeScript', value: 'typescript' }
+          ]
+        }
+      ]);
+      const useTypeScript = language === 'typescript';
       console.log(chalk.blue(`\n🚀 Setting up Node.js API in '${projectName}'...`));
-      generateNodeProject(projectName);
+      generateNodeProject(projectName, useTypeScript);
     } else {
       console.log(chalk.blue(`\n🚀 Setting up Laravel project '${projectName}'...`));
       if (!shell.which('composer')) {
