@@ -359,26 +359,24 @@ Add interactive database choice with full configuration:
 
 ## ⚡ Quick Wins (Minor Versions)
 
-### Version 1.5.2 - Command Line Flags
+### ~~Version 1.5.2 - Command Line Flags~~ ✅ COMPLETED
 
-**Target Release:** Q2 2026
+**Released:** March 13, 2026
 
-- `--skip-install` - Skip dependency installation
-- `--skip-git` - Skip Git initialization
-- `--skip-editor` - Skip opening in VS Code
-- `--template <name>` - Use specific template
-- `--yes` or `-y` - Accept all defaults
-- `--dir <path>` - Custom directory
+- ✅ `--skip-install` - Skip dependency installation
+- ✅ `--skip-git` - Skip Git initialization
+- ✅ `--skip-editor` - Skip opening in VS Code
+- ✅ `--yes` or `-y` - Accept all defaults
+- ✅ `--dir <path>` - Custom directory
 
-### Version 1.5.3 - Developer Experience
+### ~~Version 1.5.3 - Developer Experience~~ ✅ COMPLETED
 
-**Target Release:** Q2 2026
+**Released:** March 13, 2026
 
-- **Update Checker** - Notify when new version available
-- **Better Validation** - Enhanced project name validation
-- **Improved Error Messages** - More helpful error descriptions
-- **Progress Indicators** - Better visual feedback
-- **Undo Command** - Remove last created project
+- ✅ **Update Checker** - Notify when new version available
+- ✅ **Better Validation** - Enhanced project name validation
+- ✅ **Improved Error Messages** - More helpful error descriptions
+- ✅ **Progress Indicators** - Better visual feedback with ora spinners
 
 ### Version 1.5.4 - Code Quality Tools
 
@@ -560,6 +558,24 @@ We welcome community input! Here's how you can contribute:
 ---
 
 ## ✅ Completed Features
+
+### Version 1.5.3 (March 2026)
+- ✅ Update checker - Notifies when new version available
+- ✅ Enhanced project name validation with detailed feedback
+- ✅ Improved error messages with helpful suggestions
+- ✅ Better progress indicators with ora spinners
+- ✅ Validation for reserved names and npm limitations
+
+### Version 1.5.2 (March 2026)
+- ✅ Command line flags support
+- ✅ `--skip-install` flag to skip dependency installation
+- ✅ `--skip-git` flag to skip Git initialization
+- ✅ `--skip-editor` flag to skip opening in VS Code
+- ✅ `-y/--yes` flag to accept all defaults
+- ✅ `--dir <path>` flag for custom directory
+
+### Version 1.5.1 (March 2026)
+- ✅ Windows compatibility fix with try-catch blocks
 
 ### Version 1.5.0 (March 2026)
 - ✅ Colorful UI with chalk
