@@ -1,0 +1,91 @@
+name: Version Bump and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      skip_publish:
+        description: 'Skip NPM publish (only tag)'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Bump version
+        id: bump
+        run: |
+          OLD_VERSION=$(node -p "require('./package.json').version")
+          npm version ${{ inputs.version_type }} -m "chore: Bump version to %s"
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          
+          echo "old_version=$OLD_VERSION" >> $GITHUB_OUTPUT
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Push changes
+        run: |
+          git push origin main
+          git push origin v${{ steps.bump.outputs.new_version }}
+      
+      - name: Create Release Notes
+        id: release_notes
+        run: |
+          cat << EOF > release_notes.md
+          ## Release v${{ steps.bump.outputs.new_version }}
+          
+          ### Changes
+          - Bumped version from ${{ steps.bump.outputs.old_version }} to ${{ steps.bump.outputs.new_version }}
+          
+          ### Installation
+          \`\`\`bash
+          npm install -g dasyl@${{ steps.bump.outputs.new_version }}
+          \`\`\`
+          
+          ### What's Changed
+          See the full [ROADMAP](https://github.com/${{ github.repository }}/blob/main/ROADMAP.md) for details.
+          EOF
+      
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.bump.outputs.new_version }}
+          release_name: Release v${{ steps.bump.outputs.new_version }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+      
+      - name: Trigger NPM Publish
+        if: ${{ !inputs.skip_publish }}
+        run: echo "NPM publish will be triggered by tag push"
