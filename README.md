@@ -14,7 +14,8 @@
 ![npm](https://img.shields.io/npm/v/dasyl)
 ![downloads](https://img.shields.io/npm/dw/dasyl)
 ![license](https://img.shields.io/npm/l/dasyl)
-![build](https://img.shields.io/badge/status-active-brightgreen)
+![CI](https://github.com/SeniorCub/dasyl/actions/workflows/ci.yml/badge.svg)
+![Publish](https://github.com/SeniorCub/dasyl/actions/workflows/publish.yml/badge.svg)
 
 ## Create. Configure. Release.
 
