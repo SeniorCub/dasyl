@@ -67,27 +67,48 @@ async function spawnNpm(args, options = {}) {
 
 // Create a wrapper for inquirer that handles cancellation properly
 async function safePrompt(questions) {
-  // Set up a promise race between the prompt and a SIGINT handler
-  const promptPromise = inquirer.prompt(questions);
-  
-  // Create a promise that resolves when SIGINT is received
-  const sigintPromise = new Promise((_, reject) => {
-    const handler = () => {
-      process.off('SIGINT', handler);
-      reject(new Error('CANCELLED_BY_USER'));
-    };
-    process.on('SIGINT', handler);
-  });
-  
-  try {
-    return await Promise.race([promptPromise, sigintPromise]);
-  } catch (error) {
-    if (error.message === 'CANCELLED_BY_USER') {
+  return new Promise((resolve, reject) => {
+    // Ensure we can capture SIGINT
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(false); // Ensure not in raw mode
+    }
+    
+    // Create the inquirer prompt
+    const prompt = inquirer.prompt(questions);
+    
+    // Set up SIGINT handler with immediate exit
+    const handleSigint = () => {
       console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
       process.exit(0);
-    }
-    throw error;
-  }
+    };
+    
+    // Remove any existing SIGINT listeners to avoid conflicts
+    process.removeAllListeners('SIGINT');
+    
+    // Add our SIGINT listener
+    process.on('SIGINT', handleSigint);
+    
+    // Handle the prompt result
+    prompt
+      .then((answers) => {
+        process.off('SIGINT', handleSigint);
+        resolve(answers);
+      })
+      .catch((error) => {
+        process.off('SIGINT', handleSigint);
+        
+        // Check if it's a cancellation error
+        if (error.isTtyError || error.name === 'ExitPromptError' || 
+            error.message?.includes('User force closed') ||
+            error.message?.includes('canceled') ||
+            error.message?.includes('interrupted')) {
+          console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+          process.exit(0);
+        }
+        
+        reject(error);
+      });
+  });
 }
 
 const logo = `
@@ -195,16 +216,8 @@ if (dirIndex !== -1 && process.argv[dirIndex + 1]) {
   cliFlags.customDir = process.argv[dirIndex + 1];
 }
 
-// Handle SIGINT (Ctrl+C) gracefully
-let isPrompting = false;
-
-const handleExit = () => {
-  console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
-  process.exit(0);
-};
-
-process.on('SIGINT', handleExit);
-process.on('SIGTERM', handleExit);
+// Global SIGINT handler is disabled to allow safePrompt to handle cancellation
+// The safePrompt wrapper will handle cancellation properly for each prompt
 
 // Handle uncaught exceptions gracefully  
 process.on('uncaughtException', (error) => {
