@@ -5,13 +5,16 @@ import chalk from 'chalk';
 import shell from 'shelljs';
 import { generateNodeProject } from '../lib/node-generator.js';
 import { spawn } from 'child_process';
+import fs from 'fs';
+import ora from 'ora';
 
 const logo = `
-    __         __
-   / /   ___  / /_
-  / /   / _ \/ __/
- / /___/  __/ /_
-/_____/\___/\__/
+ ██████╗  █████╗ ███████╗██╗   ██╗██╗     
+ ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     
+ ██║  ██║███████║███████╗ ╚████╔╝ ██║     
+ ██║  ██║██╔══██║╚════██║  ╚██╔╝  ██║     
+ ██████╔╝██║  ██║███████║   ██║   ███████╗
+ ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝
 `;
 
 const helpMessage = `
@@ -22,10 +25,18 @@ ${chalk.bold('Usage:')}
   dasyl [command] [options]
 
 ${chalk.bold('Commands:')}
-  new      Create a new project.
+  new              Create a new project (interactive)
+  create <name>    Quick create with defaults
+  
+${chalk.bold('Quick Shortcuts:')}
+  dasyl react <name>      Create React app with Vite
+  dasyl node <name>       Create Node.js Express API (JavaScript)
+  dasyl node-ts <name>    Create Node.js Express API (TypeScript)
+  dasyl laravel <name>    Create Laravel project
 
 ${chalk.bold('Options:')}
-  -h, --help    Show this help message.
+  -h, --help       Show this help message
+  -v, --version    Show version number
 `;
 
 if (process.argv.includes('-h') || process.argv.includes('--help')) {
@@ -33,7 +44,77 @@ if (process.argv.includes('-h') || process.argv.includes('--help')) {
   process.exit(0);
 }
 
-console.log(chalk.blue.bold('Welcome to dasyl!'));
+if (process.argv.includes('-v') || process.argv.includes('--version')) {
+  const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
+  console.log(chalk.blue.bold(`dasyl v${packageJson.version}`));
+  process.exit(0);
+}
+
+console.log(chalk.blue.bold(logo));
+console.log(chalk.cyan.bold('⚡ Fast, opinionated CLI for modern development\n'));
+
+// Handle command shortcuts
+const args = process.argv.slice(2);
+const command = args[0];
+const projectName = args[1];
+
+async function quickCreate(type, name) {
+  if (!name) {
+    console.log(chalk.red('Error: Please provide a project name.'));
+    console.log(chalk.yellow(`Usage: dasyl ${type} <project-name>`));
+    process.exit(1);
+  }
+
+  if (shell.test('-d', name)) {
+    console.log(chalk.red(`Error: Directory '${name}' already exists.`));
+    process.exit(1);
+  }
+
+  switch (type) {
+    case 'react':
+    case 'vue':
+    case 'svelte':
+      console.log(chalk.blue(`🚀 Creating ${type.charAt(0).toUpperCase() + type.slice(1)} app '${name}'...`));
+      await new Promise((resolve, reject) => {
+        const child = spawn('npm', ['create', 'vite@latest', name, '--'], { stdio: 'inherit' });
+        child.on('close', code => code === 0 ? resolve() : reject(new Error(`Process exited with code ${code}`)));
+        child.on('error', reject);
+      });
+      break;
+    
+    case 'node':
+      console.log(chalk.blue(`🚀 Creating Node.js Express API '${name}'...`));
+      await generateNodeProject(name, false);
+      break;
+    
+    case 'node-ts':
+      console.log(chalk.blue(`🚀 Creating Node.js Express API with TypeScript '${name}'...`));
+      await generateNodeProject(name, true);
+      break;
+    
+    case 'laravel':
+      console.log(chalk.blue(`🚀 Creating Laravel project '${name}'...`));
+      if (!shell.which('composer')) {
+        console.log(chalk.red('Error: Composer is not installed or not in PATH.'));
+        process.exit(1);
+      }
+      await shell.exec(`composer create-project --prefer-dist laravel/laravel "${name}"`);
+      break;
+  }
+}
+
+// Check for shortcuts
+if (['react', 'vue', 'svelte', 'node', 'node-ts', 'laravel'].includes(command)) {
+  quickCreate(command, projectName).catch(err => {
+    console.error(chalk.red(err.message));
+    process.exit(1);
+  });
+} else {
+  main().catch(err => {
+    console.error(chalk.red(err.message));
+    process.exit(1);
+  });
+}
 
 async function main() {
   // 1. Get Project Name
@@ -128,8 +209,3 @@ async function main() {
     }
   }
 }
-
-main().catch(err => {
-  console.error(chalk.red(err));
-  process.exit(1);
-});
