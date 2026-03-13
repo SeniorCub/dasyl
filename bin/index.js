@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import shell from 'shelljs';
 import { generateNodeProject } from '../lib/node-generator.js';
-import { checkForUpdates } from '../lib/update-checker.js';
+import { checkForUpdates, handleAutoUpdateSetting } from '../lib/update-checker.js';
 import { spawn } from 'child_process';
 import fs from 'fs';
 import ora from 'ora';
@@ -124,6 +124,8 @@ ${chalk.bold('Options:')}
   --skip-git           Skip Git initialization
   --skip-editor        Skip opening in VS Code
   --dir <path>         Create project in custom directory
+  --enable-auto-update Enable automatic updates
+  --disable-auto-update Disable automatic updates
 `;
 
 if (process.argv.includes('-h') || process.argv.includes('--help')) {
@@ -154,6 +156,8 @@ ${chalk.bold('Options:')}
   --skip-git           Skip Git initialization
   --skip-editor        Skip opening in VS Code
   --dir <path>         Create project in custom directory
+  --enable-auto-update Enable automatic updates
+  --disable-auto-update Disable automatic updates
 `;
   console.log(helpMessageWithVersion);
   process.exit(0);
@@ -162,6 +166,17 @@ ${chalk.bold('Options:')}
 if (process.argv.includes('-v') || process.argv.includes('--version')) {
   const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
   console.log(chalk.blue.bold(`dasyl v${packageJson.version}`));
+  process.exit(0);
+}
+
+// Handle auto-update settings
+if (process.argv.includes('--enable-auto-update')) {
+  handleAutoUpdateSetting(true);
+  process.exit(0);
+}
+
+if (process.argv.includes('--disable-auto-update')) {
+  handleAutoUpdateSetting(false);
   process.exit(0);
 }
 

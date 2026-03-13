@@ -1,6 +1,6 @@
 {
   "name": "dasyl",
-  "version": "1.5.7",
+  "version": "1.6.0",
   "description": "Dasyl is a fast, opinionated CLI for creating, configuring, and releasing modern development projects in seconds.",
   "main": "bin/index.js",
   "type": "module",
