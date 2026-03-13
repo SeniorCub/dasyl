@@ -46,7 +46,35 @@ ${chalk.bold('Options:')}
 `;
 
 if (process.argv.includes('-h') || process.argv.includes('--help')) {
-  console.log(helpMessage);
+  const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
+  const helpMessageWithVersion = `
+${chalk.blue.bold(logo)}
+${chalk.gray(`v${packageJson.version}`)}
+${chalk.blue.bold('dasyl')} - Create and release development projects faster.
+
+${chalk.bold('Usage:')}
+  dasyl [command] [options]
+
+${chalk.bold('Commands:')}
+  new              Create a new project (interactive)
+  create <name>    Quick create with defaults
+  
+${chalk.bold('Quick Shortcuts:')}
+  dasyl react <name>      Create React app with Vite
+  dasyl node <name>       Create Node.js Express API (JavaScript)
+  dasyl node-ts <name>    Create Node.js Express API (TypeScript)
+  dasyl laravel <name>    Create Laravel project
+
+${chalk.bold('Options:')}
+  -h, --help           Show this help message
+  -v, --version        Show version number
+  -y, --yes            Accept all defaults (skip prompts)
+  --skip-install       Skip dependency installation
+  --skip-git           Skip Git initialization
+  --skip-editor        Skip opening in VS Code
+  --dir <path>         Create project in custom directory
+`;
+  console.log(helpMessageWithVersion);
   process.exit(0);
 }
 
@@ -78,6 +106,10 @@ process.on('SIGINT', () => {
 });
 
 console.log(chalk.blue.bold(logo));
+
+// Get and display version
+const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
+console.log(chalk.gray(`v${packageJson.version}`));
 console.log(chalk.cyan.bold('⚡ Fast, opinionated CLI for modern development\n'));
 
 // Check for updates (async, non-blocking)
