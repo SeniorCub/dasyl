@@ -188,11 +188,7 @@ if (dirIndex !== -1 && process.argv[dirIndex + 1]) {
   cliFlags.customDir = process.argv[dirIndex + 1];
 }
 
-// Simple, reliable SIGINT handler for all prompts
-process.on('SIGINT', () => {
-  console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
-  process.exit(0);
-});
+// SIGINT handler is set up after startup display
 
 // Handle uncaught exceptions gracefully  
 process.on('uncaughtException', (error) => {
@@ -217,6 +213,13 @@ console.log(chalk.blue.bold(logo));
 const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
 console.log(chalk.gray(`v${packageJson.version}`));
 console.log(chalk.cyan.bold('⚡ Fast, opinionated CLI for modern development\n'));
+
+// Set up cancellation handling immediately after startup display
+process.removeAllListeners('SIGINT'); // Clear any existing handlers
+process.on('SIGINT', () => {
+  console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+  process.exit(0);
+});
 
 // Check for updates (async, non-blocking)
 checkForUpdates();
