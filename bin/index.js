@@ -15,6 +15,56 @@ if (process.stdin.isTTY) {
   process.stdin.setEncoding('utf8');
 }
 
+// Helper function to find npm command on different platforms
+function getNpmCommand() {
+  if (process.platform === 'win32') {
+    // On Windows, try npm.cmd first, then npm
+    if (shell.which('npm.cmd')) {
+      return 'npm.cmd';
+    } else if (shell.which('npm')) {
+      return 'npm';
+    } else {
+      throw new Error('npm not found. Please ensure Node.js and npm are installed and in your PATH.');
+    }
+  } else {
+    // On Unix-like systems
+    if (shell.which('npm')) {
+      return 'npm';
+    } else {
+      throw new Error('npm not found. Please ensure Node.js and npm are installed and in your PATH.');
+    }
+  }
+}
+
+// Helper function to spawn npm with proper Windows handling
+async function spawnNpm(args, options = {}) {
+  const npmCommand = getNpmCommand();
+  
+  return new Promise((resolve, reject) => {
+    const child = spawn(npmCommand, args, { 
+      stdio: 'inherit', 
+      shell: process.platform === 'win32', // Use shell on Windows
+      ...options 
+    });
+
+    child.on('close', code => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Process exited with code ${code}`));
+      }
+    });
+
+    child.on('error', err => {
+      if (err.code === 'ENOENT') {
+        reject(new Error('npm not found. Please ensure Node.js and npm are installed and in your PATH.'));
+      } else {
+        reject(err);
+      }
+    });
+  });
+}
+
 // Create a wrapper for inquirer that handles cancellation properly
 async function safePrompt(questions) {
   // Set up a promise race between the prompt and a SIGINT handler
@@ -196,11 +246,13 @@ async function quickCreate(type, name) {
     case 'vue':
     case 'svelte':
       console.log(chalk.blue(`🚀 Creating ${type.charAt(0).toUpperCase() + type.slice(1)} app '${name}'...`));
-      await new Promise((resolve, reject) => {
-        const child = spawn('npm', ['create', 'vite@latest', targetDir, '--'], { stdio: 'inherit' });
-        child.on('close', code => code === 0 ? resolve() : reject(new Error(`Process exited with code ${code}`)));
-        child.on('error', reject);
-      });
+      try {
+        await spawnNpm(['create', 'vite@latest', targetDir, '--']);
+      } catch (error) {
+        console.log(chalk.red(`\n❌ Error: ${error.message}`));
+        console.log(chalk.yellow('\n💡 Make sure Node.js and npm are installed and in your PATH.'));
+        process.exit(1);
+      }
       break;
     
     case 'node':
@@ -356,24 +408,16 @@ async function main() {
   if (stackChoice === 'frontend') {
     console.log(chalk.blue(`\n🎨 Setting up Frontend project '${projectName}'...`));
     // Run npm create vite
-    await new Promise((resolve, reject) => {
-      const command = 'npm';
-      const args = ['create', 'vite@latest', targetDir, '--'];
-      
-      const child = spawn(command, args, { stdio: 'inherit' });
-
-      child.on('close', code => {
-        if (code === 0) {
-          resolve();
-        } else {
-          reject(new Error(`Process exited with code ${code}`));
-        }
-      });
-
-      child.on('error', err => {
-        reject(err);
-      });
-    });
+    try {
+      await spawnNpm(['create', 'vite@latest', targetDir, '--']);
+    } catch (error) {
+      console.log(chalk.red(`\n❌ Error: ${error.message}`));
+      console.log(chalk.yellow('\n💡 Troubleshooting:'));
+      console.log(chalk.cyan('  1. Make sure Node.js is installed: https://nodejs.org/'));
+      console.log(chalk.cyan('  2. Restart your terminal/command prompt'));
+      console.log(chalk.cyan('  3. Verify npm is working: npm --version'));
+      process.exit(1);
+    }
   } else {
     // Backend Choices
     let backendType;
