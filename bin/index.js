@@ -67,20 +67,48 @@ async function spawnNpm(args, options = {}) {
 
 // Create a wrapper for inquirer that handles cancellation properly
 async function safePrompt(questions) {
-  try {
-    return await inquirer.prompt(questions);
-  } catch (error) {
-    // Check if it's a cancellation error
-    if (error.isTtyError || error.name === 'ExitPromptError' || 
-        error.message?.includes('User force closed') ||
-        error.message?.includes('canceled') ||
-        error.message?.includes('interrupted') ||
-        error.code === 'SIGINT') {
-      console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
-      process.exit(0);
-    }
-    throw error;
-  }
+  return new Promise((resolve, reject) => {
+    // Create the inquirer prompt
+    const promptInstance = inquirer.prompt(questions);
+    
+    // Override inquirer's UI to handle SIGINT properly
+    promptInstance.then(answers => {
+      resolve(answers);
+    }).catch(error => {
+      // Check if it's a cancellation error
+      if (error.isTtyError || error.name === 'ExitPromptError' || 
+          error.message?.includes('User force closed') ||
+          error.message?.includes('canceled') ||
+          error.message?.includes('interrupted') ||
+          error.code === 'SIGINT') {
+        if (!process.cancelHandled) {
+          process.cancelHandled = true;
+          console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+          process.exit(0);
+        }
+      }
+      reject(error);
+    });
+    
+    // Access inquirer's internal UI and override SIGINT behavior
+    setTimeout(() => {
+      if (promptInstance.ui && promptInstance.ui.rl) {
+        const readline = promptInstance.ui.rl;
+        
+        // Remove inquirer's default SIGINT handling
+        readline.removeAllListeners('SIGINT');
+        
+        // Add our own SIGINT handler that defers to the global one
+        readline.on('SIGINT', () => {
+          if (!process.cancelHandled) {
+            process.cancelHandled = true;
+            console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+            process.exit(0);
+          }
+        });
+      }
+    }, 10); // Small delay to let inquirer initialize
+  });
 }
 
 const logo = `
@@ -215,11 +243,16 @@ console.log(chalk.gray(`v${packageJson.version}`));
 console.log(chalk.cyan.bold('⚡ Fast, opinionated CLI for modern development\n'));
 
 // Set up cancellation handling immediately after startup display
-process.removeAllListeners('SIGINT'); // Clear any existing handlers
-process.on('SIGINT', () => {
+let cancelHandled = false;
+const handleCancel = () => {
+  if (cancelHandled) return;
+  cancelHandled = true;
   console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
   process.exit(0);
-});
+};
+
+process.removeAllListeners('SIGINT'); // Clear any existing handlers
+process.on('SIGINT', handleCancel);
 
 // Check for updates (async, non-blocking)
 checkForUpdates();
