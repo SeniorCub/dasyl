@@ -9,6 +9,37 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import ora from 'ora';
 
+// Enable keypress events for better Ctrl+C handling
+process.stdin.setRawMode && process.stdin.setRawMode(false);
+if (process.stdin.isTTY) {
+  process.stdin.setEncoding('utf8');
+}
+
+// Create a wrapper for inquirer that handles cancellation properly
+async function safePrompt(questions) {
+  // Set up a promise race between the prompt and a SIGINT handler
+  const promptPromise = inquirer.prompt(questions);
+  
+  // Create a promise that resolves when SIGINT is received
+  const sigintPromise = new Promise((_, reject) => {
+    const handler = () => {
+      process.off('SIGINT', handler);
+      reject(new Error('CANCELLED_BY_USER'));
+    };
+    process.on('SIGINT', handler);
+  });
+  
+  try {
+    return await Promise.race([promptPromise, sigintPromise]);
+  } catch (error) {
+    if (error.message === 'CANCELLED_BY_USER') {
+      console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+      process.exit(0);
+    }
+    throw error;
+  }
+}
+
 const logo = `
  ██████╗  █████╗ ███████╗██╗   ██╗██╗     
  ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     
@@ -100,9 +131,31 @@ if (dirIndex !== -1 && process.argv[dirIndex + 1]) {
 }
 
 // Handle SIGINT (Ctrl+C) gracefully
-process.on('SIGINT', () => {
-  console.log(chalk.yellow('\n\n⚠️  Operation cancelled by user'));
+let isPrompting = false;
+
+const handleExit = () => {
+  console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
   process.exit(0);
+};
+
+process.on('SIGINT', handleExit);
+process.on('SIGTERM', handleExit);
+
+// Handle uncaught exceptions gracefully  
+process.on('uncaughtException', (error) => {
+  if (error.code === 'ERR_USE_AFTER_CLOSE' || error.message?.includes('readline')) {
+    console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+    process.exit(0);
+  }
+  throw error;
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason) => {
+  if (reason && (reason.message === 'Prompt was canceled' || reason.name === 'ExitPromptError')) {
+    console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+    process.exit(0);
+  }
 });
 
 console.log(chalk.blue.bold(logo));
@@ -202,7 +255,7 @@ async function main() {
     console.log(chalk.cyan(`Using default project name: ${projectName}`));
   } else {
     try {
-      const answer = await inquirer.prompt([
+      const answer = await safePrompt([
         {
           type: 'input',
           name: 'projectName',
@@ -277,7 +330,7 @@ async function main() {
     console.log(chalk.cyan(`Using default stack: Backend (Node.js)`));
   } else {
     try {
-      const answer = await inquirer.prompt([
+      const answer = await safePrompt([
         {
           type: 'list',
           name: 'stackChoice',
@@ -330,7 +383,7 @@ async function main() {
       console.log(chalk.cyan(`Using default backend: Node.js`));
     } else {
       try {
-        const answer = await inquirer.prompt([
+        const answer = await safePrompt([
           {
             type: 'list',
             name: 'backendType',
@@ -361,7 +414,7 @@ async function main() {
         console.log(chalk.cyan(`Using default language: JavaScript`));
       } else {
         try {
-          const answer = await inquirer.prompt([
+          const answer = await safePrompt([
             {
               type: 'list',
               name: 'language',
