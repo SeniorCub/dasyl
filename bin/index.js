@@ -71,6 +71,12 @@ if (dirIndex !== -1 && process.argv[dirIndex + 1]) {
   cliFlags.customDir = process.argv[dirIndex + 1];
 }
 
+// Handle SIGINT (Ctrl+C) gracefully
+process.on('SIGINT', () => {
+  console.log(chalk.yellow('\n\n⚠️  Operation cancelled by user'));
+  process.exit(0);
+});
+
 console.log(chalk.blue.bold(logo));
 console.log(chalk.cyan.bold('⚡ Fast, opinionated CLI for modern development\n'));
 
@@ -210,7 +216,12 @@ async function main() {
       ]);
       projectName = answer.projectName;
     } catch (error) {
-      console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+      // Handle different types of cancellation
+      if (error.isTtyError || error.name === 'ExitPromptError') {
+        console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+      } else {
+        console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+      }
       process.exit(0);
     }
   }
@@ -247,7 +258,12 @@ async function main() {
       ]);
       stackChoice = answer.stackChoice;
     } catch (error) {
-      console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+      // Handle different types of cancellation
+      if (error.isTtyError || error.name === 'ExitPromptError') {
+        console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+      } else {
+        console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+      }
       process.exit(0);
     }
   }
@@ -295,7 +311,12 @@ async function main() {
         ]);
         backendType = answer.backendType;
       } catch (error) {
-        console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+        // Handle different types of cancellation
+        if (error.isTtyError || error.name === 'ExitPromptError') {
+          console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+        } else {
+          console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+        }
         process.exit(0);
       }
     }
@@ -321,7 +342,12 @@ async function main() {
           ]);
           language = answer.language;
         } catch (error) {
-          console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+          // Handle different types of cancellation
+          if (error.isTtyError || error.name === 'ExitPromptError') {
+            console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+          } else {
+            console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+          }
           process.exit(0);
         }
       }
