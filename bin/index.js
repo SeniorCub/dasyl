@@ -118,21 +118,25 @@ if (['react', 'vue', 'svelte', 'node', 'node-ts', 'laravel'].includes(command)) 
 
 async function main() {
   // 1. Get Project Name
-  const { projectName } = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'projectName',
-      message: chalk.cyan('Enter your project name:'),
-      default: 'my-app',
-      validate: (input) => {
-        if (/^([a-z0-9\-\_.])+$/.test(input)) return true;
-        return 'Project name may only include name, numbers, dashes and underscores.';
+  let projectName;
+  try {
+    const answer = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'projectName',
+        message: chalk.cyan('Enter your project name:'),
+        default: 'my-app',
+        validate: (input) => {
+          if (/^([a-z0-9\-\_.])+$/.test(input)) return true;
+          return 'Project name may only include name, numbers, dashes and underscores.';
+        }
       }
-    }
-  ]).catch(() => {
+    ]);
+    projectName = answer.projectName;
+  } catch (error) {
     console.log(chalk.yellow('\n⚠️  Operation cancelled'));
     process.exit(0);
-  });
+  }
 
   if (shell.test('-d', projectName)) {
     console.log(chalk.red(`Error: Directory '${projectName}' already exists.`));
@@ -140,20 +144,24 @@ async function main() {
   }
 
   // 2. Choose Stack
-  const { stackChoice } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'stackChoice',
-      message: chalk.magenta('Choose your tech stack:'),
-      choices: [
-        { name: chalk.blue('Frontend (React/Vue/etc via Vite)'), value: 'frontend' },
-        { name: chalk.green('Backend (Node.js, Laravel)'), value: 'backend' }
-      ]
-    }
-  ]).catch(() => {
+  let stackChoice;
+  try {
+    const answer = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'stackChoice',
+        message: chalk.magenta('Choose your tech stack:'),
+        choices: [
+          { name: chalk.blue('Frontend (React/Vue/etc via Vite)'), value: 'frontend' },
+          { name: chalk.green('Backend (Node.js, Laravel)'), value: 'backend' }
+        ]
+      }
+    ]);
+    stackChoice = answer.stackChoice;
+  } catch (error) {
     console.log(chalk.yellow('\n⚠️  Operation cancelled'));
     process.exit(0);
-  });
+  }
 
   if (stackChoice === 'frontend') {
     console.log(chalk.blue(`\n🎨 Setting up Frontend project '${projectName}'...`));
@@ -178,36 +186,44 @@ async function main() {
     });
   } else {
     // Backend Choices
-    const { backendType } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'backendType',
-        message: chalk.magenta('Choose Backend Framework:'),
-        choices: [
-          { name: chalk.green('Node.js (Express API Boilerplate)'), value: 'node' },
-          { name: chalk.red('Laravel (PHP)'), value: 'laravel' }
-        ]
-      }
-    ]).catch(() => {
-      console.log(chalk.yellow('\n⚠️  Operation cancelled'));
-      process.exit(0);
-    });
-
-    if (backendType === 'node') {
-      const { language } = await inquirer.prompt([
+    let backendType;
+    try {
+      const answer = await inquirer.prompt([
         {
           type: 'list',
-          name: 'language',
-          message: chalk.magenta('Choose your language:'),
+          name: 'backendType',
+          message: chalk.magenta('Choose Backend Framework:'),
           choices: [
-            { name: chalk.yellow('JavaScript'), value: 'javascript' },
-            { name: chalk.blue('TypeScript'), value: 'typescript' }
+            { name: chalk.green('Node.js (Express API Boilerplate)'), value: 'node' },
+            { name: chalk.red('Laravel (PHP)'), value: 'laravel' }
           ]
         }
-      ]).catch(() => {
+      ]);
+      backendType = answer.backendType;
+    } catch (error) {
+      console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+      process.exit(0);
+    }
+
+    if (backendType === 'node') {
+      let language;
+      try {
+        const answer = await inquirer.prompt([
+          {
+            type: 'list',
+            name: 'language',
+            message: chalk.magenta('Choose your language:'),
+            choices: [
+              { name: chalk.yellow('JavaScript'), value: 'javascript' },
+              { name: chalk.blue('TypeScript'), value: 'typescript' }
+            ]
+          }
+        ]);
+        language = answer.language;
+      } catch (error) {
         console.log(chalk.yellow('\n⚠️  Operation cancelled'));
         process.exit(0);
-      });
+      }
       const useTypeScript = language === 'typescript';
       console.log(chalk.green(`\n🚀 Setting up Node.js API in '${projectName}'...`));
       generateNodeProject(projectName, useTypeScript);
