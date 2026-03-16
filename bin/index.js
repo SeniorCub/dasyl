@@ -5,15 +5,9 @@ import chalk from 'chalk';
 import shell from 'shelljs';
 import { generateNodeProject } from '../lib/node-generator.js';
 import { checkForUpdates, handleAutoUpdateSetting } from '../lib/update-checker.js';
-import { spawn } from 'child_process';
+import { spawn } from 'cross-spawn';
 import fs from 'fs';
 import ora from 'ora';
-
-// Enable keypress events for better Ctrl+C handling
-process.stdin.setRawMode && process.stdin.setRawMode(false);
-if (process.stdin.isTTY) {
-  process.stdin.setEncoding('utf8');
-}
 
 // Helper function to find npm command on different platforms
 function getNpmCommand() {
@@ -43,7 +37,6 @@ async function spawnNpm(args, options = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(npmCommand, args, { 
       stdio: 'inherit', 
-      shell: process.platform === 'win32', // Use shell on Windows
       ...options 
     });
 
@@ -67,48 +60,17 @@ async function spawnNpm(args, options = {}) {
 
 // Create a wrapper for inquirer that handles cancellation properly
 async function safePrompt(questions) {
-  return new Promise((resolve, reject) => {
-    // Create the inquirer prompt
-    const promptInstance = inquirer.prompt(questions);
-    
-    // Override inquirer's UI to handle SIGINT properly
-    promptInstance.then(answers => {
-      resolve(answers);
-    }).catch(error => {
-      // Check if it's a cancellation error
-      if (error.isTtyError || error.name === 'ExitPromptError' || 
-          error.message?.includes('User force closed') ||
-          error.message?.includes('canceled') ||
-          error.message?.includes('interrupted') ||
-          error.code === 'SIGINT') {
-        if (!process.cancelHandled) {
-          process.cancelHandled = true;
-          console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
-          process.exit(0);
-        }
-      }
-      reject(error);
-    });
-    
-    // Access inquirer's internal UI and override SIGINT behavior
-    setTimeout(() => {
-      if (promptInstance.ui && promptInstance.ui.rl) {
-        const readline = promptInstance.ui.rl;
-        
-        // Remove inquirer's default SIGINT handling
-        readline.removeAllListeners('SIGINT');
-        
-        // Add our own SIGINT handler that defers to the global one
-        readline.on('SIGINT', () => {
-          if (!process.cancelHandled) {
-            process.cancelHandled = true;
-            console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
-            process.exit(0);
-          }
-        });
-      }
-    }, 10); // Small delay to let inquirer initialize
-  });
+  try {
+    return await inquirer.prompt(questions);
+  } catch (error) {
+    // Check if it's a cancellation error
+    if (error.isTtyError || error.name === 'ExitPromptError' || 
+        error.message?.includes('User force closed')) {
+      console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+      process.exit(0);
+    }
+    throw error;
+  }
 }
 
 const logo = `
@@ -243,15 +205,11 @@ console.log(chalk.gray(`v${packageJson.version}`));
 console.log(chalk.cyan.bold('⚡ Fast, opinionated CLI for modern development\n'));
 
 // Set up cancellation handling immediately after startup display
-let cancelHandled = false;
 const handleCancel = () => {
-  if (cancelHandled) return;
-  cancelHandled = true;
   console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
   process.exit(0);
 };
 
-process.removeAllListeners('SIGINT'); // Clear any existing handlers
 process.on('SIGINT', handleCancel);
 
 // Check for updates (async, non-blocking)
@@ -286,7 +244,7 @@ async function quickCreate(type, name) {
     case 'svelte':
       console.log(chalk.blue(`🚀 Creating ${type.charAt(0).toUpperCase() + type.slice(1)} app '${name}'...`));
       try {
-        await spawnNpm(['create', 'vite@latest', targetDir, '--']);
+        await spawnNpm(['init', 'vite@latest', '-y', '--', targetDir]);
       } catch (error) {
         console.log(chalk.red(`\n❌ Error: ${error.message}`));
         console.log(chalk.yellow('\n💡 Make sure Node.js and npm are installed and in your PATH.'));
@@ -448,7 +406,7 @@ async function main() {
     console.log(chalk.blue(`\n🎨 Setting up Frontend project '${projectName}'...`));
     // Run npm create vite
     try {
-      await spawnNpm(['create', 'vite@latest', targetDir, '--']);
+      await spawnNpm(['init', 'vite@latest', '-y', '--', targetDir]);
     } catch (error) {
       console.log(chalk.red(`\n❌ Error: ${error.message}`));
       console.log(chalk.yellow('\n💡 Troubleshooting:'));
