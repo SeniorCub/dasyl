@@ -1,5 +1,5 @@
 {
-  "name": "dasyl",
+  "name": "@seniorcub/dasyl",
   "version": "1.6.4",
   "description": "Dasyl is a fast, opinionated CLI for creating, configuring, and releasing modern development projects in seconds.",
   "main": "bin/index.js",
@@ -20,6 +20,13 @@
   ],
   "author": "SeniorCub",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/SeniorCub/dasyl.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "dependencies": {
     "chalk": "^4.1.2",
     "inquirer": "^7.3.3",
