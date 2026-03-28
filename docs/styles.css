@@ -740,12 +740,11 @@ code, pre {
 }
 
 .suggestion-alt h3 {
-  font-size: 1rem;
+  font-size: .8rem;
   font-weight: 700;
   margin-bottom: var(--space-4);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  font-size: .8rem;
   letter-spacing: .07em;
 }
 
