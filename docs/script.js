@@ -210,8 +210,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   const body = document.getElementById('hero-static-body');
   if (!body) return;
 
-  const DASYL_VERSION = '1.6.4';
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DASYL_VERSION = '1.6.5';
 
   const LOGO_LINES = [
     ' ██████╗  █████╗ ███████╗██╗   ██╗██╗     ',
@@ -334,8 +333,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   let cmdHistory   = [];
   let historyIdx   = -1;
   let isProcessing = false;
-  // Keep in sync with the version in package.json
-  const DASYL_VERSION   = '1.6.4';
+  const DASYL_VERSION   = '1.6.5';
   const SPINNER_TICK_MS = 80;
   const SPINNER_DURATION = { create: 1400, install: 2200, git: 700 };
 

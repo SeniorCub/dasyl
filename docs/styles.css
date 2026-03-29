@@ -965,6 +965,82 @@ code, pre {
   transform: translateY(0);
 }
 
+/* ── Creator ─────────────────────────────────────────── */
+.creator { background: var(--color-bg-elevated); }
+
+.creator__card {
+  display: flex;
+  gap: var(--space-8);
+  align-items: flex-start;
+  max-width: 680px;
+  margin-inline: auto;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.creator__card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.creator__avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: .02em;
+  box-shadow: 0 0 0 4px rgba(124,58,237,.2);
+}
+
+.creator__name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+}
+
+.creator__bio {
+  color: var(--color-text-muted);
+  font-size: .975rem;
+  line-height: 1.7;
+  margin-bottom: var(--space-6);
+}
+
+.creator__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.creator__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: .45rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: .875rem;
+  font-weight: 500;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+
+.creator__link:hover {
+  border-color: var(--color-primary-lt);
+  color: var(--color-primary-lt);
+}
+
 /* ── Responsive ─────────────────────────────────────── */
 @media (max-width: 900px) {
   .hero__inner {
@@ -975,6 +1051,16 @@ code, pre {
 
   .suggestion-layout {
     grid-template-columns: 1fr;
+  }
+
+  .creator__card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .creator__links {
+    justify-content: center;
   }
 }
 
