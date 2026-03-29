@@ -129,7 +129,7 @@ git push origin main --follow-tags
 
 ## 🌐 Deploying to Go54 cPanel
 
-The **Deploy to Go54 cPanel** workflow (`deploy-cpanel.yml`) automatically deploys your website to a Go54 cPanel hosting account via FTP every time you push to the `main` branch. It can also be triggered manually from the Actions tab.
+The **Deploy to Go54 cPanel** workflow (`deploy-cpanel.yml`) automatically deploys the website to **[dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)** via FTP every time you push to the `main` branch. It can also be triggered manually from the Actions tab.
 
 ### Required GitHub Secrets
 
@@ -151,10 +151,8 @@ Add the following secrets under **Settings → Secrets and variables → Actions
 
 ### What the Workflow Deploys
 
-All repository files are deployed **excluding**:
+Only the contents of the `docs/` folder are deployed to the server root (`FTP_SERVER_DIR`), making the site directly accessible at [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng). The following are excluded:
 - `.git` directory and metadata
-- `node_modules/`
-- `.github/`
 
 ---
 
@@ -187,8 +185,9 @@ All repository files are deployed **excluding**:
 **Triggers:** Push to `main` branch, or manual dispatch
 
 **What it does:**
-- ✅ Deploys all website files to Go54 cPanel via FTP
-- ✅ Excludes `.git`, `node_modules/`, and `.github/`
+- ✅ Deploys `docs/` folder contents to Go54 cPanel via FTP
+- ✅ Website served at [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
+- ✅ Excludes `.git` metadata
 
 ### 4. **Version Bump Workflow** (`version-bump.yml`)
 
