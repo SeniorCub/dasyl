@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Dasyl — a fast, opinionated CLI for creating, configuring, and releasing modern development projects in seconds."
+    />
+    <title>Dasyl — Create. Configure. Release.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ─────────── NAV ─────────── -->
+    <header class="site-header">
+      <nav class="nav container">
+        <a href="#" class="nav__logo">
+          <span class="logo-text">dasyl</span>
+          <span class="logo-badge">CLI</span>
+        </a>
+        <ul class="nav__links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#quickstart">Quick Start</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#suggestions">Suggest</a></li>
+          <li>
+            <a
+              href="https://github.com/SeniorCub/dasyl"
+              target="_blank"
+              rel="noopener"
+              class="btn btn--outline btn--sm"
+            >
+              GitHub
+            </a>
+          </li>
+        </ul>
+        <button class="nav__burger" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ─────────── HERO ─────────── -->
+      <section class="hero">
+        <div class="container hero__inner">
+          <div class="hero__content">
+            <p class="hero__eyebrow">From <em>Dásílẹ̀</em> — to create / release</p>
+            <h1 class="hero__title">
+              Create. Configure.<br /><span class="gradient-text">Release.</span>
+            </h1>
+            <p class="hero__desc">
+              Dasyl is a fast, opinionated CLI for scaffolding modern web apps,
+              REST APIs, and full-stack projects in seconds — so you can focus
+              on building, not boilerplate.
+            </p>
+
+            <div class="hero__install">
+              <div class="terminal-line" id="hero-cmd">
+                <span class="terminal-prompt">$</span>
+                <span class="terminal-cmd">npm install -g dasyl</span>
+                <button
+                  class="copy-btn"
+                  data-copy="npm install -g dasyl"
+                  aria-label="Copy install command"
+                  title="Copy"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="hero__actions">
+              <a href="#quickstart" class="btn btn--primary">Get Started</a>
+              <a
+                href="https://github.com/SeniorCub/dasyl"
+                target="_blank"
+                rel="noopener"
+                class="btn btn--ghost"
+              >
+                View on GitHub
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+
+            <div class="hero__badges">
+              <img src="https://img.shields.io/npm/v/dasyl?style=flat-square&color=7c3aed&labelColor=1e1b4b" alt="npm version" />
+              <img src="https://img.shields.io/npm/dw/dasyl?style=flat-square&color=059669&labelColor=022c22" alt="weekly downloads" />
+              <img src="https://img.shields.io/npm/l/dasyl?style=flat-square&color=0ea5e9&labelColor=0c1a2e" alt="license" />
+            </div>
+          </div>
+
+          <div class="hero__demo" aria-hidden="true">
+            <div class="terminal">
+              <div class="terminal__bar">
+                <span class="dot dot--red"></span>
+                <span class="dot dot--yellow"></span>
+                <span class="dot dot--green"></span>
+                <span class="terminal__title">terminal</span>
+              </div>
+              <div class="terminal__body">
+                <div class="terminal__line"><span class="t-prompt">$</span> <span class="t-cmd">dasyl react my-app</span></div>
+                <div class="terminal__line terminal__line--output">
+                  <span class="t-spinner">✔</span> Creating React project <span class="t-hl">my-app</span>
+                </div>
+                <div class="terminal__line terminal__line--output">
+                  <span class="t-spinner">✔</span> Installing dependencies...
+                </div>
+                <div class="terminal__line terminal__line--output">
+                  <span class="t-spinner">✔</span> Initializing Git repo
+                </div>
+                <div class="terminal__line terminal__line--output t-success">
+                  🎉 Project created successfully!
+                </div>
+                <div class="terminal__line terminal__line--output">
+                  <span class="t-dim">cd my-app &amp;&amp; npm run dev</span>
+                </div>
+                <div class="terminal__line">
+                  <span class="t-prompt">$</span>
+                  <span class="t-cursor">▋</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────── FEATURES ─────────── -->
+      <section id="features" class="section features">
+        <div class="container">
+          <div class="section__header">
+            <h2 class="section__title">Why Dasyl?</h2>
+            <p class="section__subtitle">
+              Everything you need to go from zero to a running project — in
+              seconds.
+            </p>
+          </div>
+
+          <div class="features__grid">
+            <article class="feature-card">
+              <div class="feature-card__icon">🚀</div>
+              <h3>Quick Scaffolding</h3>
+              <p>
+                Spin up a fully-structured project with a single command. No
+                more copying boilerplate by hand.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-card__icon">⚡</div>
+              <h3>TypeScript Ready</h3>
+              <p>
+                First-class TypeScript support for Node.js projects — tsconfig,
+                path aliases, and compiled output all pre-configured.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-card__icon">📦</div>
+              <h3>Auto Installation</h3>
+              <p>
+                Optionally install all npm dependencies right after scaffolding
+                — zero extra steps required.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-card__icon">🔧</div>
+              <h3>Git Integration</h3>
+              <p>
+                Initialize a Git repository and commit the initial scaffold
+                automatically so you start with a clean history.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-card__icon">💻</div>
+              <h3>IDE Support</h3>
+              <p>
+                Open the new project in VS Code instantly — no manual
+                <code>code .</code> needed.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-card__icon">🌍</div>
+              <h3>Cross-Platform</h3>
+              <p>
+                Works seamlessly on Windows, macOS, and Linux — including
+                proper npm.cmd detection on Windows.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────── QUICK START ─────────── -->
+      <section id="quickstart" class="section quickstart">
+        <div class="container">
+          <div class="section__header">
+            <h2 class="section__title">Quick Start</h2>
+            <p class="section__subtitle">
+              Install once, scaffold forever.
+            </p>
+          </div>
+
+          <div class="steps">
+            <!-- Step 1 -->
+            <div class="step">
+              <div class="step__num">1</div>
+              <div class="step__content">
+                <h3>Install globally</h3>
+                <div class="code-block">
+                  <pre><code>npm install -g dasyl</code></pre>
+                  <button class="copy-btn" data-copy="npm install -g dasyl" aria-label="Copy">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step">
+              <div class="step__num">2</div>
+              <div class="step__content">
+                <h3>Run a quick shortcut — or use interactive mode</h3>
+                <div class="tabs" role="tablist">
+                  <button class="tab tab--active" role="tab" data-tab="shortcuts" aria-selected="true">Shortcuts</button>
+                  <button class="tab" role="tab" data-tab="interactive" aria-selected="false">Interactive</button>
+                </div>
+                <div class="tab-content tab-content--active" id="tab-shortcuts">
+                  <div class="code-block">
+                    <pre><code><span class="c-comment"># React app (Vite)</span>
+dasyl react my-app
+
+<span class="c-comment"># Node.js Express (JavaScript)</span>
+dasyl node my-api
+
+<span class="c-comment"># Node.js Express (TypeScript)</span>
+dasyl node-ts my-api
+
+<span class="c-comment"># Laravel project</span>
+dasyl laravel my-laravel-app</code></pre>
+                    <button class="copy-btn" data-copy="dasyl react my-app" aria-label="Copy">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="tab-content" id="tab-interactive">
+                  <div class="code-block">
+                    <pre><code><span class="c-comment"># Launch the interactive wizard</span>
+dasyl
+
+<span class="c-comment"># Follow the prompts:
+#  › Project name?
+#  › Frontend or Backend?
+#  › Framework?
+#  › Install dependencies? (y/n)
+#  › Init Git repo? (y/n)
+#  › Open in VS Code? (y/n)</span></code></pre>
+                    <button class="copy-btn" data-copy="dasyl" aria-label="Copy">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step">
+              <div class="step__num">3</div>
+              <div class="step__content">
+                <h3>Start building 🎉</h3>
+                <p class="step__text">
+                  Your project is ready. Dependencies installed, Git initialized,
+                  and VS Code open — straight to coding.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────── PROJECT TYPES ─────────── -->
+      <section id="projects" class="section project-types">
+        <div class="container">
+          <div class="section__header">
+            <h2 class="section__title">Project Types</h2>
+            <p class="section__subtitle">
+              Frontend, backend, full-stack — Dasyl has you covered.
+            </p>
+          </div>
+
+          <div class="project-grid">
+            <!-- Frontend -->
+            <div class="project-card">
+              <div class="project-card__header">
+                <span class="project-card__tag project-card__tag--frontend">Frontend</span>
+                <h3>React / Vue / Svelte</h3>
+              </div>
+              <p>Modern frontend scaffolding powered by Vite for blazing-fast development.</p>
+              <ul class="project-card__list">
+                <li>⚡ Vite build tooling</li>
+                <li>🎨 Opinionated folder structure</li>
+                <li>📦 All dependencies wired up</li>
+              </ul>
+              <div class="code-block code-block--sm">
+                <pre><code>dasyl react my-app</code></pre>
+              </div>
+            </div>
+
+            <!-- Node JS -->
+            <div class="project-card">
+              <div class="project-card__header">
+                <span class="project-card__tag project-card__tag--backend">Backend</span>
+                <h3>Node.js Express</h3>
+              </div>
+              <p>Production-ready REST API boilerplate with Express, MongoDB, and auth.</p>
+              <ul class="project-card__list">
+                <li>🛡️ Helmet + CORS security</li>
+                <li>🔐 Auth routes &amp; User model</li>
+                <li>🍃 MongoDB / Mongoose ready</li>
+                <li>⚙️ .env configuration</li>
+                <li>📂 Controllers / Routes / Models</li>
+              </ul>
+              <div class="code-block code-block--sm">
+                <pre><code>dasyl node my-api
+dasyl node-ts my-api   <span class="c-comment"># TypeScript</span></code></pre>
+              </div>
+            </div>
+
+            <!-- Laravel -->
+            <div class="project-card">
+              <div class="project-card__header">
+                <span class="project-card__tag project-card__tag--php">PHP</span>
+                <h3>Laravel</h3>
+              </div>
+              <p>Scaffold a fresh Laravel project using the official Laravel installer.</p>
+              <ul class="project-card__list">
+                <li>🐘 Latest Laravel version</li>
+                <li>📋 MVC structure</li>
+                <li>🔧 Ready to run</li>
+              </ul>
+              <div class="code-block code-block--sm">
+                <pre><code>dasyl laravel my-project</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────── SUGGESTION BOX ─────────── -->
+      <section id="suggestions" class="section suggestions">
+        <div class="container">
+          <div class="section__header">
+            <h2 class="section__title">💡 Suggestion Box</h2>
+            <p class="section__subtitle">
+              Have an idea for a new project type, feature, or improvement?
+              We'd love to hear it!
+            </p>
+          </div>
+
+          <div class="suggestion-layout">
+            <form class="suggestion-form" id="suggestion-form" novalidate>
+              <div class="form-group">
+                <label for="sg-name">Your name <span class="optional">(optional)</span></label>
+                <input
+                  type="text"
+                  id="sg-name"
+                  name="name"
+                  placeholder="e.g. Jane Doe"
+                  autocomplete="name"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="sg-type">Suggestion type <span class="required">*</span></label>
+                <select id="sg-type" name="type" required>
+                  <option value="" disabled selected>Select a category…</option>
+                  <option value="new-project-type">New project type</option>
+                  <option value="new-feature">New feature</option>
+                  <option value="improvement">Improvement</option>
+                  <option value="bug">Bug report</option>
+                  <option value="other">Other</option>
+                </select>
+                <span class="field-error" id="sg-type-error" role="alert"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="sg-message">Your suggestion <span class="required">*</span></label>
+                <textarea
+                  id="sg-message"
+                  name="message"
+                  rows="5"
+                  placeholder="Describe your idea, feature request, or bug in as much detail as you'd like…"
+                  required
+                  minlength="10"
+                ></textarea>
+                <span class="field-error" id="sg-message-error" role="alert"></span>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn--primary btn--full" id="sg-submit">
+                  <span class="btn-text">Open as GitHub Issue →</span>
+                </button>
+              </div>
+
+              <p class="form-note">
+                Clicking the button will open a pre-filled GitHub Issue in a new
+                tab — no account needed to preview, but you'll need a GitHub
+                account to submit.
+              </p>
+            </form>
+
+            <aside class="suggestion-alt">
+              <h3>Other ways to contribute</h3>
+              <ul class="alt-links">
+                <li>
+                  <a
+                    href="https://github.com/SeniorCub/dasyl/issues/new"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    🐛 Report a bug
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/SeniorCub/dasyl/discussions"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    💬 Join Discussions
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/SeniorCub/dasyl/pulls"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    🔀 Open a Pull Request
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/SeniorCub/dasyl/blob/main/CONTRIBUTING.md"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    📖 Contributing Guide
+                  </a>
+                </li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ─────────── FOOTER ─────────── -->
+    <footer class="footer">
+      <div class="container footer__inner">
+        <p class="footer__brand">
+          <span class="logo-text">dasyl</span> — <em>Dásílẹ̀</em> (to create / release)
+        </p>
+        <p class="footer__meta">
+          ISC License &nbsp;·&nbsp;
+          <a href="https://github.com/SeniorCub/dasyl" target="_blank" rel="noopener">GitHub</a>
+          &nbsp;·&nbsp;
+          <a href="https://www.npmjs.com/package/dasyl" target="_blank" rel="noopener">npm</a>
+        </p>
+      </div>
+    </footer>
+
+    <div class="toast" id="copy-toast" role="status" aria-live="polite">Copied!</div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
