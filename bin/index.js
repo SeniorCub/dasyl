@@ -143,7 +143,7 @@ ${chalk.bold('Options:')}
   --disable-auto-update Disable automatic updates
 
 ${chalk.bold('Created by:')}
-  ${chalk.cyan('Farinde Reuben Ifeoluwa')} ${chalk.gray('(github.com/SeniorCub)')}
+  ${chalk.cyan('SeniorCub')} ${chalk.gray('(seniorcub.name.ng)')}
 `;
   console.log(helpMessageWithVersion);
   process.exit(0);
@@ -152,7 +152,7 @@ ${chalk.bold('Created by:')}
 if (process.argv.includes('-v') || process.argv.includes('--version')) {
   const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
   console.log(chalk.blue.bold(`dasyl v${packageJson.version}`));
-  console.log(chalk.gray(`Created by Farinde Reuben Ifeoluwa (github.com/SeniorCub)`));
+  console.log(chalk.gray(`Created by SeniorCub (seniorcub.name.ng)`));
   process.exit(0);
 }
 
