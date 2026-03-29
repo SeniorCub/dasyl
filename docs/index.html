@@ -26,6 +26,7 @@
         </a>
         <ul class="nav__links">
           <li><a href="#features">Features</a></li>
+          <li><a href="#demo">Try It</a></li>
           <li><a href="#quickstart">Quick Start</a></li>
           <li><a href="#projects">Projects</a></li>
           <li><a href="#suggestions">Suggest</a></li>
@@ -97,28 +98,16 @@
           </div>
 
           <div class="hero__demo">
-            <div class="terminal" id="hero-terminal" tabindex="0" role="application" aria-label="Interactive Dasyl terminal. Click to focus and type commands.">
+            <div class="terminal terminal--static" id="hero-terminal-static" aria-label="Dasyl CLI preview">
               <div class="terminal__bar">
                 <span class="dot dot--red"></span>
                 <span class="dot dot--yellow"></span>
                 <span class="dot dot--green"></span>
-                <span class="terminal__title">dasyl — interactive demo</span>
+                <span class="terminal__title">dasyl — zsh</span>
               </div>
-              <div class="terminal__body" id="terminal-body">
-                <!-- populated by script.js -->
+              <div class="terminal__body terminal__body--hero" id="hero-static-body">
+                <!-- animated by script.js -->
               </div>
-              <!-- Hidden input captures real keyboard events on all devices -->
-              <input
-                type="text"
-                id="terminal-hidden-input"
-                class="terminal__hidden-input"
-                autocomplete="off"
-                autocorrect="off"
-                autocapitalize="off"
-                spellcheck="false"
-                aria-hidden="true"
-                tabindex="-1"
-              />
             </div>
           </div>
         </div>
@@ -189,6 +178,53 @@
                 proper npm.cmd detection on Windows.
               </p>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────── INTERACTIVE DEMO ─────────── -->
+      <section id="demo" class="section demo-section">
+        <div class="container">
+          <div class="section__header">
+            <h2 class="section__title">Try It Live</h2>
+            <p class="section__subtitle">
+              Run real dasyl commands right here in your browser — no install needed.
+            </p>
+          </div>
+
+          <div class="demo-terminal-wrap">
+            <div
+              class="terminal terminal--interactive"
+              id="demo-terminal"
+              tabindex="0"
+              role="application"
+              aria-label="Interactive Dasyl terminal. Click to focus and type commands."
+            >
+              <div class="terminal__bar">
+                <span class="dot dot--red"></span>
+                <span class="dot dot--yellow"></span>
+                <span class="dot dot--green"></span>
+                <span class="terminal__title">dasyl — interactive demo</span>
+              </div>
+              <div class="terminal__body" id="demo-terminal-body">
+                <!-- populated by script.js -->
+              </div>
+              <!-- Hidden input captures real keyboard events on all devices -->
+              <input
+                type="text"
+                id="demo-hidden-input"
+                class="terminal__hidden-input"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                aria-hidden="true"
+                tabindex="-1"
+              />
+            </div>
+            <p class="demo-hint">
+              💡 Try: <code>dasyl react my-app</code> &nbsp;·&nbsp; <code>dasyl node my-api</code> &nbsp;·&nbsp; <code>dasyl --help</code> &nbsp;·&nbsp; <code>dasyl</code> (interactive wizard)
+            </p>
           </div>
         </div>
       </section>
