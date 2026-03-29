@@ -127,6 +127,37 @@ git push origin main --follow-tags
 
 ---
 
+## 🌐 Deploying to Go54 cPanel
+
+The **Deploy to Go54 cPanel** workflow (`deploy-cpanel.yml`) automatically deploys your website to a Go54 cPanel hosting account via FTP every time you push to the `main` branch. It can also be triggered manually from the Actions tab.
+
+### Required GitHub Secrets
+
+Add the following secrets under **Settings → Secrets and variables → Actions**:
+
+| Secret | Description | Example |
+|---|---|---|
+| `FTP_SERVER` | FTP hostname from Go54 cPanel | `ftp.yourdomain.com` |
+| `FTP_USERNAME` | FTP account username | `user@yourdomain.com` |
+| `FTP_PASSWORD` | FTP account password | *(your FTP password)* |
+| `FTP_SERVER_DIR` | Remote directory to deploy into | `/public_html/` |
+
+### Finding Your FTP Credentials on Go54
+
+1. Log in to your **Go54 cPanel** account
+2. Navigate to **Files → FTP Accounts**
+3. Use the main cPanel username and password, or create a dedicated FTP account
+4. The FTP hostname is typically `ftp.yourdomain.com` or the server hostname shown in cPanel
+
+### What the Workflow Deploys
+
+All repository files are deployed **excluding**:
+- `.git` directory and metadata
+- `node_modules/`
+- `.github/`
+
+---
+
 ## 📊 Workflow Overview
 
 ### 1. **CI Workflow** (`ci.yml`)
@@ -151,7 +182,15 @@ git push origin main --follow-tags
 - ✅ Publishes to NPM with provenance
 - ✅ Creates GitHub Release
 
-### 3. **Version Bump Workflow** (`version-bump.yml`)
+### 3. **Deploy to Go54 cPanel Workflow** (`deploy-cpanel.yml`)
+
+**Triggers:** Push to `main` branch, or manual dispatch
+
+**What it does:**
+- ✅ Deploys all website files to Go54 cPanel via FTP
+- ✅ Excludes `.git`, `node_modules/`, and `.github/`
+
+### 4. **Version Bump Workflow** (`version-bump.yml`)
 
 **Triggers:** Manual dispatch from Actions tab
 
