@@ -198,18 +198,135 @@ const observer = new IntersectionObserver((entries) => {
 // Only animate if the user hasn't requested reduced motion
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   document.querySelectorAll(
-    '.feature-card, .step, .project-card, .suggestion-form, .suggestion-alt'
+    '.feature-card, .step, .project-card, .suggestion-form, .suggestion-alt, .demo-terminal-wrap'
   ).forEach((el) => {
     el.classList.add('animate-on-scroll');
     observer.observe(el);
   });
 }
 
-// ── Interactive hero terminal ─────────────────────────
+// ── Static hero terminal animation ───────────────────
+(function initHeroStaticTerminal() {
+  const body = document.getElementById('hero-static-body');
+  if (!body) return;
+
+  const DASYL_VERSION = '1.6.4';
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const LOGO_LINES = [
+    ' ██████╗  █████╗ ███████╗██╗   ██╗██╗     ',
+    ' ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     ',
+    ' ██║  ██║███████║███████╗ ╚████╔╝ ██║     ',
+    ' ██║  ██║██╔══██║╚════██║  ╚██╔╝  ██║     ',
+    ' ██████╔╝██║  ██║███████║   ██║   ███████╗',
+    ' ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝',
+  ];
+
+  const FRAMES = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+
+  function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, reducedMotion ? 0 : ms));
+  }
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function addLine(html, cls) {
+    const div = document.createElement('div');
+    div.className = 'terminal__line terminal__line--output' + (cls ? ' ' + cls : '');
+    div.innerHTML = html;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+    return div;
+  }
+
+  async function typeCommand(text) {
+    const line = document.createElement('div');
+    line.className = 'terminal__line';
+    line.innerHTML = `<span class="t-prompt">$</span> <span class="t-cmd"></span><span class="t-cursor">▋</span>`;
+    body.appendChild(line);
+    const cmdSpan = line.querySelector('.t-cmd');
+    const cursor  = line.querySelector('.t-cursor');
+    for (const ch of text) {
+      cmdSpan.textContent += ch;
+      body.scrollTop = body.scrollHeight;
+      await wait(38 + Math.random() * 28);
+    }
+    await wait(180);
+    cursor.remove();
+  }
+
+  async function spinnerLine(startText, endText, durationMs) {
+    const line = document.createElement('div');
+    line.className = 'terminal__line terminal__line--output';
+    line.innerHTML = `<span class="t-spinner-anim" aria-hidden="true">⠋</span> <span class="t-line-text">${startText}</span>`;
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+    const icon = line.querySelector('.t-spinner-anim');
+    const text = line.querySelector('.t-line-text');
+    const ticks = Math.max(2, Math.floor(durationMs / 80));
+    for (let i = 0; i < ticks; i++) {
+      icon.textContent = FRAMES[i % FRAMES.length];
+      await wait(80);
+    }
+    icon.textContent = '✔';
+    icon.className = 't-spinner';
+    text.innerHTML = endText;
+    body.scrollTop = body.scrollHeight;
+  }
+
+  async function run() {
+    await wait(700);
+
+    await typeCommand('dasyl react my-app');
+    await wait(120);
+
+    for (const line of LOGO_LINES) {
+      addLine(`<span class="t-logo">${escHtml(line)}</span>`);
+    }
+    addLine(`<span class="t-dim">v${DASYL_VERSION}</span>`);
+    addLine(`<span class="t-accent">⚡ Fast, opinionated CLI for modern development</span>`);
+    addLine('&nbsp;');
+
+    await wait(200);
+
+    await spinnerLine(
+      'Creating React project <span class="t-hl">my-app</span>...',
+      'Creating React project <span class="t-hl">my-app</span>',
+      1400
+    );
+    await spinnerLine('Installing dependencies...', 'Dependencies installed', 2200);
+    await spinnerLine(
+      'Initializing Git repository...',
+      'Git repository initialized with initial commit',
+      700
+    );
+
+    await wait(120);
+    addLine('<span class="t-success">🎉 Project <span class="t-hl">my-app</span> created successfully!</span>');
+    addLine('<span class="t-dim">cd my-app &amp;&amp; npm run dev</span>');
+
+    await wait(500);
+    // Show a fresh prompt to indicate CLI is ready
+    const promptLine = document.createElement('div');
+    promptLine.className = 'terminal__line';
+    promptLine.innerHTML = `<span class="t-prompt">$</span> <span class="t-cursor">▋</span>`;
+    body.appendChild(promptLine);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  run();
+})();
+
+// ── Interactive demo terminal ─────────────────────────
 (function initInteractiveTerminal() {
-  const body        = document.getElementById('terminal-body');
-  const hiddenInput = document.getElementById('terminal-hidden-input');
-  const terminalEl  = document.getElementById('hero-terminal');
+  const body        = document.getElementById('demo-terminal-body');
+  const hiddenInput = document.getElementById('demo-hidden-input');
+  const terminalEl  = document.getElementById('demo-terminal');
 
   if (!body || !hiddenInput || !terminalEl) return;
 
@@ -383,7 +500,10 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const name = parts[2] || null;
 
     try {
-      if (!sub || sub === '--help' || sub === '-h') {
+      if (!sub) {
+        // No sub-command → run interactive wizard (mirrors real CLI main())
+        await runWizard();
+      } else if (sub === '--help' || sub === '-h') {
         showHelp();
       } else if (sub === '--version' || sub === '-v') {
         showVersion();
@@ -415,7 +535,8 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       `<span class="t-hl">dasyl</span> <span class="t-dim">v${DASYL_VERSION} — Create and release development projects faster.</span>`,
       `&nbsp;`,
       `<span class="t-cmd-label">Usage:</span>`,
-      `  <span class="t-cmd">dasyl</span> <span class="t-dim">[type] [project-name]</span>`,
+      `  <span class="t-cmd">dasyl</span>                     <span class="t-dim">Interactive wizard (prompts for options)</span>`,
+      `  <span class="t-cmd">dasyl</span> <span class="t-dim">[type] [project-name]</span>  <span class="t-dim">Quick shortcut</span>`,
       `&nbsp;`,
       `<span class="t-cmd-label">Quick shortcuts:</span>`,
       `  <span class="t-cmd">dasyl react &lt;name&gt;</span>    <span class="t-dim">React app via Vite</span>`,
@@ -448,6 +569,193 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       `<span class="t-dim">Created by Farinde Reuben Ifeoluwa ` +
       `(<a href="https://github.com/SeniorCub" target="_blank" rel="noopener noreferrer" class="t-hl">github.com/SeniorCub</a>)</span>`
     );
+  }
+
+  /* ── Interactive wizard (mirrors real CLI main()) ───── */
+  const WIZARD_LOGO = [
+    ' ██████╗  █████╗ ███████╗██╗   ██╗██╗     ',
+    ' ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     ',
+    ' ██║  ██║███████║███████╗ ╚████╔╝ ██║     ',
+    ' ██║  ██║██╔══██║╚════██║  ╚██╔╝  ██║     ',
+    ' ██████╔╝██║  ██║███████║   ██║   ███████╗',
+    ' ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝',
+  ];
+
+  /**
+   * Prompt the user for a text answer.
+   * Returns the typed string when Enter is pressed.
+   */
+  function promptText(questionHtml, defaultVal) {
+    return new Promise((resolve) => {
+      const inputLine = getInputLine();
+
+      // Render the question above the active input line
+      const qLine = document.createElement('div');
+      qLine.className = 'terminal__line terminal__line--output';
+      qLine.innerHTML = `<span class="t-prompt-q">?</span> ${questionHtml}` +
+        (defaultVal ? ` <span class="t-dim">(${escHtml(defaultVal)})</span>` : '');
+      body.insertBefore(qLine, inputLine);
+      scrollToBottom();
+
+      // Re-use the existing input line — just wait for Enter
+      const onEnter = (e) => {
+        if (e.key !== 'Enter') return;
+        hiddenInput.removeEventListener('keydown', onEnter);
+        const val = hiddenInput.value.trim() || defaultVal || '';
+        hiddenInput.value = '';
+        syncInputDisplay();
+        commitInputLine(val);
+        resolve(val);
+      };
+      hiddenInput.addEventListener('keydown', onEnter);
+    });
+  }
+
+  /**
+   * Show a list of choices and let the user pick by number or arrow keys.
+   * choices: [{ label, value }]
+   * Returns the chosen value.
+   */
+  function promptList(questionHtml, choices) {
+    return new Promise((resolve) => {
+      let selected = 0;
+
+      const inputLine = getInputLine();
+
+      const qLine = document.createElement('div');
+      qLine.className = 'terminal__line terminal__line--output';
+      qLine.innerHTML = `<span class="t-prompt-q">?</span> ${questionHtml}`;
+      body.insertBefore(qLine, inputLine);
+
+      const choiceLines = choices.map((c, i) => {
+        const div = document.createElement('div');
+        div.className = 'terminal__line terminal__line--output';
+        body.insertBefore(div, inputLine);
+        return div;
+      });
+
+      const hintLine = document.createElement('div');
+      hintLine.className = 'terminal__line terminal__line--output';
+      hintLine.innerHTML = `<span class="t-key-hint">  ↑↓ navigate · Enter to select · or type a number (1-${choices.length})</span>`;
+      body.insertBefore(hintLine, inputLine);
+
+      function render() {
+        choices.forEach((c, i) => {
+          const active = i === selected;
+          choiceLines[i].innerHTML = active
+            ? `  <span class="t-prompt-q">❯</span> <span class="t-choice--active">${escHtml(c.label)}</span>`
+            : `    <span class="t-choice">${escHtml(c.label)}</span>`;
+        });
+        scrollToBottom();
+      }
+      render();
+
+      function finish(idx) {
+        hiddenInput.removeEventListener('keydown', onKey);
+        hiddenInput.value = '';
+        syncInputDisplay();
+
+        // Replace choice list with confirmed answer
+        choiceLines.forEach(l => l.remove());
+        hintLine.remove();
+        qLine.innerHTML = `<span class="t-prompt-q">?</span> ${questionHtml} ` +
+          `<span class="t-prompt-answer">${escHtml(choices[idx].label)}</span>`;
+        scrollToBottom();
+        resolve(choices[idx].value);
+      }
+
+      const onKey = (e) => {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          selected = (selected - 1 + choices.length) % choices.length;
+          render();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          selected = (selected + 1) % choices.length;
+          render();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          finish(selected);
+        } else {
+          // Number shortcut: pressing 1, 2, 3 … jumps to that choice
+          const num = parseInt(e.key, 10);
+          if (!isNaN(num) && num >= 1 && num <= choices.length) {
+            e.preventDefault();
+            selected = num - 1;
+            render();
+          }
+        }
+      };
+      hiddenInput.addEventListener('keydown', onKey);
+    });
+  }
+
+  async function runWizard() {
+    // Show logo + version like the real CLI
+    for (const line of WIZARD_LOGO) {
+      const div = document.createElement('div');
+      div.className = 'terminal__line terminal__line--output';
+      div.innerHTML = `<span class="t-logo">${escHtml(line)}</span>`;
+      body.insertBefore(div, getInputLine());
+    }
+    addOutputLine(`<span class="t-dim">v${DASYL_VERSION}</span>`);
+    addOutputLine(`<span class="t-accent">⚡ Fast, opinionated CLI for modern development</span>`);
+    addOutputLine('&nbsp;');
+
+    // 1. Project name
+    const projectName = await promptText(
+      `<span class="t-cmd">Enter your project name:</span>`,
+      'my-app'
+    );
+
+    if (!projectName) {
+      addOutputLine(`<span class="t-error">❌ Project name cannot be empty.</span>`);
+      return;
+    }
+
+    // 2. Stack choice
+    const stack = await promptList(
+      `<span class="t-cmd">Choose your tech stack:</span>`,
+      [
+        { label: 'Frontend (React / Vue / etc via Vite)', value: 'frontend' },
+        { label: 'Backend (Node.js, Laravel)',            value: 'backend'  },
+      ]
+    );
+
+    let type;
+
+    if (stack === 'frontend') {
+      type = 'react'; // Demo simplification: real CLI uses Vite's own interactive prompt for framework selection
+      addOutputLine(`<span class="t-dim">🎨 Setting up Frontend project '${escHtml(projectName)}'...</span>`);
+    } else {
+      // 3. Backend framework
+      const backend = await promptList(
+        `<span class="t-cmd">Choose Backend Framework:</span>`,
+        [
+          { label: 'Node.js (Express API Boilerplate)', value: 'node'    },
+          { label: 'Laravel (PHP)',                     value: 'laravel' },
+        ]
+      );
+
+      if (backend === 'node') {
+        // 4. Language
+        const lang = await promptList(
+          `<span class="t-cmd">Choose your language:</span>`,
+          [
+            { label: 'JavaScript', value: 'javascript' },
+            { label: 'TypeScript', value: 'typescript' },
+          ]
+        );
+        type = lang === 'typescript' ? 'node-ts' : 'node';
+        addOutputLine(`<span class="t-dim">🚀 Setting up Node.js API in '${escHtml(projectName)}'...</span>`);
+      } else {
+        type = 'laravel';
+        addOutputLine(`<span class="t-dim">🚀 Setting up Laravel project '${escHtml(projectName)}'...</span>`);
+      }
+    }
+
+    addOutputLine('&nbsp;');
+    await simulateCreate(type, projectName);
   }
 
   /* ── Command: scaffold ─────────────────────────────── */
@@ -510,8 +818,9 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const welcome = document.createElement('div');
     welcome.className = 'terminal__line terminal__line--output';
     welcome.innerHTML =
-      `<span class="t-dim">Type <span class="t-hl">dasyl --help</span> for available commands, ` +
-      `or try <span class="t-hl">dasyl react my-app</span>.</span>`;
+      `<span class="t-dim">Type <span class="t-hl">dasyl</span> for the interactive wizard, ` +
+      `<span class="t-hl">dasyl react my-app</span> for a quick start, ` +
+      `or <span class="t-hl">dasyl --help</span> for all commands.</span>`;
     body.appendChild(welcome);
 
     const inputLine = document.createElement('div');
