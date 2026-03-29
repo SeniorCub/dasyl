@@ -16,6 +16,9 @@
 ![license](https://img.shields.io/npm/l/dasyl)
 ![CI](https://github.com/SeniorCub/dasyl/actions/workflows/ci.yml/badge.svg)
 ![Publish](https://github.com/SeniorCub/dasyl/actions/workflows/publish.yml/badge.svg)
+![Deploy](https://github.com/SeniorCub/dasyl/actions/workflows/deploy-cpanel.yml/badge.svg)
+
+🌐 **Live site:** [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
 
 ## Create. Configure. Release.
 
