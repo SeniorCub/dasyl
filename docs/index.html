@@ -96,36 +96,29 @@
             </div>
           </div>
 
-          <div class="hero__demo" aria-hidden="true">
-            <div class="terminal">
+          <div class="hero__demo">
+            <div class="terminal" id="hero-terminal" tabindex="0" role="application" aria-label="Interactive Dasyl terminal. Click to focus and type commands.">
               <div class="terminal__bar">
                 <span class="dot dot--red"></span>
                 <span class="dot dot--yellow"></span>
                 <span class="dot dot--green"></span>
-                <span class="terminal__title">terminal</span>
+                <span class="terminal__title">dasyl — interactive demo</span>
               </div>
-              <div class="terminal__body">
-                <div class="terminal__line"><span class="t-prompt">$</span> <span class="t-cmd">dasyl react my-app</span></div>
-                <div class="terminal__line terminal__line--output">
-                  <span class="t-spinner">✔</span> Creating React project <span class="t-hl">my-app</span>
-                </div>
-                <div class="terminal__line terminal__line--output">
-                  <span class="t-spinner">✔</span> Installing dependencies...
-                </div>
-                <div class="terminal__line terminal__line--output">
-                  <span class="t-spinner">✔</span> Initializing Git repo
-                </div>
-                <div class="terminal__line terminal__line--output t-success">
-                  🎉 Project created successfully!
-                </div>
-                <div class="terminal__line terminal__line--output">
-                  <span class="t-dim">cd my-app &amp;&amp; npm run dev</span>
-                </div>
-                <div class="terminal__line">
-                  <span class="t-prompt">$</span>
-                  <span class="t-cursor">▋</span>
-                </div>
+              <div class="terminal__body" id="terminal-body">
+                <!-- populated by script.js -->
               </div>
+              <!-- Hidden input captures real keyboard events on all devices -->
+              <input
+                type="text"
+                id="terminal-hidden-input"
+                class="terminal__hidden-input"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                aria-hidden="true"
+                tabindex="-1"
+              />
             </div>
           </div>
         </div>
