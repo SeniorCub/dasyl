@@ -18,7 +18,10 @@
     "mean",
     "laravel"
   ],
-  "author": "SeniorCub",
+  "author": {
+    "name": "Farinde Reuben Ifeoluwa",
+    "url": "https://github.com/SeniorCub"
+  },
   "license": "ISC",
   "repository": {
     "type": "git",

@@ -194,6 +194,13 @@ This project uses [Semantic Versioning](https://semver.org/).
 
 Contributions are welcome! Please see the [contributing guidelines](CONTRIBUTING.md) for more information.
 
+## About the Creator
+
+**Dasyl** was created by **Farinde Reuben Ifeoluwa** ([@SeniorCub](https://github.com/SeniorCub)).
+
+- 🐙 GitHub: [github.com/SeniorCub](https://github.com/SeniorCub)
+- 🌐 Website: [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
+
 ## License
 
 This project is licensed under the ISC License. See the [LICENSE](LICENSE) file for details.
