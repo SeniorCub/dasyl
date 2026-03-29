@@ -141,6 +141,9 @@ ${chalk.bold('Options:')}
   --dir <path>         Create project in custom directory
   --enable-auto-update Enable automatic updates
   --disable-auto-update Disable automatic updates
+
+${chalk.bold('Created by:')}
+  ${chalk.cyan('Farinde Reuben Ifeoluwa')} ${chalk.gray('(github.com/SeniorCub)')}
 `;
   console.log(helpMessageWithVersion);
   process.exit(0);
@@ -149,6 +152,7 @@ ${chalk.bold('Options:')}
 if (process.argv.includes('-v') || process.argv.includes('--version')) {
   const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
   console.log(chalk.blue.bold(`dasyl v${packageJson.version}`));
+  console.log(chalk.gray(`Created by Farinde Reuben Ifeoluwa (github.com/SeniorCub)`));
   process.exit(0);
 }
 
