@@ -28,7 +28,7 @@
     "url": "git://github.com/SeniorCub/dasyl.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
     "chalk": "^4.1.2",
