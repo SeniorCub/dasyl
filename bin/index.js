@@ -4,6 +4,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import shell from 'shelljs';
 import { generateNodeProject } from '../lib/node-generator.js';
+import { generateLaravelProject } from '../lib/laravel-generator.js';
 import { checkForUpdates, handleAutoUpdateSetting } from '../lib/update-checker.js';
 import { spawn } from 'cross-spawn';
 import fs from 'fs';

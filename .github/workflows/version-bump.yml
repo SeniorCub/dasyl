@@ -28,7 +28,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
       
       - name: Setup Node.js
@@ -54,7 +54,7 @@ jobs:
       
       - name: Push changes
         run: |
-          git push origin main
+          git push origin ${{ github.ref_name }}
           git push origin v${{ steps.bump.outputs.new_version }}
       
       - name: Trigger NPM Publish

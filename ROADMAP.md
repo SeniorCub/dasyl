@@ -1,7 +1,7 @@
 # Dasyl Roadmap
 
-**Last Updated:** March 13, 2026  
-**Current Version:** 1.5.1
+**Last Updated:** May 12, 2026  
+**Current Version:** 1.7.0
 
 This document outlines the planned features and enhancements for Dasyl CLI. The roadmap is subject to change based on community feedback and priorities.
 
@@ -378,39 +378,40 @@ Add interactive database choice with full configuration:
 - ✅ **Improved Error Messages** - More helpful error descriptions
 - ✅ **Progress Indicators** - Better visual feedback with ora spinners
 
-### Version 1.5.4 - Code Quality Tools
+### ~~Version 1.5.4 - Code Quality Tools~~ ✅ COMPLETED
 
-**Target Release:** Q2 2026
+**Released:** March 13, 2026
 
-- **.editorconfig** generation
-- **.prettierrc** setup with auto-format
-- **.eslintrc** configuration
-- **Husky** pre-commit hooks
-- **lint-staged** integration
-- **VS Code workspace settings**
+- ✅ **.editorconfig** generation
+- ✅ **.prettierrc** setup with auto-format
+- ✅ **.eslintrc** configuration
+- ✅ **Husky** pre-commit hooks
+- ✅ **lint-staged** integration
+- ✅ **VS Code workspace settings**
 
-### Version 1.5.5 - Custom Templates
+### ~~Version 1.6.0 - Auto-Update System~~ ✅ COMPLETED
 
-**Target Release:** Q3 2026
+**Released:** March 13, 2026
 
-- **Template Repository Support**
-  - Load templates from GitHub
-  - Local template directories
-  - Community template registry
-  
-- **Template Marketplace**
-  - Browse available templates
-  - Rate and review templates
-  - Template versioning
-  
-- **Template Generator**
-  - Create your own templates
-  - Template scaffolding tool
-  - Share templates with team
+- ✅ **Auto-Update Functionality** - Automatic version detection and update
+- ✅ **User Preference Management** - Enable/disable auto-updates
+- ✅ **Cross-platform Config Storage** - ~/.dasyl/ or AppData/Local/dasyl
+- ✅ **Smart Update Frequency** - Daily notifications
+- ✅ **Windows Compatibility** - Better npm command detection
+
+### ~~Version 1.7.0 - Scaffolding Improvements~~ ✅ COMPLETED
+
+**Released:** May 12, 2026
+
+- ✅ **Laravel Scaffold Fixes** - Automatically install API routes
+- ✅ **Package Sanitization** - Better fallback for package name sanitization
+- ✅ **Improved Project Scaffolding** - General enhancements and bug fixes
+- ✅ **GitHub Actions Optimization** - Improved CI/CD workflows
 
 ---
 
-## 🎯 Priority Order (Most Impactful First)
+## 🚀 Version 1.8.0 - Enhanced Backend Options
+
 
 ### High Priority (Next 3 Releases)
 
