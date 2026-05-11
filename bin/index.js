@@ -58,6 +58,10 @@ async function spawnNpm(args, options = {}) {
   });
 }
 
+async function installLaravelApiScaffolding(targetDir, options = {}) {
+  return shell.exec('php artisan install:api', { cwd: targetDir, ...options });
+}
+
 // Create a wrapper for inquirer that handles cancellation properly
 async function safePrompt(questions) {
   try {
@@ -276,7 +280,15 @@ async function quickCreate(type, name) {
       const spinner = ora({ text: chalk.blue(`Creating Laravel project '${name}'...`), color: 'blue' }).start();
       const result = await shell.exec(`composer create-project --prefer-dist laravel/laravel "${targetDir}"`, { silent: true });
       if (result.code === 0) {
-        spinner.succeed(chalk.green(`Laravel project '${name}' created successfully!`));
+        spinner.text = chalk.blue(`Setting up Laravel API scaffolding for '${name}'...`);
+        const apiSetupResult = await installLaravelApiScaffolding(targetDir, { silent: true });
+        if (apiSetupResult.code === 0) {
+          spinner.succeed(chalk.green(`Laravel project '${name}' created successfully!`));
+        } else {
+          spinner.fail(chalk.red(`Laravel project '${name}' was created but API scaffolding setup failed.`));
+          console.log(chalk.yellow(`\n💡 Run ${chalk.cyan('php artisan install:api')} inside '${targetDir}' to complete setup.`));
+          process.exit(1);
+        }
       } else {
         spinner.fail(chalk.red(`Failed to create Laravel project`));
         process.exit(1);
@@ -490,7 +502,17 @@ async function main() {
         console.log(chalk.red('Error: Composer is not installed or not in PATH.'));
         process.exit(1);
       }
-      await shell.exec(`composer create-project --prefer-dist laravel/laravel "${targetDir}"`);
+      const laravelResult = await shell.exec(`composer create-project --prefer-dist laravel/laravel "${targetDir}"`);
+      if (laravelResult.code !== 0) {
+        process.exit(1);
+      }
+
+      const apiSetupResult = await installLaravelApiScaffolding(targetDir);
+      if (apiSetupResult.code !== 0) {
+        console.log(chalk.red(`\n❌ Laravel project was created but API scaffolding setup failed.`));
+        console.log(chalk.yellow(`💡 Run ${chalk.cyan('php artisan install:api')} inside '${targetDir}' to complete setup.`));
+        process.exit(1);
+      }
     }
   }
 }
