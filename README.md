@@ -62,6 +62,9 @@ dasyl react my-app
 # Create Node.js Express API (JavaScript)
 dasyl node my-api
 
+# Scaffold into current empty folder
+dasyl node ./
+
 # Create Node.js Express API (TypeScript)
 dasyl node-ts my-api
 
@@ -97,6 +100,7 @@ When creating a Node.js project, you get:
 - ✅ Authentication routes boilerplate
 - ✅ User model with validation
 - ✅ Organized folder structure
+- ✅ Structure choice: basic or modern modules
 - ✅ TypeScript support (optional)
 
 ### Post-Creation Options
@@ -129,9 +133,17 @@ dasyl
 # Follow prompts to:
 # - Choose project type
 # - Select language (JS/TS for Node.js)
+# - Select Node.js folder structure (basic/modern)
 # - Auto-install dependencies
 # - Initialize Git
 # - Open in VS Code
+```
+
+### Choose a Node.js Structure from CLI
+
+```bash
+dasyl node my-api --structure modern
+dasyl node-ts my-api --structure basic
 ```
 
 ## Project Structure (Node.js)

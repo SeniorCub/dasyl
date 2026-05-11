@@ -107,6 +107,7 @@ ${chalk.bold('Options:')}
   --skip-git           Skip Git initialization
   --skip-editor        Skip opening in VS Code
   --dir <path>         Create project in custom directory
+  --structure <type>   Node.js structure: basic or modern
   --enable-auto-update Enable automatic updates
   --disable-auto-update Disable automatic updates
 `;
@@ -139,6 +140,7 @@ ${chalk.bold('Options:')}
   --skip-git           Skip Git initialization
   --skip-editor        Skip opening in VS Code
   --dir <path>         Create project in custom directory
+  --structure <type>   Node.js structure: basic or modern
   --enable-auto-update Enable automatic updates
   --disable-auto-update Disable automatic updates
 
@@ -173,13 +175,37 @@ const cliFlags = {
   skipGit: process.argv.includes('--skip-git'),
   skipEditor: process.argv.includes('--skip-editor'),
   yes: process.argv.includes('-y') || process.argv.includes('--yes'),
-  customDir: null
+  customDir: null,
+  structure: null
 };
 
 // Parse custom directory
 const dirIndex = process.argv.indexOf('--dir');
 if (dirIndex !== -1 && process.argv[dirIndex + 1]) {
   cliFlags.customDir = process.argv[dirIndex + 1];
+}
+
+const structureIndex = process.argv.indexOf('--structure');
+if (structureIndex !== -1 && process.argv[structureIndex + 1]) {
+  const structure = process.argv[structureIndex + 1].toLowerCase();
+  if (['basic', 'modern'].includes(structure)) {
+    cliFlags.structure = structure;
+  } else {
+    console.log(chalk.red(`\n❌ Error: Invalid structure '${process.argv[structureIndex + 1]}'.`));
+    console.log(chalk.yellow('\n💡 Valid options:'));
+    console.log(chalk.cyan('  --structure basic'));
+    console.log(chalk.cyan('  --structure modern'));
+    process.exit(1);
+  }
+}
+
+function isDirectoryEmpty(targetDir) {
+  try {
+    const files = fs.readdirSync(targetDir).filter(file => !['.DS_Store', 'Thumbs.db'].includes(file));
+    return files.length === 0;
+  } catch (error) {
+    return false;
+  }
 }
 
 // SIGINT handler is set up after startup display
@@ -234,12 +260,33 @@ async function quickCreate(type, name) {
 
   const targetDir = cliFlags.customDir ? `${cliFlags.customDir}/${name}` : name;
   
-  if (shell.test('-d', targetDir)) {
+  const allowExistingEmpty = type === 'node' || type === 'node-ts';
+  if (shell.test('-d', targetDir) && (!allowExistingEmpty || !isDirectoryEmpty(targetDir))) {
     console.log(chalk.red(`\n❌ Error: Directory '${targetDir}' already exists.`));
     console.log(chalk.yellow('\n💡 Suggestions:'));
     console.log(chalk.cyan(`  1. Choose a different project name`));
     console.log(chalk.cyan(`  2. Delete the existing directory: rm -rf ${targetDir}`));
+    if (allowExistingEmpty) {
+      console.log(chalk.cyan(`  3. Use an empty directory to scaffold in place`));
+    }
     process.exit(1);
+  }
+
+  let nodeStructure = cliFlags.structure || 'basic';
+  if ((type === 'node' || type === 'node-ts') && !cliFlags.structure && !cliFlags.yes) {
+    const answer = await safePrompt([
+      {
+        type: 'list',
+        name: 'nodeStructure',
+        message: chalk.magenta('Choose your Node.js folder structure:'),
+        choices: [
+          { name: chalk.yellow('Basic (controllers, routes, models folders)'), value: 'basic' },
+          { name: chalk.blue('Modern (modules/<feature>/<feature>.controller files)'), value: 'modern' }
+        ],
+        default: 'basic'
+      }
+    ]);
+    nodeStructure = answer.nodeStructure;
   }
 
   switch (type) {
@@ -258,12 +305,12 @@ async function quickCreate(type, name) {
     
     case 'node':
       console.log(chalk.blue(`🚀 Creating Node.js Express API '${name}'...`));
-      await generateNodeProject(targetDir, false, cliFlags);
+      await generateNodeProject(targetDir, false, cliFlags, nodeStructure);
       break;
     
     case 'node-ts':
       console.log(chalk.blue(`🚀 Creating Node.js Express API with TypeScript '${name}'...`));
-      await generateNodeProject(targetDir, true, cliFlags);
+      await generateNodeProject(targetDir, true, cliFlags, nodeStructure);
       break;
     
     case 'laravel':
@@ -453,6 +500,7 @@ async function main() {
 
     if (backendType === 'node') {
       let language;
+      let structure = cliFlags.structure || 'basic';
       
       if (cliFlags.yes) {
         language = 'javascript';
@@ -482,8 +530,25 @@ async function main() {
         }
       }
       const useTypeScript = language === 'typescript';
+      if (!cliFlags.structure && !cliFlags.yes) {
+        const answer = await safePrompt([
+          {
+            type: 'list',
+            name: 'nodeStructure',
+            message: chalk.magenta('Choose your Node.js folder structure:'),
+            choices: [
+              { name: chalk.yellow('Basic (controllers, routes, models folders)'), value: 'basic' },
+              { name: chalk.blue('Modern (modules/<feature>/<feature>.controller files)'), value: 'modern' }
+            ],
+            default: 'basic'
+          }
+        ]);
+        structure = answer.nodeStructure;
+      } else if (cliFlags.yes && !cliFlags.structure) {
+        console.log(chalk.cyan('Using default Node.js structure: basic'));
+      }
       console.log(chalk.green(`\n🚀 Setting up Node.js API in '${projectName}'...`));
-      generateNodeProject(targetDir, useTypeScript, cliFlags);
+      generateNodeProject(targetDir, useTypeScript, cliFlags, structure);
     } else {
       console.log(chalk.red(`\n🚀 Setting up Laravel project '${projectName}'...`));
       if (!shell.which('composer')) {
