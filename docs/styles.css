@@ -114,6 +114,15 @@ code, pre {
   font-weight: 800;
   letter-spacing: -.02em;
   margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.section__title svg {
+  flex-shrink: 0;
+  color: var(--color-primary-lt);
 }
 
 .section__subtitle {
@@ -513,6 +522,16 @@ code, pre {
   color: var(--color-text-dim);
   text-align: center;
   line-height: 1.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.demo-hint svg {
+  flex-shrink: 0;
+  color: var(--color-primary-lt);
 }
 
 .demo-hint code {
@@ -554,8 +573,16 @@ code, pre {
 }
 
 .feature-card__icon {
-  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124,58,237,.12);
+  border-radius: var(--radius);
   margin-bottom: var(--space-4);
+  color: var(--color-primary-lt);
+  flex-shrink: 0;
 }
 
 .feature-card h3 {
@@ -751,6 +778,17 @@ code, pre {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+}
+
+.project-card__list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.project-card__list li svg {
+  flex-shrink: 0;
+  color: var(--color-primary-lt);
 }
 
 .project-card .code-block { margin-top: auto; }
