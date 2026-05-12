@@ -288,7 +288,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       addLine(`<span class="t-logo">${escHtml(line)}</span>`);
     }
     addLine(`<span class="t-dim">v${DASYL_VERSION}</span>`);
-    addLine(`<span class="t-accent">⚡ Fast, opinionated CLI for modern development</span>`);
+    addLine(`<span class="t-accent">Fast, opinionated CLI for modern development</span>`);
     addLine('&nbsp;');
 
     await wait(200);
@@ -306,7 +306,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     );
 
     await wait(120);
-    addLine('<span class="t-success">🎉 Project <span class="t-hl">my-app</span> created successfully!</span>');
+    addLine('<span class="t-success">&#10003; Project <span class="t-hl">my-app</span> created successfully!</span>');
     addLine('<span class="t-dim">cd my-app &amp;&amp; npm run dev</span>');
 
     await wait(500);
@@ -697,7 +697,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       body.insertBefore(div, getInputLine());
     }
     addOutputLine(`<span class="t-dim">v${DASYL_VERSION}</span>`);
-    addOutputLine(`<span class="t-accent">⚡ Fast, opinionated CLI for modern development</span>`);
+    addOutputLine(`<span class="t-accent">Fast, opinionated CLI for modern development</span>`);
     addOutputLine('&nbsp;');
 
     // 1. Project name
@@ -707,7 +707,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     );
 
     if (!projectName) {
-      addOutputLine(`<span class="t-error">❌ Project name cannot be empty.</span>`);
+      addOutputLine(`<span class="t-error">Error: Project name cannot be empty.</span>`);
       return;
     }
 
@@ -724,7 +724,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
     if (stack === 'frontend') {
       type = 'react'; // Demo simplification: real CLI uses Vite's own interactive prompt for framework selection
-      addOutputLine(`<span class="t-dim">🎨 Setting up Frontend project '${escHtml(projectName)}'...</span>`);
+      addOutputLine(`<span class="t-dim">Setting up Frontend project '${escHtml(projectName)}'...</span>`);
     } else {
       // 3. Backend framework
       const backend = await promptList(
@@ -745,10 +745,10 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           ]
         );
         type = lang === 'typescript' ? 'node-ts' : 'node';
-        addOutputLine(`<span class="t-dim">🚀 Setting up Node.js API in '${escHtml(projectName)}'...</span>`);
+        addOutputLine(`<span class="t-dim">Setting up Node.js API in '${escHtml(projectName)}'...</span>`);
       } else {
         type = 'laravel';
-        addOutputLine(`<span class="t-dim">🚀 Setting up Laravel project '${escHtml(projectName)}'...</span>`);
+        addOutputLine(`<span class="t-dim">Setting up Laravel project '${escHtml(projectName)}'...</span>`);
       }
     }
 
@@ -768,7 +768,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
   async function simulateCreate(type, name) {
     if (!name) {
-      addOutputLine(`<span class="t-error">❌ Please provide a project name.</span>`);
+      addOutputLine(`<span class="t-error">Error: Please provide a project name.</span>`);
       addOutputLine(
         `<span class="t-dim">Usage:   <span class="t-cmd">dasyl ${escHtml(type)} &lt;project-name&gt;</span></span>`
       );
@@ -797,7 +797,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
     await wait(120);
     addOutputLine(
-      `<span class="t-success">🎉 Project <span class="t-hl">${escHtml(name)}</span> created successfully!</span>`
+      `<span class="t-success">&#10003; Project <span class="t-hl">${escHtml(name)}</span> created successfully!</span>`
     );
 
     const nextCmd = type === 'laravel'
@@ -805,7 +805,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       : `cd ${escHtml(name)} &amp;&amp; npm run dev`;
     addOutputLine(`<span class="t-dim">${nextCmd}</span>`);
     addOutputLine(
-      `<span class="t-dim t-note">⚡ This is a simulation — install dasyl globally to scaffold real projects.</span>`
+      `<span class="t-dim t-note">Note: This is a simulation — install dasyl globally to scaffold real projects.</span>`
     );
   }
 
