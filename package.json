@@ -1,6 +1,6 @@
 {
   "name": "@seniorcub/dasyl",
-  "version": "1.6.5",
+  "version": "1.7.0",
   "description": "Dasyl is a fast, opinionated CLI for creating, configuring, and releasing modern development projects in seconds.",
   "main": "bin/index.js",
   "type": "module",
