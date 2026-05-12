@@ -247,8 +247,8 @@ const handleCancel = () => {
 
 process.on('SIGINT', handleCancel);
 
-// Check for updates (async, non-blocking)
-checkForUpdates();
+// Check for updates
+await checkForUpdates();
 
 // Handle command shortcuts
 const args = process.argv.slice(2).filter(arg => !arg.startsWith('--') && arg !== '-y');
