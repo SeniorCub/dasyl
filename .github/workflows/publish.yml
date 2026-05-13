@@ -37,7 +37,7 @@ jobs:
             exit 1
           fi
           
-          echo "✅ Version verified: v$PACKAGE_VERSION"
+          echo "Version verified: v$PACKAGE_VERSION"
           echo "version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
       
       - name: Publish to NPM

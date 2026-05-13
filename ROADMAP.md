@@ -1,13 +1,13 @@
 # Dasyl Roadmap
 
 **Last Updated:** May 13, 2026  
-**Current Version:** 1.8.0
+**Current Version:** 1.8.1
 
 This document outlines the planned features and enhancements for Dasyl CLI. The roadmap is subject to change based on community feedback and priorities.
 
 ---
 
-## 🚀 Version 1.6.0 - Enhanced Backend Options
+## Version 1.6.0 - Enhanced Backend Options
 
 **Target Release:** Q2 2026
 
@@ -39,7 +39,7 @@ This document outlines the planned features and enhancements for Dasyl CLI. The 
 
 ---
 
-## 🎨 Version 1.7.0 - Frontend Enhancements
+## Version 1.7.0 - Frontend Enhancements
 
 **Target Release:** Q3 2026
 
@@ -86,27 +86,27 @@ This document outlines the planned features and enhancements for Dasyl CLI. The 
 
 ---
 
-## 🧪 Version 1.8.0 - Code Quality & Testing (COMPLETED)
+## Version 1.8.0 - Code Quality & Testing (COMPLETED)
 
 **Released:** May 13, 2026
 
 ### Laravel Integration
-- ✅ **Laravel Scaffolding Fixes** - Fixed API scaffolding setup using `php artisan install:api`.
-- ✅ **Static Analysis** - Integrated **PHPStan** and **Larastan** into the Laravel generator.
-- ✅ **Code Styling** - Integrated **Laravel Pint** for automatic code formatting.
-- ✅ **Custom Command** - Added `php artisan run:test` command to run analysis and styling in one go.
+- [v] **Laravel Scaffolding Fixes** - Fixed API scaffolding setup using `php artisan install:api`.
+- [v] **Static Analysis** - Integrated **PHPStan** and **Larastan** into the Laravel generator.
+- [v] **Code Styling** - Integrated **Laravel Pint** for automatic code formatting.
+- [v] **Custom Command** - Added `php artisan run:test` command to run analysis and styling in one go.
 
 ### Node.js Integration
-- ✅ **Linting & Formatting** - Integrated **ESLint** and **Prettier** into both JavaScript and TypeScript Node.js generators.
-- ✅ **Utility Scripts** - Added `npm run lint`, `npm run lint:fix`, and `npm run format` scripts to `package.json`.
+- [v] **Linting & Formatting** - Integrated **ESLint** and **Prettier** into both JavaScript and TypeScript Node.js generators.
+- [v] **Utility Scripts** - Added `npm run lint`, `npm run lint:fix`, and `npm run format` scripts to `package.json`.
 
 ### General Improvements
-- ✅ **Async Flow Fixes** - Fixed missing `await` statements in the main CLI entry point.
-- ✅ **Website Overhaul** - Updated the project website with a new theme (Primary: #ff2200) and documentation for new features.
+- [v] **Async Flow Fixes** - Fixed missing `await` statements in the main CLI entry point.
+- [v] **Website Overhaul** - Updated the project website with a new theme (Primary: #ff2200) and documentation for new features.
 
 ---
 
-## 🗄️ Version 1.9.0 - Database Templates
+## Version 1.9.0 - Database Templates
 
 **Target Release:** Q4 2026
 
@@ -153,7 +153,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 🔐 Version 1.10.0 - Authentication Boilerplate
+## Version 1.10.0 - Authentication Boilerplate
 
 **Target Release:** Q1 2027
 
@@ -193,7 +193,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 📱 Version 2.0.0 - Mobile & Desktop
+## Version 2.0.0 - Mobile & Desktop
 
 **Target Release:** Q2 2027
 
@@ -226,7 +226,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 🐳 Version 2.1.0 - DevOps Ready
+## Version 2.1.0 - DevOps Ready
 
 **Target Release:** Q3 2027
 
@@ -262,7 +262,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 🧪 Version 2.2.0 - Testing Setup
+## Version 2.2.0 - Testing Setup
 
 **Target Release:** Q4 2027
 
@@ -299,7 +299,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 📊 Version 2.3.0 - Monitoring & Logging
+## Version 2.3.0 - Monitoring & Logging
 
 **Target Release:** Q1 2028
 
@@ -338,7 +338,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 🔄 Version 2.4.0 - Full Stack Templates
+## Version 2.4.0 - Full Stack Templates
 
 **Target Release:** Q2 2028
 
@@ -377,60 +377,60 @@ Add interactive database choice with full configuration:
 
 ---
 
-## ⚡ Quick Wins (Minor Versions)
+## Quick Wins (Minor Versions)
 
-### ~~Version 1.5.2 - Command Line Flags~~ ✅ COMPLETED
-
-**Released:** March 13, 2026
-
-- ✅ `--skip-install` - Skip dependency installation
-- ✅ `--skip-git` - Skip Git initialization
-- ✅ `--skip-editor` - Skip opening in VS Code
-- ✅ `--yes` or `-y` - Accept all defaults
-- ✅ `--dir <path>` - Custom directory
-
-### ~~Version 1.5.3 - Developer Experience~~ ✅ COMPLETED
+### Version 1.5.2 - Command Line Flags - COMPLETED
 
 **Released:** March 13, 2026
 
-- ✅ **Update Checker** - Notify when new version available
-- ✅ **Better Validation** - Enhanced project name validation
-- ✅ **Improved Error Messages** - More helpful error descriptions
-- ✅ **Progress Indicators** - Better visual feedback with ora spinners
+- [v] `--skip-install` - Skip dependency installation
+- [v] `--skip-git` - Skip Git initialization
+- [v] `--skip-editor` - Skip opening in VS Code
+- [v] `--yes` or `-y` - Accept all defaults
+- [v] `--dir <path>` - Custom directory
 
-### ~~Version 1.5.4 - Code Quality Tools~~ ✅ COMPLETED
-
-**Released:** March 13, 2026
-
-- ✅ **.editorconfig** generation
-- ✅ **.prettierrc** setup with auto-format
-- ✅ **.eslintrc** configuration
-- ✅ **Husky** pre-commit hooks
-- ✅ **lint-staged** integration
-- ✅ **VS Code workspace settings**
-
-### ~~Version 1.6.0 - Auto-Update System~~ ✅ COMPLETED
+### Version 1.5.3 - Developer Experience - COMPLETED
 
 **Released:** March 13, 2026
 
-- ✅ **Auto-Update Functionality** - Automatic version detection and update
-- ✅ **User Preference Management** - Enable/disable auto-updates
-- ✅ **Cross-platform Config Storage** - ~/.dasyl/ or AppData/Local/dasyl
-- ✅ **Smart Update Frequency** - Daily notifications
-- ✅ **Windows Compatibility** - Better npm command detection
+- [v] **Update Checker** - Notify when new version available
+- [v] **Better Validation** - Enhanced project name validation
+- [v] **Improved Error Messages** - More helpful error descriptions
+- [v] **Progress Indicators** - Better visual feedback with ora spinners
 
-### ~~Version 1.7.0 - Scaffolding Improvements~~ ✅ COMPLETED
+### Version 1.5.4 - Code Quality Tools - COMPLETED
+
+**Released:** March 13, 2026
+
+- [v] **.editorconfig** generation
+- [v] **.prettierrc** setup with auto-format
+- [v] **.eslintrc** configuration
+- [v] **Husky** pre-commit hooks
+- [v] **lint-staged** integration
+- [v] **VS Code workspace settings**
+
+### Version 1.6.0 - Auto-Update System - COMPLETED
+
+**Released:** March 13, 2026
+
+- [v] **Auto-Update Functionality** - Automatic version detection and update
+- [v] **User Preference Management** - Enable/disable auto-updates
+- [v] **Cross-platform Config Storage** - ~/.dasyl/ or AppData/Local/dasyl
+- [v] **Smart Update Frequency** - Daily notifications
+- [v] **Windows Compatibility** - Better npm command detection
+
+### Version 1.7.0 - Scaffolding Improvements - COMPLETED
 
 **Released:** May 12, 2026
 
-- ✅ **Laravel Scaffold Fixes** - Automatically install API routes
-- ✅ **Package Sanitization** - Better fallback for package name sanitization
-- ✅ **Improved Project Scaffolding** - General enhancements and bug fixes
-- ✅ **GitHub Actions Optimization** - Improved CI/CD workflows
+- [v] **Laravel Scaffold Fixes** - Automatically install API routes
+- [v] **Package Sanitization** - Better fallback for package name sanitization
+- [v] **Improved Project Scaffolding** - General enhancements and bug fixes
+- [v] **GitHub Actions Optimization** - Improved CI/CD workflows
 
 ---
 
-## 🚀 Version 1.8.0 - Enhanced Backend Options
+## Version 1.8.0 - Enhanced Backend Options
 
 
 ### High Priority (Next 3 Releases)
@@ -473,7 +473,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 💡 Additional Ideas (Future Consideration)
+## Suggestion Box
 
 ### Community Features
 
@@ -543,7 +543,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 📝 Contributing to the Roadmap
+## Contributing to the Roadmap
 
 We welcome community input! Here's how you can contribute:
 
@@ -557,11 +557,11 @@ We welcome community input! Here's how you can contribute:
 1. Check if feature exists in roadmap
 2. Open GitHub issue with label `feature-request`
 3. Describe use case and benefits
-4. Community can vote with 👍 reactions
+4. Community can vote with +1 reactions
 
 ---
 
-## 🔗 Links
+## Links
 
 - **GitHub Repository:** [https://github.com/SeniorCub/dasyl](https://github.com/SeniorCub/dasyl)
 - **NPM Package:** [https://www.npmjs.com/package/dasyl](https://www.npmjs.com/package/dasyl)
@@ -570,7 +570,7 @@ We welcome community input! Here's how you can contribute:
 
 ---
 
-## 📊 Release Cycle
+## Release Cycle
 
 - **Major Versions** (X.0.0) - Every 6-12 months, breaking changes
 - **Minor Versions** (1.X.0) - Every 2-3 months, new features
@@ -578,44 +578,44 @@ We welcome community input! Here's how you can contribute:
 
 ---
 
-## ✅ Completed Features
+## Completed Features
 
 ### Version 1.5.3 (March 2026)
-- ✅ Update checker - Notifies when new version available
-- ✅ Enhanced project name validation with detailed feedback
-- ✅ Improved error messages with helpful suggestions
-- ✅ Better progress indicators with ora spinners
-- ✅ Validation for reserved names and npm limitations
+- [v] Update checker - Notifies when new version available
+- [v] Enhanced project name validation with detailed feedback
+- [v] Improved error messages with helpful suggestions
+- [v] Better progress indicators with ora spinners
+- [v] Validation for reserved names and npm limitations
 
 ### Version 1.5.2 (March 2026)
-- ✅ Command line flags support
-- ✅ `--skip-install` flag to skip dependency installation
-- ✅ `--skip-git` flag to skip Git initialization
-- ✅ `--skip-editor` flag to skip opening in VS Code
-- ✅ `-y/--yes` flag to accept all defaults
-- ✅ `--dir <path>` flag for custom directory
+- [v] Command line flags support
+- [v] `--skip-install` flag to skip dependency installation
+- [v] `--skip-git` flag to skip Git initialization
+- [v] `--skip-editor` flag to skip opening in VS Code
+- [v] `-y/--yes` flag to accept all defaults
+- [v] `--dir <path>` flag for custom directory
 
 ### Version 1.5.1 (March 2026)
-- ✅ Windows compatibility fix with try-catch blocks
+- [v] Windows compatibility fix with try-catch blocks
 
 ### Version 1.5.0 (March 2026)
-- ✅ Colorful UI with chalk
-- ✅ Operation cancellation handling
-- ✅ Enhanced user experience
+- [v] Colorful UI with chalk
+- [v] Operation cancellation handling
+- [v] Enhanced user experience
 
 ### Version 1.4.0 (February 2026)
-- ✅ Node.js Express boilerplate
-- ✅ TypeScript support
-- ✅ Laravel integration
-- ✅ React/Vue/Svelte via Vite
+- [v] Node.js Express boilerplate
+- [v] TypeScript support
+- [v] Laravel integration
+- [v] React/Vue/Svelte via Vite
 
 ### Version 1.0.0 (January 2026)
-- ✅ Interactive CLI
-- ✅ Quick shortcuts
-- ✅ Git integration
-- ✅ VS Code integration
-- ✅ Auto dependency installation
+- [v] Interactive CLI
+- [v] Quick shortcuts
+- [v] Git integration
+- [v] VS Code integration
+- [v] Auto dependency installation
 
 ---
 
-**Note:** This roadmap is a living document and will be updated as priorities shift and new ideas emerge. Star ⭐ the repository to stay updated!
+**Note:** This roadmap is a living document and will be updated as priorities shift and new ideas emerge. Star the repository to stay updated!

@@ -2,7 +2,7 @@
 
 This guide will help you set up automated NPM publishing using GitHub Actions.
 
-## 📋 Prerequisites
+## Prerequisites
 
 1. **NPM Account** - [Sign up at npmjs.com](https://www.npmjs.com/signup)
 2. **GitHub Repository** - Your dasyl repository
@@ -10,13 +10,13 @@ This guide will help you set up automated NPM publishing using GitHub Actions.
 
 ---
 
-## 🔑 Step 1: Generate NPM Access Token
+## Step 1: Generate NPM Access Token
 
 ### Option A: Classic Token (Recommended for now)
 
 1. Go to [npmjs.com](https://www.npmjs.com) and log in
-2. Click your profile icon → **Access Tokens**
-3. Click **Generate New Token** → **Classic Token**
+2. Click your profile icon -> **Access Tokens**
+3. Click **Generate New Token** -> **Classic Token**
 4. Select **Automation** type
 5. Copy the token (starts with `npm_...`)
 6. **Save it securely** - you won't see it again!
@@ -24,8 +24,8 @@ This guide will help you set up automated NPM publishing using GitHub Actions.
 ### Option B: Granular Token (Modern approach)
 
 1. Go to [npmjs.com](https://www.npmjs.com) and log in
-2. Click your profile icon → **Access Tokens**
-3. Click **Generate New Token** → **Granular Access Token**
+2. Click your profile icon -> **Access Tokens**
+3. Click **Generate New Token** -> **Granular Access Token**
 4. Configure:
    - **Name:** `dasyl-github-actions`
    - **Expiration:** Choose duration (or No expiration)
@@ -36,10 +36,10 @@ This guide will help you set up automated NPM publishing using GitHub Actions.
 
 ---
 
-## 🔐 Step 2: Add Token to GitHub Secrets
+## Step 2: Add Token to GitHub Secrets
 
 1. Go to your GitHub repository
-2. Click **Settings** → **Secrets and variables** → **Actions**
+2. Click **Settings** -> **Secrets and variables** -> **Actions**
 3. Click **New repository secret**
 4. Add secret:
    - **Name:** `NPM_TOKEN`
@@ -48,7 +48,7 @@ This guide will help you set up automated NPM publishing using GitHub Actions.
 
 ---
 
-## 📝 Step 3: Update Package.json (if needed)
+## Step 3: Update Package.json (if needed)
 
 Make sure your `package.json` has:
 
@@ -64,7 +64,7 @@ Make sure your `package.json` has:
 
 ---
 
-## 🚀 How to Use the CI/CD Workflows
+## How to Use the CI/CD Workflows
 
 ### Method 1: Manual Workflow (Recommended)
 
@@ -74,17 +74,17 @@ This is the **easiest and safest** way:
 2. Select **Version Bump and Release** workflow
 3. Click **Run workflow**
 4. Choose version type:
-   - **patch** (1.5.3 → 1.5.4) - Bug fixes
-   - **minor** (1.5.3 → 1.6.0) - New features
-   - **major** (1.5.3 → 2.0.0) - Breaking changes
+   - **patch** (1.5.3 -> 1.5.4) - Bug fixes
+   - **minor** (1.5.3 -> 1.6.0) - New features
+   - **major** (1.5.3 -> 2.0.0) - Breaking changes
 5. Click **Run workflow**
 
 **What happens:**
-- ✅ Bumps version in package.json
-- ✅ Creates git commit
-- ✅ Creates and pushes git tag (e.g., v1.5.4)
-- ✅ Creates GitHub Release
-- ✅ Triggers NPM publish automatically
+- [v] Bumps version in package.json
+- [v] Creates git commit
+- [v] Creates and pushes git tag (e.g., v1.5.4)
+- [v] Creates GitHub Release
+- [v] Triggers NPM publish automatically
 
 ### Method 2: Manual Tag Creation
 
@@ -112,13 +112,13 @@ This is the **easiest and safest** way:
 ### Method 3: Using npm version command
 
 ```bash
-# Patch release (1.5.3 → 1.5.4)
+# Patch release (1.5.3 -> 1.5.4)
 npm version patch -m "chore: Bump version to %s"
 
-# Minor release (1.5.3 → 1.6.0)
+# Minor release (1.5.3 -> 1.6.0)
 npm version minor -m "chore: Bump version to %s"
 
-# Major release (1.5.3 → 2.0.0)
+# Major release (1.5.3 -> 2.0.0)
 npm version major -m "chore: Bump version to %s"
 
 # Push changes and tags
@@ -127,13 +127,13 @@ git push origin main --follow-tags
 
 ---
 
-## 🌐 Deploying to Go54 cPanel
+## Deploying to Go54 cPanel
 
 The **Deploy to Go54 cPanel** workflow (`deploy-cpanel.yml`) automatically deploys the website to **[dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)** via FTP every time you push to the `main` branch. It can also be triggered manually from the Actions tab.
 
 ### Required GitHub Secrets
 
-Add the following secrets under **Settings → Secrets and variables → Actions**:
+Add the following secrets under **Settings -> Secrets and variables -> Actions**:
 
 | Secret | Description | Example |
 |---|---|---|
@@ -145,7 +145,7 @@ Add the following secrets under **Settings → Secrets and variables → Actions
 ### Finding Your FTP Credentials on Go54
 
 1. Log in to your **Go54 cPanel** account
-2. Navigate to **Files → FTP Accounts**
+2. Navigate to **Files -> FTP Accounts**
 3. Use the main cPanel username and password, or create a dedicated FTP account
 4. The FTP hostname is typically `ftp.yourdomain.com` or the server hostname shown in cPanel
 
@@ -156,53 +156,53 @@ Only the contents of the `docs/` folder are deployed to the server root (`FTP_SE
 
 ---
 
-## 📊 Workflow Overview
+## Workflow Overview
 
 ### 1. **CI Workflow** (`ci.yml`)
 
 **Triggers:** Push/PR to main or develop branch
 
 **What it does:**
-- ✅ Tests on Ubuntu, Windows, macOS
-- ✅ Tests on Node.js 18, 20, 21
-- ✅ Verifies package integrity
-- ✅ Checks syntax
-- ✅ Validates package.json
-- ✅ Checks required files
+- [v] Tests on Ubuntu, Windows, macOS
+- [v] Tests on Node.js 18, 20, 21
+- [v] Verifies package integrity
+- [v] Checks syntax
+- [v] Validates package.json
+- [v] Checks required files
 
 ### 2. **Publish Workflow** (`publish.yml`)
 
 **Triggers:** Push of version tag (e.g., `v1.5.4`)
 
 **What it does:**
-- ✅ Verifies tag matches package.json version
-- ✅ Installs dependencies
-- ✅ Publishes to NPM with provenance
-- ✅ Creates GitHub Release
+- [v] Verifies tag matches package.json version
+- [v] Installs dependencies
+- [v] Publishes to NPM with provenance
+- [v] Creates GitHub Release
 
 ### 3. **Deploy to Go54 cPanel Workflow** (`deploy-cpanel.yml`)
 
 **Triggers:** Push to `main` branch, or manual dispatch
 
 **What it does:**
-- ✅ Deploys `docs/` folder contents to Go54 cPanel via FTP
-- ✅ Website served at [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
-- ✅ Excludes `.git` metadata
+- [v] Deploys `docs/` folder contents to Go54 cPanel via FTP
+- [v] Website served at [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
+- [v] Excludes `.git` metadata
 
 ### 4. **Version Bump Workflow** (`version-bump.yml`)
 
 **Triggers:** Manual dispatch from Actions tab
 
 **What it does:**
-- ✅ Bumps version in package.json
-- ✅ Commits and pushes changes
-- ✅ Creates and pushes version tag
-- ✅ Creates GitHub Release
-- ✅ Triggers NPM publish (via tag)
+- [v] Bumps version in package.json
+- [v] Commits and pushes changes
+- [v] Creates and pushes version tag
+- [v] Creates GitHub Release
+- [v] Triggers NPM publish (via tag)
 
 ---
 
-## 🎯 Recommended Publishing Flow
+## Recommended Publishing Flow
 
 ### For Bug Fixes (Patch):
 ```bash
@@ -243,7 +243,7 @@ git push
 
 ---
 
-## 🔍 Verify Everything Works
+## Verify Everything Works
 
 ### Test 1: Check CI
 ```bash
@@ -253,14 +253,14 @@ git add README.md
 git commit -m "test: CI workflow"
 git push
 ```
-✅ Check Actions tab - CI should run
+[v] Check Actions tab - CI should run
 
 ### Test 2: Dry Run Publish
 ```bash
 # Test local npm publish
 npm pack --dry-run
 ```
-✅ Should show what would be published
+[v] Should show what would be published
 
 ### Test 3: Create a Test Release
 ```bash
@@ -268,11 +268,11 @@ npm pack --dry-run
 npm version prerelease --preid=beta -m "chore: Test release v%s"
 git push origin main --follow-tags
 ```
-✅ Check if workflow publishes to NPM
+[v] Check if workflow publishes to NPM
 
 ---
 
-## 🛠️ Troubleshooting
+## Troubleshooting
 
 ### Issue: "npm publish" fails with 403
 
@@ -304,7 +304,7 @@ git push origin main --follow-tags
 
 ---
 
-## 📚 Additional Resources
+## Additional Resources
 
 - [NPM Publishing Guide](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
@@ -313,7 +313,7 @@ git push origin main --follow-tags
 
 ---
 
-## 🎉 You're All Set!
+## You're All Set!
 
 Your CI/CD pipeline is now configured. Every time you push a version tag, your package will automatically be published to NPM!
 
@@ -321,7 +321,7 @@ Your CI/CD pipeline is now configured. Every time you push a version tag, your p
 
 ```bash
 # Recommended: Use GitHub Actions UI
-1. Go to Actions → Version Bump and Release
+1. Go to Actions -> Version Bump and Release
 2. Select version type (patch/minor/major)
 3. Click Run workflow
 

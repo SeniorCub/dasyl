@@ -67,7 +67,7 @@ async function safePrompt(questions) {
     // Check if it's a cancellation error
     if (error.isTtyError || error.name === 'ExitPromptError' || 
         error.message?.includes('User force closed')) {
-      console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+      console.log(chalk.yellow('\n(!) Operation cancelled by user'));
       process.exit(0);
     }
     throw error;
@@ -75,12 +75,14 @@ async function safePrompt(questions) {
 }
 
 const logo = `
- ██████╗  █████╗ ███████╗██╗   ██╗██╗     
- ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     
- ██║  ██║███████║███████╗ ╚████╔╝ ██║     
- ██║  ██║██╔══██║╚════██║  ╚██╔╝  ██║     
- ██████╔╝██║  ██║███████║   ██║   ███████╗
- ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝
+     _                 _ 
+    | |               | |
+  __| | __ _ ___ _   _| |
+ / _' |/ _' / __| | | | |
+| (_| | (_| \__ \ |_| | |
+ \__,_|\__,_|___/\__, |_|
+                  __/ |  
+                 |___/   
 `;
 
 const helpMessage = `
@@ -192,8 +194,8 @@ if (structureIndex !== -1 && process.argv[structureIndex + 1]) {
   if (['basic', 'modern'].includes(structure)) {
     cliFlags.structure = structure;
   } else {
-    console.log(chalk.red(`\n❌ Error: Invalid structure '${process.argv[structureIndex + 1]}'.`));
-    console.log(chalk.yellow('\n💡 Valid options:'));
+    console.log(chalk.red(`\n[x] Error: Invalid structure '${process.argv[structureIndex + 1]}'.`));
+    console.log(chalk.yellow('\n[!] Valid options:'));
     console.log(chalk.cyan('  --structure basic'));
     console.log(chalk.cyan('  --structure modern'));
     process.exit(1);
@@ -214,7 +216,7 @@ function isDirectoryEmpty(targetDir) {
 // Handle uncaught exceptions gracefully  
 process.on('uncaughtException', (error) => {
   if (error.code === 'ERR_USE_AFTER_CLOSE' || error.message?.includes('readline')) {
-    console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+    console.log(chalk.yellow('\n(!) Operation cancelled by user'));
     process.exit(0);
   }
   throw error;
@@ -223,7 +225,7 @@ process.on('uncaughtException', (error) => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason) => {
   if (reason && (reason.message === 'Prompt was canceled' || reason.name === 'ExitPromptError')) {
-    console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+    console.log(chalk.yellow('\n(!) Operation cancelled by user'));
     process.exit(0);
   }
 });
@@ -233,11 +235,11 @@ console.log(chalk.blue.bold(logo));
 // Get and display version
 const packageJson = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
 console.log(chalk.gray(`v${packageJson.version}`));
-console.log(chalk.cyan.bold('⚡ Fast, opinionated CLI for modern development\n'));
+console.log(chalk.cyan.bold('Fast, opinionated CLI for modern development\n'));
 
 // Set up cancellation handling immediately after startup display
 const handleCancel = () => {
-  console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+  console.log(chalk.yellow('\n(!) Operation cancelled by user'));
   process.exit(0);
 };
 
@@ -253,8 +255,8 @@ const projectName = args[1];
 
 async function quickCreate(type, name) {
   if (!name) {
-    console.log(chalk.red('\n❌ Error: Please provide a project name.'));
-    console.log(chalk.yellow(`\n💡 Usage: ${chalk.cyan(`dasyl ${type} <project-name>`)}`));
+    console.log(chalk.red('\n[x] Error: Please provide a project name.'));
+    console.log(chalk.yellow(`\n[!] Usage: ${chalk.cyan(`dasyl ${type} <project-name>`)}`));
     console.log(chalk.gray(`\nExample: ${chalk.cyan(`dasyl ${type} my-awesome-app`)}`));
     process.exit(1);
   }
@@ -263,8 +265,8 @@ async function quickCreate(type, name) {
   
   const allowExistingEmpty = type === 'node' || type === 'node-ts';
   if (shell.test('-d', targetDir) && (!allowExistingEmpty || !isDirectoryEmpty(targetDir))) {
-    console.log(chalk.red(`\n❌ Error: Directory '${targetDir}' already exists.`));
-    console.log(chalk.yellow('\n💡 Suggestions:'));
+    console.log(chalk.red(`\n[x] Error: Directory '${targetDir}' already exists.`));
+    console.log(chalk.yellow('\n[!] Suggestions:'));
     console.log(chalk.cyan(`  1. Choose a different project name`));
     console.log(chalk.cyan(`  2. Delete the existing directory: rm -rf ${targetDir}`));
     if (allowExistingEmpty) {
@@ -294,30 +296,30 @@ async function quickCreate(type, name) {
     case 'react':
     case 'vue':
     case 'svelte':
-      console.log(chalk.blue(`🚀 Creating ${type.charAt(0).toUpperCase() + type.slice(1)} app '${name}'...`));
+      console.log(chalk.blue(`Creating ${type.charAt(0).toUpperCase() + type.slice(1)} app '${name}'...`));
       try {
         await spawnNpm(['init', 'vite@latest', '-y', '--', targetDir]);
       } catch (error) {
-        console.log(chalk.red(`\n❌ Error: ${error.message}`));
-        console.log(chalk.yellow('\n💡 Make sure Node.js and npm are installed and in your PATH.'));
+        console.log(chalk.red(`\n[x] Error: ${error.message}`));
+        console.log(chalk.yellow('\n[!] Make sure Node.js and npm are installed and in your PATH.'));
         process.exit(1);
       }
       break;
     
     case 'node':
-      console.log(chalk.blue(`🚀 Creating Node.js Express API '${name}'...`));
+      console.log(chalk.blue(`Creating Node.js Express API '${name}'...`));
       await generateNodeProject(targetDir, false, cliFlags, nodeStructure);
       break;
     
     case 'node-ts':
-      console.log(chalk.blue(`🚀 Creating Node.js Express API with TypeScript '${name}'...`));
+      console.log(chalk.blue(`Creating Node.js Express API with TypeScript '${name}'...`));
       await generateNodeProject(targetDir, true, cliFlags, nodeStructure);
       break;
     
     case 'laravel':
       if (!shell.which('composer')) {
-        console.log(chalk.red('\n❌ Error: Composer is not installed or not in PATH.'));
-        console.log(chalk.yellow('\n💡 Install Composer:'));
+        console.log(chalk.red('\n[x] Error: Composer is not installed or not in PATH.'));
+        console.log(chalk.yellow('\n[!] Install Composer:'));
         console.log(chalk.cyan('  Visit: https://getcomposer.org/download/'));
         process.exit(1);
       }
@@ -360,32 +362,32 @@ async function main() {
             
             // Check if empty
             if (!trimmed) {
-              return chalk.red('❌ Project name cannot be empty');
+              return chalk.red('[x] Project name cannot be empty');
             }
             
             // Check length
             if (trimmed.length < 2) {
-              return chalk.red('❌ Project name must be at least 2 characters long');
+              return chalk.red('[x] Project name must be at least 2 characters long');
             }
             
             if (trimmed.length > 214) {
-              return chalk.red('❌ Project name must be less than 214 characters (npm limitation)');
+              return chalk.red('[x] Project name must be less than 214 characters (npm limitation)');
             }
             
             // Check for invalid characters
             if (!/^([a-z0-9\-\_.])+$/.test(trimmed)) {
-              return chalk.red('❌ Project name may only include lowercase letters, numbers, dashes, underscores, and dots');
+              return chalk.red('[x] Project name may only include lowercase letters, numbers, dashes, underscores, and dots');
             }
             
             // Check if starts with dot or underscore
             if (trimmed.startsWith('.') || trimmed.startsWith('_')) {
-              return chalk.yellow('⚠️  Warning: Project names starting with . or _ are not recommended');
+              return chalk.yellow('[!] Warning: Project names starting with . or _ are not recommended');
             }
             
             // Check for reserved names
             const reserved = ['node_modules', 'favicon.ico'];
             if (reserved.includes(trimmed.toLowerCase())) {
-              return chalk.red(`❌ "${trimmed}" is a reserved name and cannot be used`);
+              return chalk.red(`[x] "${trimmed}" is a reserved name and cannot be used`);
             }
             
             return true;
@@ -396,9 +398,9 @@ async function main() {
     } catch (error) {
       // Handle different types of cancellation
       if (error.isTtyError || error.name === 'ExitPromptError') {
-        console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+        console.log(chalk.yellow('\n(!) Operation cancelled by user'));
       } else {
-        console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+        console.log(chalk.yellow('\n(!) Operation cancelled'));
       }
       process.exit(0);
     }
@@ -407,8 +409,8 @@ async function main() {
   const targetDir = cliFlags.customDir ? `${cliFlags.customDir}/${projectName}` : projectName;
 
   if (shell.test('-d', targetDir)) {
-    console.log(chalk.red(`\n❌ Error: Directory '${targetDir}' already exists.`));
-    console.log(chalk.yellow('\n💡 Suggestions:'));
+    console.log(chalk.red(`\n[x] Error: Directory '${targetDir}' already exists.`));
+    console.log(chalk.yellow('\n[!] Suggestions:'));
     console.log(chalk.cyan(`  1. Choose a different project name`));
     console.log(chalk.cyan(`  2. Delete the existing directory: rm -rf ${targetDir}`));
     console.log(chalk.cyan(`  3. Use a different directory: dasyl --dir /path/to/directory`));
@@ -438,22 +440,22 @@ async function main() {
     } catch (error) {
       // Handle different types of cancellation
       if (error.isTtyError || error.name === 'ExitPromptError') {
-        console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+        console.log(chalk.yellow('\n(!) Operation cancelled by user'));
       } else {
-        console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+        console.log(chalk.yellow('\n(!) Operation cancelled'));
       }
       process.exit(0);
     }
   }
 
   if (stackChoice === 'frontend') {
-    console.log(chalk.blue(`\n🎨 Setting up Frontend project '${projectName}'...`));
+    console.log(chalk.blue(`\nSetting up Frontend project '${projectName}'...`));
     // Run npm create vite
     try {
       await spawnNpm(['init', 'vite@latest', '-y', '--', targetDir]);
     } catch (error) {
-      console.log(chalk.red(`\n❌ Error: ${error.message}`));
-      console.log(chalk.yellow('\n💡 Troubleshooting:'));
+      console.log(chalk.red(`\n[x] Error: ${error.message}`));
+      console.log(chalk.yellow('\n[!] Troubleshooting:'));
       console.log(chalk.cyan('  1. Make sure Node.js is installed: https://nodejs.org/'));
       console.log(chalk.cyan('  2. Restart your terminal/command prompt'));
       console.log(chalk.cyan('  3. Verify npm is working: npm --version'));
@@ -483,9 +485,9 @@ async function main() {
       } catch (error) {
         // Handle different types of cancellation
         if (error.isTtyError || error.name === 'ExitPromptError') {
-          console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+          console.log(chalk.yellow('\n(!) Operation cancelled by user'));
         } else {
-          console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+          console.log(chalk.yellow('\n(!) Operation cancelled'));
         }
         process.exit(0);
       }
@@ -515,9 +517,9 @@ async function main() {
         } catch (error) {
           // Handle different types of cancellation
           if (error.isTtyError || error.name === 'ExitPromptError') {
-            console.log(chalk.yellow('\n⚠️  Operation cancelled by user'));
+            console.log(chalk.yellow('\n(!) Operation cancelled by user'));
           } else {
-            console.log(chalk.yellow('\n⚠️  Operation cancelled'));
+            console.log(chalk.yellow('\n(!) Operation cancelled'));
           }
           process.exit(0);
         }
@@ -540,7 +542,7 @@ async function main() {
       } else if (cliFlags.yes && !cliFlags.structure) {
         console.log(chalk.cyan('Using default Node.js structure: basic'));
       }
-      console.log(chalk.green(`\n🚀 Setting up Node.js API in '${projectName}'...`));
+      console.log(chalk.green(`\nSetting up Node.js API in '${projectName}'...`));
       await generateNodeProject(targetDir, useTypeScript, cliFlags, structure);
     } else {
       if (!shell.which('composer')) {

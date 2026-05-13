@@ -1,14 +1,16 @@
-# dásílẹ → dasyl
+# dasile -> dasyl
 
-*From Dásílẹ̀ (to create / release)*
+*From Dasile (to create / release)*
 
 ```
- ██████╗  █████╗ ███████╗██╗   ██╗██╗     
- ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     
- ██║  ██║███████║███████╗ ╚████╔╝ ██║     
- ██║  ██║██╔══██║╚════██║  ╚██╔╝  ██║     
- ██████╔╝██║  ██║███████║   ██║   ███████╗
- ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝
+     _                 _ 
+    | |               | |
+  __| | __ _ ___ _   _| |
+ / _' |/ _' / __| | | | |
+| (_| | (_| \__ \ |_| | |
+ \__,_|\__,_|___/\__, |_|
+                  __/ |  
+                 |___/   
 ```
 
 ![npm](https://img.shields.io/npm/v/dasyl)
@@ -18,7 +20,7 @@
 ![Publish](https://github.com/SeniorCub/dasyl/actions/workflows/publish.yml/badge.svg)
 ![Deploy](https://github.com/SeniorCub/dasyl/actions/workflows/deploy-cpanel.yml/badge.svg)
 
-🌐 **Live site:** [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
+**Live site:** [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
 
 ## Create. Configure. Release.
 
@@ -26,14 +28,14 @@
 
 From web apps to APIs and full stacks, Dasyl removes repetitive setup so you can focus on building.
 
-## ✨ Features
+## Features
 
-- 🚀 **Quick Scaffolding** - Create projects with a single command
-- 📦 **Auto Installation** - Optionally install dependencies automatically
-- 🔧 **Git Integration** - Initialize Git repo with first commit
-- 💻 **IDE Support** - Open in VS Code automatically
-- ⚡ **TypeScript Support** - Choose between JavaScript or TypeScript
-- 🎯 **Shortcuts** - Fast commands for common project types
+- **Quick Scaffolding** - Create projects with a single command
+- **Auto Installation** - Optionally install dependencies automatically
+- **Git Integration** - Initialize Git repo with first commit
+- **IDE Support** - Open in VS Code automatically
+- **TypeScript Support** - Choose between JavaScript or TypeScript
+- **Shortcuts** - Fast commands for common project types
 
 ## Installation
 
@@ -89,44 +91,45 @@ dasyl laravel my-laravel-app
 - **Node.js Express (TypeScript)** - REST API boilerplate with TypeScript
 #### Laravel
 - **PHP Framework** for modern web applications
-- ✅ **API Scaffolding** - Automatically runs `php artisan install:api`
-- ✅ **Static Analysis** - Integrated **PHPStan** and **Larastan**
-- ✅ **Code Styling** - Integrated **Laravel Pint**
-- ✅ **Custom Test Command** - Includes `php artisan run:test` out of the box
+- [v] **API Scaffolding** - Automatically runs `php artisan install:api`
+- [v] **Static Analysis** - Integrated **PHPStan** and **Larastan**
+- [v] **Code Styling** - Integrated **Laravel Pint**
+- [v] **Custom Test Command** - Includes `php artisan run:test` out of the box
 
 ### Node.js Project Features
 
 When creating a Node.js project, you get:
 
-- ✅ Express.js setup with middleware
-- ✅ **Code Quality** - Integrated **ESLint** and **Prettier**
-- ✅ **Linting Scripts** - `npm run lint`, `npm run lint:fix`, and `npm run format`
-- ✅ MongoDB integration ready
-- ✅ Environment configuration (.env)
-- ✅ Error handling middleware
-- ✅ Authentication routes boilerplate
-- ✅ User model with validation
-- ✅ Organized folder structure
-- ✅ Structure choice: basic or modern modules
-- ✅ TypeScript support (optional)
+- [v] Express.js setup with middleware
+- [v] **Code Quality** - Integrated **ESLint** and **Prettier**
+- [v] **Linting Scripts** - `npm run lint`, `npm run lint:fix`, and `npm run format`
+- [v] MongoDB integration ready
+- [v] Environment configuration (.env)
+- [v] Error handling middleware
+- [v] Authentication routes boilerplate
+- [v] User model with validation
+- [v] Organized folder structure
+- [v] Structure choice: basic or modern modules
+- [v] TypeScript support (optional)
 
 ### Laravel Project Features
 
 When creating a Laravel project, you get:
 
-- ✅ **Full API Setup** - Ready-to-go API scaffolding
-- ✅ **Code Quality** - Pre-configured **PHPStan** (level 5)
-- ✅ **Auto-Formatting** - Pre-configured **Laravel Pint**
-- ✅ **run:test Command** - A single command to run analysis and styling:
+- [v] **Full API Setup** - Ready-to-go API scaffolding
+- [v] **Code Quality** - Pre-configured **PHPStan** (level 5)
+- [v] **Auto-Formatting** - Pre-configured **Laravel Pint**
+- [v] **run:test Command** - A single command to run analysis and styling:
   ```bash
   php artisan run:test
   ```
 
 ### Post-Creation Options
+
 After scaffolding, Dasyl can:
-- 📦 Install dependencies automatically
-- 🔧 Initialize Git repository with initial commit
-- 💻 Open project in VS Code
+- **Install dependencies automatically**
+- **Initialize Git repository with initial commit**
+- **Open project in VS Code**
 
 ## Examples
 
@@ -228,8 +231,8 @@ Contributions are welcome! Please see the [contributing guidelines](CONTRIBUTING
 
 **Dasyl** was created by **Farinde Reuben Ifeoluwa** ([@SeniorCub](https://github.com/SeniorCub)).
 
-- 🐙 GitHub: [github.com/SeniorCub](https://github.com/SeniorCub)
-- 🌐 Website: [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
+- GitHub: [github.com/SeniorCub](https://github.com/SeniorCub)
+- Website: [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
 
 ## License
 

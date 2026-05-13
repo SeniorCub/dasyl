@@ -2,7 +2,7 @@
    Dasyl Website — script.js
    ==================================================== */
 
-// ── Copy-to-clipboard ─────────────────────────────────
+// -- Copy-to-clipboard ---------------------------------
 const toast = document.getElementById('copy-toast');
 let toastTimer;
 
@@ -38,7 +38,7 @@ document.addEventListener('click', (e) => {
   });
 });
 
-// ── Tab switching ─────────────────────────────────────
+// -- Tab switching -------------------------------------
 document.querySelectorAll('.tabs').forEach((tabGroup) => {
   tabGroup.addEventListener('click', (e) => {
     const tab = e.target.closest('.tab');
@@ -66,7 +66,7 @@ document.querySelectorAll('.tabs').forEach((tabGroup) => {
   });
 });
 
-// ── Mobile navigation ─────────────────────────────────
+// -- Mobile navigation ---------------------------------
 const burger = document.querySelector('.nav__burger');
 const navLinks = document.querySelector('.nav__links');
 
@@ -85,7 +85,7 @@ if (burger && navLinks) {
   });
 }
 
-// ── Suggestion form → GitHub Issue URL ───────────────
+// -- Suggestion form -> GitHub Issue URL ---------------
 const form = document.getElementById('suggestion-form');
 
 function validateForm() {
@@ -183,7 +183,7 @@ if (form) {
   });
 }
 
-// ── Subtle scroll-reveal animation ───────────────────
+// -- Subtle scroll-reveal animation -------------------
 const observerConfig = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
 
 const observer = new IntersectionObserver((entries) => {
@@ -205,26 +205,28 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   });
 }
 
-// ── Static hero terminal animation ───────────────────
+// -- Static hero terminal animation -------------------
 (function initHeroStaticTerminal() {
   const body = document.getElementById('hero-static-body');
   if (!body) return;
 
-  const DASYL_VERSION = '1.8.0';
+  const DASYL_VERSION = '1.8.1';
 
   const LOGO_LINES = [
-    ' ██████╗  █████╗ ███████╗██╗   ██╗██╗     ',
-    ' ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     ',
-    ' ██║  ██║███████║███████╗ ╚████╔╝ ██║     ',
-    ' ██║  ██║██╔══██║╚════██║  ╚██╔╝  ██║     ',
-    ' ██████╔╝██║  ██║███████║   ██║   ███████╗',
-    ' ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝',
+    '     _                 _ ',
+    '    | |               | |',
+    '  __| | __ _ ___ _   _| |',
+    ' / _\' |/ _\' / __| | | | |',
+    '| (_| | (_| \\__ \\ |_| | |',
+    ' \\__,_|\\__,_|___/\\__, |_|',
+    '                  __/ |  ',
+    '                 |___/   ',
   ];
 
-  const FRAMES = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+  const FRAMES = ['-','\\','|','/'];
 
   function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, reducedMotion ? 0 : ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   function escHtml(s) {
@@ -246,7 +248,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   async function typeCommand(text) {
     const line = document.createElement('div');
     line.className = 'terminal__line';
-    line.innerHTML = `<span class="t-prompt">$</span> <span class="t-cmd"></span><span class="t-cursor">▋</span>`;
+    line.innerHTML = `<span class="t-prompt">$</span> <span class="t-cmd"></span><span class="t-cursor">_</span>`;
     body.appendChild(line);
     const cmdSpan = line.querySelector('.t-cmd');
     const cursor  = line.querySelector('.t-cursor');
@@ -262,7 +264,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   async function spinnerLine(startText, endText, durationMs) {
     const line = document.createElement('div');
     line.className = 'terminal__line terminal__line--output';
-    line.innerHTML = `<span class="t-spinner-anim" aria-hidden="true">⠋</span> <span class="t-line-text">${startText}</span>`;
+    line.innerHTML = `<span class="t-spinner-anim" aria-hidden="true">-</span> <span class="t-line-text">${startText}</span>`;
     body.appendChild(line);
     body.scrollTop = body.scrollHeight;
     const icon = line.querySelector('.t-spinner-anim');
@@ -272,7 +274,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       icon.textContent = FRAMES[i % FRAMES.length];
       await wait(80);
     }
-    icon.textContent = '✔';
+    icon.textContent = '[v]';
     icon.className = 't-spinner';
     text.innerHTML = endText;
     body.scrollTop = body.scrollHeight;
@@ -288,7 +290,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       addLine(`<span class="t-logo">${escHtml(line)}</span>`);
     }
     addLine(`<span class="t-dim">v${DASYL_VERSION}</span>`);
-    addLine(`<span class="t-accent">⚡ Fast, opinionated CLI for modern development</span>`);
+    addLine(`<span class="t-accent">Fast, opinionated CLI for modern development</span>`);
     addLine('&nbsp;');
 
     await wait(200);
@@ -306,14 +308,14 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     );
 
     await wait(120);
-    addLine('<span class="t-success">🎉 Project <span class="t-hl">my-app</span> created successfully!</span>');
-    addLine('<span class="t-dim">cd my-app &amp;&amp; npm run dev</span>');
+    addLine('<span class="t-success">Project <span class="t-hl">my-app</span> created successfully!</span>');
+    addLine('<span class="t-dim">cd my-app && npm run dev</span>');
 
     await wait(500);
     // Show a fresh prompt to indicate CLI is ready
     const promptLine = document.createElement('div');
     promptLine.className = 'terminal__line';
-    promptLine.innerHTML = `<span class="t-prompt">$</span> <span class="t-cursor">▋</span>`;
+    promptLine.innerHTML = `<span class="t-prompt">$</span> <span class="t-cursor">_</span>`;
     body.appendChild(promptLine);
     body.scrollTop = body.scrollHeight;
   }
@@ -321,7 +323,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   run();
 })();
 
-// ── Interactive demo terminal ─────────────────────────
+// -- Interactive demo terminal -------------------------
 (function initInteractiveTerminal() {
   const body        = document.getElementById('demo-terminal-body');
   const hiddenInput = document.getElementById('demo-hidden-input');
@@ -329,22 +331,22 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
   if (!body || !hiddenInput || !terminalEl) return;
 
-  /* ── State ──────────────────────────────────────────── */
+  /* -- State -------------------------------------------- */
   let cmdHistory   = [];
   let historyIdx   = -1;
   let isProcessing = false;
-  const DASYL_VERSION   = '1.8.0';
+  const DASYL_VERSION   = '1.8.1';
   const SPINNER_TICK_MS = 80;
   const SPINNER_DURATION = { create: 1400, install: 2200, git: 700 };
 
-  /* ── Focus management ──────────────────────────────── */
+  /* -- Focus management -------------------------------- */
   terminalEl.addEventListener('click', () => hiddenInput.focus());
   terminalEl.addEventListener('focus', () => hiddenInput.focus());
 
   hiddenInput.addEventListener('focus', () => terminalEl.classList.add('terminal--focused'));
   hiddenInput.addEventListener('blur',  () => terminalEl.classList.remove('terminal--focused'));
 
-  /* ── Input display sync ────────────────────────────── */
+  /* -- Input display sync ------------------------------ */
   hiddenInput.addEventListener('input', syncInputDisplay);
 
   function syncInputDisplay() {
@@ -355,7 +357,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     scrollToBottom();
   }
 
-  /* ── Keyboard handling ─────────────────────────────── */
+  /* -- Keyboard handling ------------------------------- */
   hiddenInput.addEventListener('keydown', (e) => {
     if (isProcessing) return;
 
@@ -382,7 +384,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     }
   });
 
-  /* ── DOM helpers ───────────────────────────────────── */
+  /* -- DOM helpers ------------------------------------- */
   function getInputLine() {
     return body.querySelector('.terminal__input-line');
   }
@@ -425,13 +427,13 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     next.className = 'terminal__line terminal__input-line';
     next.innerHTML  = `<span class="t-prompt">$</span> ` +
                       `<span class="t-input-text"></span>` +
-                      `<span class="t-cursor">▋</span>`;
+                      `<span class="t-cursor">_</span>`;
     body.appendChild(next);
     scrollToBottom();
   }
 
-  /* ── Spinner animation ─────────────────────────────── */
-  const FRAMES = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+  /* -- Spinner animation ------------------------------- */
+  const FRAMES = ['-','\\','|','/'];
 
   function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -443,7 +445,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   function createSpinnerLine(textHtml) {
     const line = document.createElement('div');
     line.className = 'terminal__line terminal__line--output';
-    line.innerHTML  = `<span class="t-spinner-anim" aria-hidden="true">⠋</span>` +
+    line.innerHTML  = `<span class="t-spinner-anim" aria-hidden="true">-</span>` +
                       `<span class="t-line-text">${textHtml}</span>`;
     body.insertBefore(line, getInputLine());
     scrollToBottom();
@@ -460,12 +462,12 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       await wait(SPINNER_TICK_MS);
     }
 
-    if (icon) { icon.textContent = '✔'; icon.className = 't-spinner'; }
+    if (icon) { icon.textContent = '[v]'; icon.className = 't-spinner'; }
     if (text) text.innerHTML = finalTextHtml;
     scrollToBottom();
   }
 
-  /* ── Command execution ─────────────────────────────── */
+  /* -- Command execution ------------------------------- */
   async function submitCommand(raw) {
     const cmd = raw.trim();
     hiddenInput.value = '';
@@ -488,7 +490,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     if (base !== 'dasyl') {
       addOutputLine(
         `<span class="t-error">command not found: <strong>${escHtml(base)}</strong>` +
-        ` — try <span class="t-hl">dasyl --help</span></span>`
+        ` - try <span class="t-hl">dasyl --help</span></span>`
       );
       return;
     }
@@ -499,7 +501,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
     try {
       if (!sub) {
-        // No sub-command → run interactive wizard (mirrors real CLI main())
+        // No sub-command -> run interactive wizard (mirrors real CLI main())
         await runWizard();
       } else if (sub === '--help' || sub === '-h') {
         showHelp();
@@ -510,7 +512,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       } else {
         addOutputLine(
           `<span class="t-error">Unknown option: <strong>${escHtml(sub)}</strong>` +
-          ` — run <span class="t-hl">dasyl --help</span> for usage.</span>`
+          ` - run <span class="t-hl">dasyl --help</span> for usage.</span>`
         );
       }
     } finally {
@@ -527,10 +529,10 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     });
   }
 
-  /* ── Command: --help ───────────────────────────────── */
+  /* -- Command: --help --------------------------------- */
   function showHelp() {
     const rows = [
-      `<span class="t-hl">dasyl</span> <span class="t-dim">v${DASYL_VERSION} — Create and release development projects faster.</span>`,
+      `<span class="t-hl">dasyl</span> <span class="t-dim">v${DASYL_VERSION} - Create and release development projects faster.</span>`,
       `&nbsp;`,
       `<span class="t-cmd-label">Usage:</span>`,
       `  <span class="t-cmd">dasyl</span>                     <span class="t-dim">Interactive wizard (prompts for options)</span>`,
@@ -560,7 +562,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     scrollToBottom();
   }
 
-  /* ── Command: --version ────────────────────────────── */
+  /* -- Command: --version ------------------------------ */
   function showVersion() {
     addOutputLine(`<span class="t-hl">dasyl</span> <span class="t-spinner">v${DASYL_VERSION}</span>`);
     addOutputLine(
@@ -569,7 +571,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     );
   }
 
-  /* ── Interactive wizard (mirrors real CLI main()) ───── */
+  /* -- Interactive wizard (mirrors real CLI main()) ----- */
   const WIZARD_LOGO = [
     ' ██████╗  █████╗ ███████╗██╗   ██╗██╗     ',
     ' ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     ',
@@ -634,14 +636,14 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
       const hintLine = document.createElement('div');
       hintLine.className = 'terminal__line terminal__line--output';
-      hintLine.innerHTML = `<span class="t-key-hint">  ↑↓ navigate · Enter to select · or type a number (1-${choices.length})</span>`;
+      hintLine.innerHTML = `<span class="t-key-hint">  ↑↓ navigate . Enter to select . or type a number (1-${choices.length})</span>`;
       body.insertBefore(hintLine, inputLine);
 
       function render() {
         choices.forEach((c, i) => {
           const active = i === selected;
           choiceLines[i].innerHTML = active
-            ? `  <span class="t-prompt-q">❯</span> <span class="t-choice--active">${escHtml(c.label)}</span>`
+            ? `  <span class="t-prompt-q">></span> <span class="t-choice--active">${escHtml(c.label)}</span>`
             : `    <span class="t-choice">${escHtml(c.label)}</span>`;
         });
         scrollToBottom();
@@ -675,7 +677,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           e.preventDefault();
           finish(selected);
         } else {
-          // Number shortcut: pressing 1, 2, 3 … jumps to that choice
+          // Number shortcut: pressing 1, 2, 3 ... jumps to that choice
           const num = parseInt(e.key, 10);
           if (!isNaN(num) && num >= 1 && num <= choices.length) {
             e.preventDefault();
@@ -697,7 +699,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       body.insertBefore(div, getInputLine());
     }
     addOutputLine(`<span class="t-dim">v${DASYL_VERSION}</span>`);
-    addOutputLine(`<span class="t-accent">⚡ Fast, opinionated CLI for modern development</span>`);
+    addOutputLine(`<span class="t-accent">Fast, opinionated CLI for modern development</span>`);
     addOutputLine('&nbsp;');
 
     // 1. Project name
@@ -707,7 +709,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     );
 
     if (!projectName) {
-      addOutputLine(`<span class="t-error">❌ Project name cannot be empty.</span>`);
+      addOutputLine(`<span class="t-error">[x] Project name cannot be empty.</span>`);
       return;
     }
 
@@ -724,7 +726,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
     if (stack === 'frontend') {
       type = 'react'; // Demo simplification: real CLI uses Vite's own interactive prompt for framework selection
-      addOutputLine(`<span class="t-dim">🎨 Setting up Frontend project '${escHtml(projectName)}'...</span>`);
+      addOutputLine(`<span class="t-dim">Setting up Frontend project '${escHtml(projectName)}'...</span>`);
     } else {
       // 3. Backend framework
       const backend = await promptList(
@@ -745,10 +747,10 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           ]
         );
         type = lang === 'typescript' ? 'node-ts' : 'node';
-        addOutputLine(`<span class="t-dim">🚀 Setting up Node.js API in '${escHtml(projectName)}'...</span>`);
+        addOutputLine(`<span class="t-dim">Setting up Node.js API in '${escHtml(projectName)}'...</span>`);
       } else {
         type = 'laravel';
-        addOutputLine(`<span class="t-dim">🚀 Setting up Laravel project '${escHtml(projectName)}'...</span>`);
+        addOutputLine(`<span class="t-dim">Setting up Laravel project '${escHtml(projectName)}'...</span>`);
       }
     }
 
@@ -756,7 +758,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     await simulateCreate(type, projectName);
   }
 
-  /* ── Command: scaffold ─────────────────────────────── */
+  /* -- Command: scaffold ------------------------------- */
   const TYPE_LABELS = {
     react:     'React',
     vue:       'Vue',
@@ -768,9 +770,9 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
   async function simulateCreate(type, name) {
     if (!name) {
-      addOutputLine(`<span class="t-error">❌ Please provide a project name.</span>`);
+      addOutputLine(`<span class="t-error">[x] Please provide a project name.</span>`);
       addOutputLine(
-        `<span class="t-dim">Usage:   <span class="t-cmd">dasyl ${escHtml(type)} &lt;project-name&gt;</span></span>`
+        `<span class="t-dim">Usage:   <span class="t-cmd">dasyl ${escHtml(type)} <project-name></span></span>`
       );
       addOutputLine(
         `<span class="t-dim">Example: <span class="t-cmd">dasyl ${escHtml(type)} my-awesome-app</span></span>`
@@ -797,19 +799,19 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
     await wait(120);
     addOutputLine(
-      `<span class="t-success">🎉 Project <span class="t-hl">${escHtml(name)}</span> created successfully!</span>`
+      `<span class="t-success">Project <span class="t-hl">${escHtml(name)}</span> created successfully!</span>`
     );
 
     const nextCmd = type === 'laravel'
-      ? `cd ${escHtml(name)} &amp;&amp; php artisan serve`
-      : `cd ${escHtml(name)} &amp;&amp; npm run dev`;
+      ? `cd ${escHtml(name)} && php artisan serve`
+      : `cd ${escHtml(name)} && npm run dev`;
     addOutputLine(`<span class="t-dim">${nextCmd}</span>`);
     addOutputLine(
-      `<span class="t-dim t-note">⚡ This is a simulation — install dasyl globally to scaffold real projects.</span>`
+      `<span class="t-dim t-note">This is a simulation - install dasyl globally to scaffold real projects.</span>`
     );
   }
 
-  /* ── Initialise ─────────────────────────────────────── */
+  /* -- Initialise --------------------------------------- */
   function init() {
     body.innerHTML = '';
 
@@ -826,7 +828,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     inputLine.innerHTML =
       `<span class="t-prompt">$</span> ` +
       `<span class="t-input-text"></span>` +
-      `<span class="t-cursor">▋</span>`;
+      `<span class="t-cursor">_</span>`;
     body.appendChild(inputLine);
   }
 

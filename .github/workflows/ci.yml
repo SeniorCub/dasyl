@@ -51,18 +51,18 @@ jobs:
       - name: Check package.json
         run: |
           if ! jq empty package.json; then
-            echo "❌ Invalid package.json"
+            echo "Invalid package.json"
             exit 1
-          fi
-          echo "✅ package.json is valid"
-      
-      - name: Check for required files
-        run: |
-          files=("README.md" "LICENSE" "package.json" "bin/index.js")
-          for file in "${files[@]}"; do
+            fi
+            echo "package.json is valid"
+
+            - name: Check for required files
+            run: |
+            files=("README.md" "LICENSE" "package.json" "bin/index.js")
+            for file in "${files[@]}"; do
             if [ ! -f "$file" ]; then
-              echo "❌ Missing required file: $file"
+              echo "Missing required file: $file"
               exit 1
             fi
-          done
-          echo "✅ All required files present"
+            done
+            echo "All required files present"
