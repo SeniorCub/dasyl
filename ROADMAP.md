@@ -1,7 +1,7 @@
 # Dasyl Roadmap
 
-**Last Updated:** May 12, 2026  
-**Current Version:** 1.7.0
+**Last Updated:** May 13, 2026  
+**Current Version:** 1.8.0
 
 This document outlines the planned features and enhancements for Dasyl CLI. The roadmap is subject to change based on community feedback and priorities.
 
@@ -86,7 +86,27 @@ This document outlines the planned features and enhancements for Dasyl CLI. The 
 
 ---
 
-## 🗄️ Version 1.8.0 - Database Templates
+## 🧪 Version 1.8.0 - Code Quality & Testing (COMPLETED)
+
+**Released:** May 13, 2026
+
+### Laravel Integration
+- ✅ **Laravel Scaffolding Fixes** - Fixed API scaffolding setup using `php artisan install:api`.
+- ✅ **Static Analysis** - Integrated **PHPStan** and **Larastan** into the Laravel generator.
+- ✅ **Code Styling** - Integrated **Laravel Pint** for automatic code formatting.
+- ✅ **Custom Command** - Added `php artisan run:test` command to run analysis and styling in one go.
+
+### Node.js Integration
+- ✅ **Linting & Formatting** - Integrated **ESLint** and **Prettier** into both JavaScript and TypeScript Node.js generators.
+- ✅ **Utility Scripts** - Added `npm run lint`, `npm run lint:fix`, and `npm run format` scripts to `package.json`.
+
+### General Improvements
+- ✅ **Async Flow Fixes** - Fixed missing `await` statements in the main CLI entry point.
+- ✅ **Website Overhaul** - Updated the project website with a new theme (Primary: #ff2200) and documentation for new features.
+
+---
+
+## 🗄️ Version 1.9.0 - Database Templates
 
 **Target Release:** Q4 2026
 
@@ -133,7 +153,7 @@ Add interactive database choice with full configuration:
 
 ---
 
-## 🔐 Version 1.9.0 - Authentication Boilerplate
+## 🔐 Version 1.10.0 - Authentication Boilerplate
 
 **Target Release:** Q1 2027
 
