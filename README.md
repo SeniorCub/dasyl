@@ -172,51 +172,51 @@ dasyl node-ts my-api --structure basic
 ### JavaScript
 ```
 my-api/
-├── bin/
-├── config/
-│   ├── database.js
-│   ├── middleware.js
-│   └── routes.js
-├── controllers/
-│   ├── authController.js
-│   └── userController.js
-├── middleware/
-│   ├── auth.js
-│   ├── errorHandler.js
-│   └── security.js
-├── models/
-│   └── User.js
-├── routes/
-│   ├── authRoutes.js
-│   └── userRoutes.js
-├── utils/
-├── public/
-├── uploads/
-├── .env
-├── .gitignore
-├── package.json
-└── server.js
+|-- bin/
+|-- config/
+|   |-- database.js
+|   |-- middleware.js
+|   \-- routes.js
+|-- controllers/
+|   |-- authController.js
+|   \-- userController.js
+|-- middleware/
+|   |-- auth.js
+|   |-- errorHandler.js
+|   \-- security.js
+|-- models/
+|   \-- User.js
+|-- routes/
+|   |-- authRoutes.js
+|   \-- userRoutes.js
+|-- utils/
+|-- public/
+|-- uploads/
+|-- .env
+|-- .gitignore
+|-- package.json
+\-- server.js
 ```
 
 ### TypeScript
 ```
 my-api/
-├── src/
-│   ├── bin/
-│   ├── config/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── utils/
-│   └── server.ts
-├── dist/           # Compiled output
-├── public/
-├── uploads/
-├── .env
-├── .gitignore
-├── tsconfig.json
-└── package.json
+|-- src/
+|   |-- bin/
+|   |-- config/
+|   |-- controllers/
+|   |-- middleware/
+|   |-- models/
+|   |-- routes/
+|   |-- utils/
+|   \-- server.ts
+|-- dist/           # Compiled output
+|-- public/
+|-- uploads/
+|-- .env
+|-- .gitignore
+|-- tsconfig.json
+\-- package.json
 ```
 
 ## Versioning

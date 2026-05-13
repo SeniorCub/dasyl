@@ -1,5 +1,5 @@
 /* ====================================================
-   Dasyl Website — script.js
+   Dasyl Website - script.js
    ==================================================== */
 
 // -- Copy-to-clipboard ---------------------------------
@@ -573,12 +573,14 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
   /* -- Interactive wizard (mirrors real CLI main()) ----- */
   const WIZARD_LOGO = [
-    ' ██████╗  █████╗ ███████╗██╗   ██╗██╗     ',
-    ' ██╔══██╗██╔══██╗██╔════╝╚██╗ ██╔╝██║     ',
-    ' ██║  ██║███████║███████╗ ╚████╔╝ ██║     ',
-    ' ██║  ██║██╔══██║╚════██║  ╚██╔╝  ██║     ',
-    ' ██████╔╝██║  ██║███████║   ██║   ███████╗',
-    ' ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝',
+    '     _                 _ ',
+    '    | |               | |',
+    '  __| | __ _ ___ _   _| |',
+    ' / _\' |/ _\' / __| | | | |',
+    '| (_| | (_| \\__ \\ |_| | |',
+    ' \\__,_|\\__,_|___/\\__, |_|',
+    '                  __/ |  ',
+    '                 |___/   ',
   ];
 
   /**
@@ -597,7 +599,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       body.insertBefore(qLine, inputLine);
       scrollToBottom();
 
-      // Re-use the existing input line — just wait for Enter
+      // Re-use the existing input line - just wait for Enter
       const onEnter = (e) => {
         if (e.key !== 'Enter') return;
         hiddenInput.removeEventListener('keydown', onEnter);
@@ -636,7 +638,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
       const hintLine = document.createElement('div');
       hintLine.className = 'terminal__line terminal__line--output';
-      hintLine.innerHTML = `<span class="t-key-hint">  ↑↓ navigate . Enter to select . or type a number (1-${choices.length})</span>`;
+      hintLine.innerHTML = `<span class="t-key-hint">  ^v navigate . Enter to select . or type a number (1-${choices.length})</span>`;
       body.insertBefore(hintLine, inputLine);
 
       function render() {

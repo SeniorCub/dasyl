@@ -1,8 +1,8 @@
 /* ====================================================
-   Dasyl Website — styles.css
+   Dasyl Website - styles.css
    ==================================================== */
 
-/* ── Reset & Variables ──────────────────────────────── */
+/* -- Reset & Variables -------------------------------- */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -91,7 +91,7 @@ code, pre {
   font-size: .9em;
 }
 
-/* ── Utilities ──────────────────────────────────────── */
+/* -- Utilities ---------------------------------------- */
 .container {
   max-width: var(--container-width);
   margin-inline: auto;
@@ -128,7 +128,7 @@ code, pre {
   margin-inline: auto;
 }
 
-/* ── Buttons ────────────────────────────────────────── */
+/* -- Buttons ------------------------------------------ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -176,7 +176,7 @@ code, pre {
 .btn--sm { padding: .4rem .85rem; font-size: .85rem; }
 .btn--full { width: 100%; justify-content: center; }
 
-/* ── Navigation ─────────────────────────────────────── */
+/* -- Navigation -------------------------------------- */
 .site-header {
   position: sticky;
   top: 0;
@@ -254,7 +254,7 @@ code, pre {
   transition: all .25s ease;
 }
 
-/* ── Hero ───────────────────────────────────────────── */
+/* -- Hero -------------------------------------------- */
 .hero {
   padding-top: var(--space-24);
   padding-bottom: var(--space-24);
@@ -352,7 +352,7 @@ code, pre {
 }
 .hero__badges img { border-radius: 4px; }
 
-/* ── Terminal demo widget ────────────────────────────── */
+/* -- Terminal demo widget ------------------------------ */
 .terminal {
   background: #0d0d0d;
   border: 1px solid var(--color-border);
@@ -469,7 +469,7 @@ code, pre {
   50%       { opacity: 0; }
 }
 
-/* ── Static hero terminal body ───────────────────────── */
+/* -- Static hero terminal body ------------------------ */
 .terminal__body--hero {
   padding: 1rem 1.25rem;
   line-height: 1.85;
@@ -494,7 +494,7 @@ code, pre {
 
 .t-accent { color: var(--color-accent); font-size: .85em; }
 
-/* ── Interactive Demo section ────────────────────────── */
+/* -- Interactive Demo section -------------------------- */
 .demo-section { background: var(--color-bg-elevated); }
 
 .demo-terminal-wrap {
@@ -536,7 +536,7 @@ code, pre {
 .t-choice--active { color: #fff; }
 .t-key-hint  { color: var(--color-text-dim); font-size: .8em; }
 
-/* ── Features ───────────────────────────────────────── */
+/* -- Features ---------------------------------------- */
 .features { background: var(--color-bg); }
 
 .features__grid {
@@ -583,7 +583,7 @@ code, pre {
   font-size: .85em;
 }
 
-/* ── Quick Start ────────────────────────────────────── */
+/* -- Quick Start -------------------------------------- */
 .quickstart { background: var(--color-bg-elevated); }
 
 .steps {
@@ -631,7 +631,7 @@ code, pre {
   padding-top: .65rem;
 }
 
-/* ── Code blocks ────────────────────────────────────── */
+/* -- Code blocks -------------------------------------- */
 .code-block {
   position: relative;
   background: var(--color-bg);
@@ -667,7 +667,7 @@ code, pre {
 
 .c-comment { color: var(--color-text-dim); font-style: italic; }
 
-/* ── Tabs ───────────────────────────────────────────── */
+/* -- Tabs -------------------------------------------- */
 .tabs {
   display: flex;
   gap: var(--space-1);
@@ -698,7 +698,7 @@ code, pre {
 .tab-content { display: none; }
 .tab-content--active { display: block; }
 
-/* ── Project Types ──────────────────────────────────── */
+/* -- Project Types ------------------------------------ */
 .project-types { background: var(--color-bg); }
 
 .project-grid {
@@ -760,7 +760,7 @@ code, pre {
 
 .project-card .code-block { margin-top: auto; }
 
-/* ── Suggestion Box ─────────────────────────────────── */
+/* -- Suggestion Box ---------------------------------- */
 .suggestions { background: var(--color-bg-elevated); }
 
 .suggestion-layout {
@@ -901,7 +901,7 @@ code, pre {
   border-color: var(--color-border);
 }
 
-/* ── Toast ──────────────────────────────────────────── */
+/* -- Toast -------------------------------------------- */
 .toast {
   position: fixed;
   bottom: var(--space-6);
@@ -925,7 +925,7 @@ code, pre {
   transform: translateX(-50%) translateY(0);
 }
 
-/* ── Footer ─────────────────────────────────────────── */
+/* -- Footer ------------------------------------------ */
 .footer {
   border-top: 1px solid var(--color-border);
   padding-block: var(--space-8);
@@ -958,7 +958,7 @@ code, pre {
 .footer__meta a { color: var(--color-text-dim); }
 .footer__meta a:hover { color: var(--color-text-muted); }
 
-/* ── Scroll-reveal animation ────────────────────────── */
+/* -- Scroll-reveal animation -------------------------- */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(24px);
@@ -970,7 +970,7 @@ code, pre {
   transform: translateY(0);
 }
 
-/* ── Creator ─────────────────────────────────────────── */
+/* -- Creator ------------------------------------------ */
 .creator { background: var(--color-bg-elevated); }
 
 .creator__card {
@@ -1046,7 +1046,7 @@ code, pre {
   color: var(--color-primary-lt);
 }
 
-/* ── Responsive ─────────────────────────────────────── */
+/* -- Responsive -------------------------------------- */
 @media (max-width: 900px) {
   .hero__inner {
     grid-template-columns: 1fr;
