@@ -11,20 +11,25 @@
 
 :root {
   /* Colors */
-  --color-bg:          #0d0d14;
-  --color-bg-elevated: #13131f;
-  --color-bg-surface:  #1a1a2e;
-  --color-border:      #2a2a42;
-  --color-text:        #e2e2f0;
-  --color-text-muted:  #8888aa;
-  --color-text-dim:    #555570;
+  --color-bg:          #0d0d0d;
+  --color-bg-elevated: #1a1a1a;
+  --color-bg-surface:  #1f1f1f;
+  --color-border:      #333333;
+  --color-text:        #f0f0f0;
+  --color-text-muted:  #999999;
+  --color-text-dim:    #565656;
 
-  --color-primary:     #7c3aed;
-  --color-primary-lt:  #a78bfa;
-  --color-accent:      #06b6d4;
-  --color-green:       #10b981;
-  --color-yellow:      #f59e0b;
-  --color-red:         #ef4444;
+  --color-primary:     #ff2200;
+  --color-primary-lt:  #ff5533;
+  --color-secondary:   #565656;
+  --color-dark:        #1f1f1f;
+  --color-light:       #999999;
+  --color-card-bg:     #161616;
+
+  --color-accent:      #ff5533;
+  --color-green:       #00ff88;
+  --color-yellow:      #ffcc00;
+  --color-red:         #ff2200;
 
   /* Typography */
   --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
@@ -145,10 +150,10 @@ code, pre {
   color: #fff;
 }
 .btn--primary:hover {
-  background: #6d28d9;
+  background: #cc1b00;
   color: #fff;
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(124, 58, 237, .4);
+  box-shadow: 0 8px 24px rgba(255, 34, 0, .4);
 }
 
 .btn--outline {
@@ -176,7 +181,7 @@ code, pre {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(13,13,20,.85);
+  background: rgba(13,13,13,.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
@@ -262,8 +267,8 @@ code, pre {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(124,58,237,.12) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(6,182,212,.08) 0%, transparent 70%);
+    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(255,34,0,.1) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(255,85,51,.06) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -349,7 +354,7 @@ code, pre {
 
 /* ── Terminal demo widget ────────────────────────────── */
 .terminal {
-  background: #0d0d14;
+  background: #0d0d0d;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -364,7 +369,7 @@ code, pre {
 
 .terminal--focused {
   border-color: var(--color-primary);
-  box-shadow: var(--shadow-lg), 0 0 0 2px rgba(124, 58, 237, .25);
+  box-shadow: var(--shadow-lg), 0 0 0 2px rgba(255, 34, 0, .25);
 }
 
 .terminal__bar {
@@ -381,9 +386,9 @@ code, pre {
   height: 12px;
   border-radius: 50%;
 }
-.dot--red    { background: #ef4444; }
-.dot--yellow { background: #f59e0b; }
-.dot--green  { background: #10b981; }
+.dot--red    { background: #ff2200; }
+.dot--yellow { background: #ffcc00; }
+.dot--green  { background: #00ff88; }
 
 .terminal__title {
   margin-left: auto;

@@ -59,10 +59,6 @@ async function spawnNpm(args, options = {}) {
   });
 }
 
-async function installLaravelApiScaffolding(targetDir, options = {}) {
-  return shell.exec('php artisan install:api', { cwd: targetDir, ...options });
-}
-
 // Create a wrapper for inquirer that handles cancellation properly
 async function safePrompt(questions) {
   try {
@@ -325,23 +321,7 @@ async function quickCreate(type, name) {
         console.log(chalk.cyan('  Visit: https://getcomposer.org/download/'));
         process.exit(1);
       }
-      const spinner = ora({ text: chalk.blue(`Creating Laravel project '${name}'...`), color: 'blue' }).start();
-      const result = await shell.exec(`composer create-project --prefer-dist laravel/laravel "${targetDir}"`, { silent: true });
-      if (result.code === 0) {
-        spinner.text = chalk.blue(`Setting up Laravel API scaffolding for '${name}'...`);
-        const apiSetupResult = await installLaravelApiScaffolding(targetDir, { silent: true });
-        if (apiSetupResult.code === 0) {
-          spinner.succeed(chalk.green(`Laravel project '${name}' created successfully!`));
-        } else {
-          spinner.fail(chalk.red(`Laravel project '${name}' was created but API scaffolding setup failed.`));
-          console.log(chalk.yellow(`\n💡 Run ${chalk.cyan('php artisan install:api')} inside '${targetDir}' to complete setup.`));
-          process.exit(1);
-        }
-      } else {
-        spinner.fail(chalk.red(`Failed to create Laravel project`));
-        process.exit(1);
-      }
-      break;
+      await generateLaravelProject(targetDir, cliFlags);
       break;
   }
 }
@@ -561,24 +541,13 @@ async function main() {
         console.log(chalk.cyan('Using default Node.js structure: basic'));
       }
       console.log(chalk.green(`\n🚀 Setting up Node.js API in '${projectName}'...`));
-      generateNodeProject(targetDir, useTypeScript, cliFlags, structure);
+      await generateNodeProject(targetDir, useTypeScript, cliFlags, structure);
     } else {
-      console.log(chalk.red(`\n🚀 Setting up Laravel project '${projectName}'...`));
       if (!shell.which('composer')) {
         console.log(chalk.red('Error: Composer is not installed or not in PATH.'));
         process.exit(1);
       }
-      const laravelResult = await shell.exec(`composer create-project --prefer-dist laravel/laravel "${targetDir}"`);
-      if (laravelResult.code !== 0) {
-        process.exit(1);
-      }
-
-      const apiSetupResult = await installLaravelApiScaffolding(targetDir);
-      if (apiSetupResult.code !== 0) {
-        console.log(chalk.red(`\n❌ Laravel project was created but API scaffolding setup failed.`));
-        console.log(chalk.yellow(`💡 Run ${chalk.cyan('php artisan install:api')} inside '${targetDir}' to complete setup.`));
-        process.exit(1);
-      }
+      await generateLaravelProject(targetDir, cliFlags);
     }
   }
 }

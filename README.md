@@ -87,13 +87,20 @@ dasyl laravel my-laravel-app
 #### Backend
 - **Node.js Express** - REST API boilerplate with JavaScript
 - **Node.js Express (TypeScript)** - REST API boilerplate with TypeScript
-- **Laravel** - PHP framework for web applications
+#### Laravel
+- **PHP Framework** for modern web applications
+- ✅ **API Scaffolding** - Automatically runs `php artisan install:api`
+- ✅ **Static Analysis** - Integrated **PHPStan** and **Larastan**
+- ✅ **Code Styling** - Integrated **Laravel Pint**
+- ✅ **Custom Test Command** - Includes `php artisan run:test` out of the box
 
 ### Node.js Project Features
 
 When creating a Node.js project, you get:
 
 - ✅ Express.js setup with middleware
+- ✅ **Code Quality** - Integrated **ESLint** and **Prettier**
+- ✅ **Linting Scripts** - `npm run lint`, `npm run lint:fix`, and `npm run format`
 - ✅ MongoDB integration ready
 - ✅ Environment configuration (.env)
 - ✅ Error handling middleware
@@ -103,8 +110,19 @@ When creating a Node.js project, you get:
 - ✅ Structure choice: basic or modern modules
 - ✅ TypeScript support (optional)
 
-### Post-Creation Options
+### Laravel Project Features
 
+When creating a Laravel project, you get:
+
+- ✅ **Full API Setup** - Ready-to-go API scaffolding
+- ✅ **Code Quality** - Pre-configured **PHPStan** (level 5)
+- ✅ **Auto-Formatting** - Pre-configured **Laravel Pint**
+- ✅ **run:test Command** - A single command to run analysis and styling:
+  ```bash
+  php artisan run:test
+  ```
+
+### Post-Creation Options
 After scaffolding, Dasyl can:
 - 📦 Install dependencies automatically
 - 🔧 Initialize Git repository with initial commit
