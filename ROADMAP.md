@@ -106,7 +106,20 @@ This document outlines the planned features and enhancements for Dasyl CLI. The 
 
 ---
 
-## Version 1.9.0 - Database Templates
+## Version 1.9.0 - Mobile Support (COMPLETED)
+
+**Released:** May 13, 2026
+
+### Mobile Stack
+- [v] **Expo Integration** - Added support for scaffolding mobile applications using Expo.
+- [v] **Nativewind Setup** - Integrated **Nativewind** for Tailwind CSS support in React Native.
+- [v] **Reanimated & Safe Area** - Pre-installed and configured essential mobile libraries.
+- [v] **Babel & Metro Config** - Automatic configuration of Babel and Metro for Nativewind support.
+- [v] **Quick Shortcut** - Added `dasyl mobile <name>` shortcut for instant mobile project creation.
+
+---
+
+## Version 1.10.0 - Database Templates
 
 **Target Release:** Q4 2026
 

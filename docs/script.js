@@ -210,7 +210,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   const body = document.getElementById('hero-static-body');
   if (!body) return;
 
-  const DASYL_VERSION = '1.8.2';
+  const DASYL_VERSION = '1.9.0';
 
   const LOGO_LINES = [
     '     _                 _ ',
@@ -335,7 +335,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   let cmdHistory   = [];
   let historyIdx   = -1;
   let isProcessing = false;
-  const DASYL_VERSION   = '1.8.2';
+  const DASYL_VERSION   = '1.9.0';
   const SPINNER_TICK_MS = 80;
   const SPINNER_DURATION = { create: 1400, install: 2200, git: 700 };
 
@@ -507,7 +507,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         showHelp();
       } else if (sub === '--version' || sub === '-v') {
         showVersion();
-      } else if (['react','vue','svelte','node','node-ts','laravel'].includes(sub)) {
+      } else if (['react','vue','svelte','node','node-ts','laravel','mobile'].includes(sub)) {
         await simulateCreate(sub, name);
       } else {
         addOutputLine(
@@ -545,6 +545,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       `  <span class="t-cmd">dasyl node &lt;name&gt;</span>     <span class="t-dim">Node.js Express API (JS)</span>`,
       `  <span class="t-cmd">dasyl node-ts &lt;name&gt;</span>  <span class="t-dim">Node.js Express API (TS)</span>`,
       `  <span class="t-cmd">dasyl laravel &lt;name&gt;</span>  <span class="t-dim">Laravel PHP project</span>`,
+      `  <span class="t-cmd">dasyl mobile &lt;name&gt;</span>   <span class="t-dim">Expo Mobile app</span>`,
       `&nbsp;`,
       `<span class="t-cmd-label">Flags:</span>`,
       `  <span class="t-cmd">--help</span>     <span class="t-dim">Show this help message</span>`,
@@ -721,6 +722,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       [
         { label: 'Frontend (React / Vue / etc via Vite)', value: 'frontend' },
         { label: 'Backend (Node.js, Laravel)',            value: 'backend'  },
+        { label: 'Mobile (Expo, Nativewind)',             value: 'mobile'   },
       ]
     );
 
@@ -729,6 +731,9 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     if (stack === 'frontend') {
       type = 'react'; // Demo simplification: real CLI uses Vite's own interactive prompt for framework selection
       addOutputLine(`<span class="t-dim">Setting up Frontend project '${escHtml(projectName)}'...</span>`);
+    } else if (stack === 'mobile') {
+      type = 'mobile';
+      addOutputLine(`<span class="t-dim">Setting up Mobile project '${escHtml(projectName)}'...</span>`);
     } else {
       // 3. Backend framework
       const backend = await promptList(
@@ -768,6 +773,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     node:      'Node.js Express API',
     'node-ts': 'Node.js Express API (TypeScript)',
     laravel:   'Laravel',
+    mobile:    'Expo Mobile app',
   };
 
   async function simulateCreate(type, name) {
@@ -804,9 +810,14 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       `<span class="t-success">Project <span class="t-hl">${escHtml(name)}</span> created successfully!</span>`
     );
 
-    const nextCmd = type === 'laravel'
-      ? `cd ${escHtml(name)} && php artisan serve`
-      : `cd ${escHtml(name)} && npm run dev`;
+    let nextCmd;
+    if (type === 'laravel') {
+      nextCmd = `cd ${escHtml(name)} && php artisan serve`;
+    } else if (type === 'mobile') {
+      nextCmd = `cd ${escHtml(name)} && npx expo start`;
+    } else {
+      nextCmd = `cd ${escHtml(name)} && npm run dev`;
+    }
     addOutputLine(`<span class="t-dim">${nextCmd}</span>`);
     addOutputLine(
       `<span class="t-dim t-note">This is a simulation - install dasyl globally to scaffold real projects.</span>`

@@ -747,6 +747,7 @@ code, pre {
 .project-card__tag--frontend { background: rgba(6,182,212,.15); color: var(--color-accent); }
 .project-card__tag--backend  { background: rgba(16,185,129,.15); color: var(--color-green); }
 .project-card__tag--php      { background: rgba(124,58,237,.15); color: var(--color-primary-lt); }
+.project-card__tag--mobile   { background: rgba(255,204,0,.15); color: var(--color-yellow); }
 
 .project-card p { color: var(--color-text-muted); font-size: .95rem; }
 

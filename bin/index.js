@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import shell from 'shelljs';
 import { generateNodeProject } from '../lib/node-generator.js';
 import { generateLaravelProject } from '../lib/laravel-generator.js';
+import { generateMobileProject } from '../lib/mobile-generator.js';
 import { checkForUpdates, handleAutoUpdateSetting } from '../lib/update-checker.js';
 import { spawn } from 'cross-spawn';
 import fs from 'fs';
@@ -101,6 +102,7 @@ ${chalk.bold('Quick Shortcuts:')}
   dasyl node <name>       Create Node.js Express API (JavaScript)
   dasyl node-ts <name>    Create Node.js Express API (TypeScript)
   dasyl laravel <name>    Create Laravel project
+  dasyl mobile <name>     Create Expo Mobile app with Nativewind
 
 ${chalk.bold('Options:')}
   -h, --help           Show this help message
@@ -134,6 +136,7 @@ ${chalk.bold('Quick Shortcuts:')}
   dasyl node <name>       Create Node.js Express API (JavaScript)
   dasyl node-ts <name>    Create Node.js Express API (TypeScript)
   dasyl laravel <name>    Create Laravel project
+  dasyl mobile <name>     Create Expo Mobile app with Nativewind
 
 ${chalk.bold('Options:')}
   -h, --help           Show this help message
@@ -325,11 +328,15 @@ async function quickCreate(type, name) {
       }
       await generateLaravelProject(targetDir, cliFlags);
       break;
+    
+    case 'mobile':
+      await generateMobileProject(targetDir, cliFlags);
+      break;
   }
 }
 
 // Check for shortcuts
-if (['react', 'vue', 'svelte', 'node', 'node-ts', 'laravel'].includes(command)) {
+if (['react', 'vue', 'svelte', 'node', 'node-ts', 'laravel', 'mobile'].includes(command)) {
   quickCreate(command, projectName).catch(err => {
     console.error(chalk.red(err.message));
     process.exit(1);
@@ -432,7 +439,8 @@ async function main() {
           message: chalk.magenta('Choose your tech stack:'),
           choices: [
             { name: chalk.blue('Frontend (React/Vue/etc via Vite)'), value: 'frontend' },
-            { name: chalk.green('Backend (Node.js, Laravel)'), value: 'backend' }
+            { name: chalk.green('Backend (Node.js, Laravel)'), value: 'backend' },
+            { name: chalk.yellow('Mobile (Expo, Nativewind)'), value: 'mobile' }
           ]
         }
       ]);
@@ -461,6 +469,8 @@ async function main() {
       console.log(chalk.cyan('  3. Verify npm is working: npm --version'));
       process.exit(1);
     }
+  } else if (stackChoice === 'mobile') {
+    await generateMobileProject(targetDir, cliFlags);
   } else {
     // Backend Choices
     let backendType;

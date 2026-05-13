@@ -72,6 +72,9 @@ dasyl node-ts my-api
 
 # Create Laravel project
 dasyl laravel my-laravel-app
+
+# Create Expo Mobile app
+dasyl mobile my-mobile-app
 ```
 
 ### Commands
@@ -90,11 +93,19 @@ dasyl laravel my-laravel-app
 - **Node.js Express** - REST API boilerplate with JavaScript
 - **Node.js Express (TypeScript)** - REST API boilerplate with TypeScript
 #### Laravel
-- **PHP Framework** for modern web applications
-- [v] **API Scaffolding** - Automatically runs `php artisan install:api`
-- [v] **Static Analysis** - Integrated **PHPStan** and **Larastan**
-- [v] **Code Styling** - Integrated **Laravel Pint**
-- [v] **Custom Test Command** - Includes `php artisan run:test` out of the box
+- PHP Framework for modern web applications
+- [v] API Scaffolding - Automatically runs `php artisan install:api`
+- [v] Static Analysis - Integrated **PHPStan** and **Larastan**
+- [v] Code Styling - Integrated **Laravel Pint**
+- [v] Custom Test Command - Includes `php artisan run:test` out of the box
+
+#### Mobile
+- **Expo + Nativewind** - Cross-platform mobile apps with Tailwind CSS
+- [v] **Expo** latest version
+- [v] **Nativewind** pre-configured
+- [v] **Reanimated & Safe Area Context**
+- [v] **Babel & Metro** pre-configured
+- [v] Instant project scaffolding
 
 ### Node.js Project Features
 
