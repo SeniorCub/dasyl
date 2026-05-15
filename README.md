@@ -88,6 +88,7 @@ dasyl mobile my-mobile-app
 
 #### Frontend
 - **React/Vue/Svelte** - Modern frontend frameworks via Vite
+- [v] **Optional Tailwind CSS** - Automatic setup and configuration
 
 #### Backend
 - **Node.js Express** - REST API boilerplate with JavaScript

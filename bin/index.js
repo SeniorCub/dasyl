@@ -6,6 +6,7 @@ import shell from 'shelljs';
 import { generateNodeProject } from '../lib/node-generator.js';
 import { generateLaravelProject } from '../lib/laravel-generator.js';
 import { generateMobileProject } from '../lib/mobile-generator.js';
+import { generateFrontendProject } from '../lib/frontend-generator.js';
 import { checkForUpdates, handleAutoUpdateSetting } from '../lib/update-checker.js';
 import { spawn } from 'cross-spawn';
 import fs from 'fs';
@@ -299,14 +300,7 @@ async function quickCreate(type, name) {
     case 'react':
     case 'vue':
     case 'svelte':
-      console.log(chalk.blue(`Creating ${type.charAt(0).toUpperCase() + type.slice(1)} app '${name}'...`));
-      try {
-        await spawnNpm(['init', 'vite@latest', '-y', '--', targetDir]);
-      } catch (error) {
-        console.log(chalk.red(`\n[x] Error: ${error.message}`));
-        console.log(chalk.yellow('\n[!] Make sure Node.js and npm are installed and in your PATH.'));
-        process.exit(1);
-      }
+      await generateFrontendProject(targetDir, cliFlags);
       break;
     
     case 'node':
@@ -457,18 +451,7 @@ async function main() {
   }
 
   if (stackChoice === 'frontend') {
-    console.log(chalk.blue(`\nSetting up Frontend project '${projectName}'...`));
-    // Run npm create vite
-    try {
-      await spawnNpm(['init', 'vite@latest', '-y', '--', targetDir]);
-    } catch (error) {
-      console.log(chalk.red(`\n[x] Error: ${error.message}`));
-      console.log(chalk.yellow('\n[!] Troubleshooting:'));
-      console.log(chalk.cyan('  1. Make sure Node.js is installed: https://nodejs.org/'));
-      console.log(chalk.cyan('  2. Restart your terminal/command prompt'));
-      console.log(chalk.cyan('  3. Verify npm is working: npm --version'));
-      process.exit(1);
-    }
+    await generateFrontendProject(targetDir, cliFlags);
   } else if (stackChoice === 'mobile') {
     await generateMobileProject(targetDir, cliFlags);
   } else {
