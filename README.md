@@ -95,6 +95,7 @@ dasyl mobile my-mobile-app
 - **Node.js Express (TypeScript)** - REST API boilerplate with TypeScript
 #### Laravel
 - PHP Framework for modern web applications
+- [v] **PHP-Aware Scaffolding** - Automatically selects Laravel 11, 12, or 13 based on local PHP version.
 - [v] API Scaffolding - Automatically runs `php artisan install:api`
 - [v] Static Analysis - Integrated **PHPStan** and **Larastan**
 - [v] Code Styling - Integrated **Laravel Pint**

@@ -761,6 +761,66 @@ code, pre {
 
 .project-card .code-block { margin-top: auto; }
 
+/* -- Changelog --------------------------------------- */
+.changelog { background: var(--color-bg); }
+
+.changelog__card {
+  max-width: 800px;
+  margin-inline: auto;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.changelog__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.changelog__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.changelog__version {
+  font-family: var(--font-mono);
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--color-primary-lt);
+  background: rgba(255,34,0,.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.changelog__date {
+  font-size: .8rem;
+  color: var(--color-text-dim);
+}
+
+.changelog__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.changelog__list {
+  color: var(--color-text-muted);
+  font-size: .95rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.changelog__footer {
+  margin-top: var(--space-8);
+  text-align: center;
+}
+
 /* -- Suggestion Box ---------------------------------- */
 .suggestions { background: var(--color-bg-elevated); }
 

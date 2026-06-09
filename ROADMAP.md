@@ -1,13 +1,24 @@
 # Dasyl Roadmap
 
-**Last Updated:** May 13, 2026  
-**Current Version:** 1.8.1
+**Last Updated:** June 9, 2026  
+**Current Version:** 1.11.0
 
 This document outlines the planned features and enhancements for Dasyl CLI. The roadmap is subject to change based on community feedback and priorities.
 
 ---
 
-## Version 1.6.0 - Enhanced Backend Options
+## Version 1.11.0 - PHP-Aware Laravel Scaffolding (COMPLETED)
+
+**Released:** June 9, 2026
+
+### Laravel Enhancements
+- [v] **PHP Version Detection** - Automatically detects local PHP version.
+- [v] **Laravel Version Mapping** - Maps PHP version to the best compatible modern Laravel version (11, 12, or 13).
+- [v] **Security Audit Handling** - Improved error messages and advice for Composer security advisories.
+
+---
+
+## Version 1.10.0 - Database Templates (COMPLETED)
 
 **Target Release:** Q2 2026
 
