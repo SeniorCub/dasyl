@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18.x, 20.x, 21.x]
+        node-version: [20.x, 22.x]
     
     steps:
       - name: Checkout code
@@ -56,13 +56,13 @@ jobs:
             fi
             echo "package.json is valid"
 
-            - name: Check for required files
-            run: |
-            files=("README.md" "LICENSE" "package.json" "bin/index.js")
-            for file in "${files[@]}"; do
+      - name: Check for required files
+        run: |
+          files=("README.md" "LICENSE" "package.json" "bin/index.js")
+          for file in "${files[@]}"; do
             if [ ! -f "$file" ]; then
               echo "Missing required file: $file"
               exit 1
             fi
-            done
-            echo "All required files present"
+          done
+          echo "All required files present"
