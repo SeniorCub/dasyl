@@ -850,7 +850,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 })();
 
 // -- Leaderboard Fetching ------------------------------
-const API_URL = 'http://localhost:3000/api'; // Update to production URL before deploying
+const API_URL = 'https://dasyl-ten.vercel.app/api';
 const leaderboardContainer = document.getElementById('leaderboard-container');
 const leaderboardList = document.getElementById('leaderboard-list');
 const leaderboardLoading = document.getElementById('leaderboard-loading');
