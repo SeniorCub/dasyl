@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
-const User = require('./models/User');
+const User = require('../models/User');
 
 const app = express();
 app.use(cors());
@@ -80,7 +80,7 @@ app.get('/api/leaderboard', async (req, res) => {
   }
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
