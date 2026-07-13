@@ -11,6 +11,7 @@ import { checkForUpdates, handleAutoUpdateSetting } from '../lib/update-checker.
 import { spawn } from 'cross-spawn';
 import fs from 'fs';
 import ora from 'ora';
+import { requireAuthentication, trackUsage, loginToLeaderboard } from '../lib/telemetry.js';
 
 // Helper function to find npm command on different platforms
 function getNpmCommand() {
@@ -252,10 +253,17 @@ process.on('SIGINT', handleCancel);
 // Check for updates
 await checkForUpdates();
 
-// Handle command shortcuts
 const args = process.argv.slice(2).filter(arg => !arg.startsWith('--') && arg !== '-y');
 const command = args[0];
 const projectName = args[1];
+
+if (command === 'login') {
+  await loginToLeaderboard(projectName);
+  process.exit(0);
+}
+
+// Ensure the user is authenticated to use Dasyl
+await requireAuthentication();
 
 async function quickCreate(type, name) {
   if (!name) {
@@ -331,15 +339,23 @@ async function quickCreate(type, name) {
 
 // Check for shortcuts
 if (['react', 'vue', 'svelte', 'node', 'node-ts', 'laravel', 'mobile'].includes(command)) {
-  quickCreate(command, projectName).catch(err => {
+  quickCreate(command, projectName).then(async () => {
+    await trackUsage();
+  }).catch(err => {
+    console.error(chalk.red(err.message));
+    process.exit(1);
+  });
+} else if (command === 'new' || command === 'create' || !command) {
+  main().then(async () => {
+    await trackUsage();
+  }).catch(err => {
     console.error(chalk.red(err.message));
     process.exit(1);
   });
 } else {
-  main().catch(err => {
-    console.error(chalk.red(err.message));
-    process.exit(1);
-  });
+  console.log(chalk.red(`\n[x] Error: Unknown command '${command}'.`));
+  console.log(chalk.yellow(`\n[!] Run ${chalk.cyan('dasyl --help')} for usage.`));
+  process.exit(1);
 }
 
 async function main() {

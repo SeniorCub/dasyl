@@ -1,3 +1,4 @@
+export function initScript() {
 /* ====================================================
    Dasyl Website - script.js
    ==================================================== */
@@ -847,3 +848,112 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
   init();
 })();
+
+// -- Leaderboard Fetching ------------------------------
+const API_URL = 'http://localhost:3000/api'; // Update to production URL before deploying
+const leaderboardContainer = document.getElementById('leaderboard-container');
+const leaderboardList = document.getElementById('leaderboard-list');
+const leaderboardLoading = document.getElementById('leaderboard-loading');
+
+let leaderboardData = [];
+let currentPage = 1;
+const itemsPerPage = 10;
+let isFetching = false;
+
+function renderLeaderboard() {
+  if (!leaderboardList) return;
+  
+  if (leaderboardData.length === 0) {
+    leaderboardLoading.style.display = 'block';
+    leaderboardLoading.textContent = 'No activity recorded yet. Be the first to use Dasyl!';
+    leaderboardList.innerHTML = '';
+    
+    // Remove pagination if it exists
+    const existingPagination = document.getElementById('leaderboard-pagination');
+    if (existingPagination) existingPagination.remove();
+    return;
+  }
+  
+  leaderboardLoading.style.display = 'none';
+  
+  const totalPages = Math.ceil(leaderboardData.length / itemsPerPage);
+  // Ensure currentPage is valid
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+  
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, leaderboardData.length);
+  const pageData = leaderboardData.slice(startIndex, endIndex);
+  
+  leaderboardList.innerHTML = pageData.map((user, index) => {
+    const globalRank = startIndex + index + 1;
+    return `
+      <div class="leaderboard__item">
+        <div class="leaderboard__rank">#${globalRank}</div>
+        <div class="leaderboard__user">@${user.username}</div>
+        <div>
+          <div class="leaderboard__score">${user.score.toLocaleString()}</div>
+          <span class="leaderboard__score-label">Projects</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  // Render pagination controls
+  let paginationDiv = document.getElementById('leaderboard-pagination');
+  if (!paginationDiv) {
+    paginationDiv = document.createElement('div');
+    paginationDiv.id = 'leaderboard-pagination';
+    paginationDiv.className = 'leaderboard__pagination';
+    leaderboardContainer.appendChild(paginationDiv);
+  }
+  
+  if (totalPages > 1) {
+    paginationDiv.style.display = 'flex';
+    paginationDiv.innerHTML = `
+      <button class="leaderboard__pagination-btn" id="lb-prev" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+      <div class="leaderboard__pagination-info">Page ${currentPage} of ${totalPages}</div>
+      <button class="leaderboard__pagination-btn" id="lb-next" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+    `;
+    
+    document.getElementById('lb-prev').addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderLeaderboard();
+      }
+    });
+    
+    document.getElementById('lb-next').addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderLeaderboard();
+      }
+    });
+  } else {
+    paginationDiv.style.display = 'none';
+  }
+}
+
+async function fetchLeaderboard() {
+  if (!leaderboardList || isFetching) return;
+  isFetching = true;
+  try {
+    const res = await fetch(`${API_URL}/leaderboard`);
+    if (!res.ok) throw new Error('Failed to fetch');
+    leaderboardData = await res.json();
+    renderLeaderboard();
+  } catch (error) {
+    if (leaderboardData.length === 0) {
+      leaderboardLoading.textContent = 'Error loading leaderboard data.';
+    }
+  } finally {
+    isFetching = false;
+  }
+}
+
+// Fetch on load and auto-refresh every 10 seconds
+if (leaderboardList) {
+  fetchLeaderboard();
+  setInterval(fetchLeaderboard, 10000);
+}
+}

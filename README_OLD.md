@@ -232,24 +232,6 @@ my-api/
 \-- package.json
 ```
 
-## 🏆 Community Leaderboard & Telemetry
-
-Dasyl now features a global leaderboard to track which developers are scaffolding the most projects! 
-By using Dasyl, you can join the community, rack up points, and compete on the public leaderboard.
-
-### Authentication
-To participate in the leaderboard, Dasyl requires a quick one-time authentication.
-You can create your account and get on the board by running:
-```bash
-dasyl login
-```
-Alternatively, if you run a scaffolding command without being authenticated, Dasyl will automatically prompt you to choose a username!
-
-### Telemetry (How it Works)
-- **What is tracked:** Only a single ping containing your unique user token is sent upon the *successful* scaffolding of a project.
-- **What is NOT tracked:** Your project names, source code, environment variables, directories, or any other personally identifiable information are **never** tracked.
-- **Where to view:** The public leaderboard can be viewed on our upcoming community website!
-
 ## Versioning
 
 This project uses [Semantic Versioning](https://semver.org/).
