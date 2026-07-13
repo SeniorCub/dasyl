@@ -16,6 +16,11 @@ mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+// Root Health Check
+app.get('/', (req, res) => {
+  res.json({ message: 'Dasyl API is running successfully on Vercel!' });
+});
+
 // Register a new user
 app.post('/api/auth/register', async (req, res) => {
   try {
