@@ -96,3 +96,6 @@ dist
 
 # Ignore .npmrc to avoid committing tokens
 .npmrc
+
+package-lock.json
+*.env
