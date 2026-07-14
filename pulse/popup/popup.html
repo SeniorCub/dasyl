@@ -16,66 +16,45 @@
     <div class="header">
         <div>
             <div class="logo">DASYL PULSE</div>
-            <p style="font-size: 9px; color: var(--text-dim); margin-top: 2px;">See your network like a developer.</p>
+            <p style="font-size: 9px; color: var(--text-dim); margin-top: 2px;">Runtime Intelligence</p>
         </div>
-        <div id="statusBadge" class="status-badge status-excellent">Excellent</div>
+        <div id="statusBadge" class="status-badge status-excellent">Active</div>
     </div>
 
-    <div class="meter-container">
-        <svg class="progress-ring" width="180" height="180">
-            <circle class="progress-ring__background" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="80" cx="90" cy="90"/>
-            <circle id="progressCircle" class="progress-ring__circle" stroke="url(#gradient)" stroke-width="8" stroke-dasharray="502.6" stroke-dashoffset="502.6" fill="transparent" r="80" cx="90" cy="90"/>
-            <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#39ff14" />
-                    <stop offset="100%" stop-color="#00e5ff" />
-                </linearGradient>
-            </defs>
-        </svg>
-        <div id="speedDisplay" class="speed-value">0.0</div>
-        <div class="speed-unit">Mbps Download</div>
+    <div class="site-info" style="padding: 10px 15px; border-bottom: 1px solid var(--border-color);">
+        <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase;">Current Site</div>
+        <div id="currentUrl" style="font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; color: #fff;">--</div>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-label">Latency (Unloaded)</div>
-            <div id="latencyUnloadedDisplay" class="stat-value">--</div>
+            <div class="stat-label">Total Requests</div>
+            <div id="totalRequests" class="stat-value">0</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Latency (Loaded)</div>
-            <div id="latencyLoadedDisplay" class="stat-value">--</div>
+            <div class="stat-label">Failed (500s)</div>
+            <div id="failedRequests" class="stat-value" style="color: #ff3366;">0</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Upload</div>
-            <div id="uploadDisplay" class="stat-value">--</div>
+            <div class="stat-label">Slow (>1s)</div>
+            <div id="slowRequests" class="stat-value" style="color: #ffaa00;">0</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">Jitter</div>
-            <div id="jitterDisplay" class="stat-value">--</div>
-        </div>
-    </div>
-
-    <div class="client-info" id="clientInfo">
-        <div class="info-row">
-            <span>IP:</span>
-            <span id="clientIP">--</span>
-        </div>
-        <div class="info-row">
-            <span>Provider:</span>
-            <span id="clientProvider">--</span>
-        </div>
-        <div class="info-row">
-            <span>Location:</span>
-            <span id="clientLocation">--</span>
-        </div>
-        <div class="info-row">
-            <span>Server:</span>
-            <span id="serverInfo">Cloudflare CDN</span>
+            <div class="stat-label">Avg API Time</div>
+            <div id="avgTime" class="stat-value">--</div>
         </div>
     </div>
 
     <div class="section-title">
-        <span>HISTORY</span>
+        <span>SMART WARNINGS</span>
+    </div>
+    <div id="warningsList" class="warnings-list" style="padding: 0 15px; max-height: 100px; overflow-y: auto;">
+        <!-- Warnings will be injected here -->
+        <div style="font-size: 11px; color: var(--text-dim); padding: 5px 0;">No active warnings.</div>
+    </div>
+
+    <div class="section-title">
+        <span>REQUEST HISTORY (LAST 100)</span>
     </div>
     <div id="historyList" class="history-list">
         <!-- History items will be injected here -->
@@ -83,15 +62,13 @@
 
     <div class="controls">
         <div class="toggle-container">
-            <span>Dev Mode</span>
+            <span>Dev Mode Interception</span>
             <label class="switch">
                 <input type="checkbox" id="devModeToggle">
                 <span class="slider"></span>
             </label>
         </div>
     </div>
-
-    <button id="runTestBtn" class="btn-primary">RUN SPEED TEST</button>
 
     <script src="popup.js"></script>
 </body>

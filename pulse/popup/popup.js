@@ -1,164 +1,134 @@
-// Dasyl Net - Popup Controller
+// Dasyl Net - Runtime Intelligence Popup Controller
 
 document.addEventListener('DOMContentLoaded', () => {
     // UI Elements
-    const runTestBtn = document.getElementById('runTestBtn');
-    const speedDisplay = document.getElementById('speedDisplay');
-    const uploadDisplay = document.getElementById('uploadDisplay');
-    const latencyUnloadedDisplay = document.getElementById('latencyUnloadedDisplay');
-    const latencyLoadedDisplay = document.getElementById('latencyLoadedDisplay');
-    const jitterDisplay = document.getElementById('jitterDisplay');
-    const clientIP = document.getElementById('clientIP');
-    const clientProvider = document.getElementById('clientProvider');
-    const clientLocation = document.getElementById('clientLocation');
-    const statusBadge = document.getElementById('statusBadge');
+    const currentUrlDisplay = document.getElementById('currentUrl');
+    const totalRequestsDisplay = document.getElementById('totalRequests');
+    const failedRequestsDisplay = document.getElementById('failedRequests');
+    const slowRequestsDisplay = document.getElementById('slowRequests');
+    const avgTimeDisplay = document.getElementById('avgTime');
     const historyList = document.getElementById('historyList');
+    const warningsList = document.getElementById('warningsList');
     const devModeToggle = document.getElementById('devModeToggle');
-    const progressCircle = document.getElementById('progressCircle');
-
-    const radius = progressCircle.r.baseVal.value;
-    const circumference = 2 * Math.PI * radius;
 
     // Load initial state
     loadData();
 
     // Event Listeners
-    runTestBtn.addEventListener('click', runSpeedTest);
     devModeToggle.addEventListener('change', toggleDevMode);
 
-    function setProgress(percent) {
-        const offset = circumference - (percent / 100) * circumference;
-        progressCircle.style.strokeDashoffset = offset;
-    }
-
-    function displayTestResult(res) {
-        if (!res) return;
-
-        animateValue(speedDisplay, 0, res.downloadMbps, 1000);
-        uploadDisplay.textContent = res.uploadMbps + ' Mbps';
-        latencyUnloadedDisplay.textContent = (res.latencyUnloaded || res.latencyMs || '--') + ' ms';
-        latencyLoadedDisplay.textContent = (res.latencyLoaded || '--') + ' ms';
-        jitterDisplay.textContent = (res.jitter || res.jitterMs || '--') + ' ms';
-        
-        if (res.client) {
-            clientIP.textContent = res.client.ip || '--';
-            clientProvider.textContent = res.client.org || '--';
-            
-            const city = res.client.city;
-            const country = res.client.country_name;
-            if (city && country) {
-                clientLocation.textContent = `${city}, ${country}`;
-            } else if (city || country) {
-                clientLocation.textContent = city || country;
-            } else {
-                clientLocation.textContent = 'Unknown';
+    function loadData() {
+        // Get settings
+        chrome.storage.local.get('settings', (data) => {
+            if (data.settings) {
+                devModeToggle.checked = data.settings.devMode;
             }
-        } else {
-            clientIP.textContent = '--';
-            clientProvider.textContent = '--';
-            clientLocation.textContent = '--';
-        }
+        });
 
-        setProgress(Math.min(res.downloadMbps, 100));
+        // Request metrics from background script
+        chrome.runtime.sendMessage({ action: 'getTabMetrics' }, (response) => {
+            if (response && response.success) {
+                currentUrlDisplay.textContent = response.url || 'Unknown URL';
+                processMetrics(response.metrics || []);
+            } else {
+                currentUrlDisplay.textContent = 'No data for active tab';
+                processMetrics([]);
+            }
+        });
     }
 
-    async function loadData() {
-        const data = await chrome.storage.local.get(['history', 'settings', 'currentStatus']);
-        
-        // Update history
-        updateHistoryUI(data.history || []);
-        
-        // Update status badge
-        if (data.currentStatus) {
-            statusBadge.textContent = data.currentStatus;
-            statusBadge.className = `status-badge status-${data.currentStatus.toLowerCase()}`;
-        }
-
-        // Update settings
-        if (data.settings) {
-            devModeToggle.checked = data.settings.devMode;
-        }
-    }
-
-    function updateHistoryUI(history) {
-        historyList.innerHTML = '';
-        if (history.length === 0) {
-            historyList.innerHTML = '<div class="history-item">No tests yet</div>';
+    function processMetrics(metrics) {
+        if (!metrics || metrics.length === 0) {
+            totalRequestsDisplay.textContent = '0';
+            failedRequestsDisplay.textContent = '0';
+            slowRequestsDisplay.textContent = '0';
+            avgTimeDisplay.textContent = '--';
+            historyList.innerHTML = '<div class="history-item">No network requests intercepted yet.</div>';
+            warningsList.innerHTML = '<div style="font-size: 11px; color: var(--text-dim); padding: 5px 0;">No active warnings.</div>';
             return;
         }
 
-        history.forEach((test, index) => {
-            const date = new Date(test.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        totalRequestsDisplay.textContent = metrics.length;
+        
+        let failedCount = 0;
+        let slowCount = 0;
+        let totalTime = 0;
+        const warnings = [];
+
+        // Reverse to show newest first
+        const reversedMetrics = [...metrics].reverse();
+        historyList.innerHTML = '';
+
+        reversedMetrics.forEach(req => {
+            totalTime += req.duration;
+
+            // Analyze
+            if (req.status === 0 || req.status >= 400) {
+                failedCount++;
+                if (req.status >= 500) {
+                    warnings.push(`⚠ Server Error (${req.status}) on ${new URL(req.url).pathname}`);
+                } else if (req.status === 0) {
+                    warnings.push(`⚠ Network/CORS Failed on ${new URL(req.url).pathname}`);
+                }
+            }
+
+            if (req.duration > 1000) {
+                slowCount++;
+                if (req.duration > 2500) {
+                    warnings.push(`⚠ Slow API (${(req.duration/1000).toFixed(1)}s) on ${new URL(req.url).pathname}`);
+                }
+            }
+
+            // Create UI Item
+            const date = new Date(req.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            let statusColor = '#39ff14'; // green
+            if (req.status >= 400 || req.status === 0) statusColor = '#ff3366'; // red
+            else if (req.duration > 1000) statusColor = '#ffaa00'; // yellow
+
             const item = document.createElement('div');
-            item.className = 'history-item clickable';
+            item.className = 'history-item';
+            item.style.display = 'flex';
+            item.style.flexDirection = 'column';
+            item.style.gap = '4px';
             item.innerHTML = `
-                <span>${test.downloadMbps} / ${test.uploadMbps} Mbps</span>
-                <span class="date">${date}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600; color: ${statusColor}; font-size: 10px;">${req.method} ${req.status || 'ERR'}</span>
+                    <span style="color: var(--text-dim); font-size: 10px;">${req.duration.toFixed(0)}ms</span>
+                </div>
+                <div style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #ccc;">
+                    ${req.url}
+                </div>
+                <div style="font-size: 9px; color: var(--text-dim); text-align: right;">${date}</div>
             `;
-            item.addEventListener('click', () => {
-                displayTestResult(test);
-                // Visual feedback for selection
-                document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-            });
             historyList.appendChild(item);
         });
-    }
 
-    async function runSpeedTest() {
-        runTestBtn.disabled = true;
-        runTestBtn.textContent = 'TESTING...';
-        setProgress(0);
-        
-        speedDisplay.textContent = '0.0';
-        uploadDisplay.textContent = '--';
-        latencyUnloadedDisplay.textContent = '--';
-        latencyLoadedDisplay.textContent = '--';
-        jitterDisplay.textContent = '--';
-        clientIP.textContent = '--';
-        clientProvider.textContent = '--';
-        clientLocation.textContent = '--';
+        // Update Stats
+        failedRequestsDisplay.textContent = failedCount;
+        slowRequestsDisplay.textContent = slowCount;
+        avgTimeDisplay.textContent = (totalTime / metrics.length).toFixed(0) + 'ms';
 
-        chrome.runtime.sendMessage({ action: 'runFullTest' }, (response) => {
-            if (response && response.success) {
-                displayTestResult(response.results);
-                loadData(); // Refresh history
-            } else {
-                console.error('Speed Test Failed:', response ? response.error : 'No response');
-                speedDisplay.textContent = 'Err';
-            }
-            
-            runTestBtn.disabled = false;
-            runTestBtn.textContent = 'RUN SPEED TEST';
-        });
-    }
-
-    // Progress update listener from background
-    chrome.runtime.onMessage.addListener((request) => {
-        if (request.action === 'testProgress') {
-            runTestBtn.textContent = request.message.toUpperCase();
-            // Could update small progress bar here too
+        // Display Warnings
+        if (warnings.length > 0) {
+            warningsList.innerHTML = warnings.map(w => `<div style="font-size: 11px; color: #ffaa00; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">${w}</div>`).join('');
+        } else {
+            warningsList.innerHTML = '<div style="font-size: 11px; color: var(--text-dim); padding: 5px 0;">No active warnings.</div>';
         }
-    });
+    }
 
     function toggleDevMode() {
         chrome.storage.local.get('settings', (data) => {
             const settings = data.settings || {};
             settings.devMode = devModeToggle.checked;
             chrome.storage.local.set({ settings });
+            
+            // Auto reload metrics to show that interception relies on this
+            if (settings.devMode) {
+                setTimeout(loadData, 500);
+            }
         });
     }
 
-    function animateValue(obj, start, end, duration) {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            obj.innerHTML = (progress * (end - start) + start).toFixed(1);
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
-        };
-        window.requestAnimationFrame(step);
-    }
+    // Auto-refresh metrics every 2 seconds if popup is open
+    setInterval(loadData, 2000);
 });
