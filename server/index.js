@@ -6,7 +6,10 @@ const { v4: uuidv4 } = require('uuid');
 const User = require('./models/User');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ['https://dasyl.seniorcub.name.ng', 'http://localhost:5173', 'http://localhost:4173'],
+  credentials: true
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
