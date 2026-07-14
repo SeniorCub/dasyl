@@ -74,7 +74,48 @@ function updateStatus(status) {
   chrome.storage.local.set({ currentStatus: status });
 }
 
+// Tab metrics store
+const tabMetrics = new Map();
+
+chrome.tabs.onRemoved.addListener((tabId) => {
+  tabMetrics.delete(tabId);
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  // Clear metrics when a page refreshes
+  if (changeInfo.status === 'loading' && changeInfo.url) {
+    tabMetrics.set(tabId, []);
+  }
+});
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // Handle runtime intelligence metrics
+  if (request.action === 'recordRequest' && sender.tab) {
+    const tabId = sender.tab.id;
+    if (!tabMetrics.has(tabId)) {
+      tabMetrics.set(tabId, []);
+    }
+    const metrics = tabMetrics.get(tabId);
+    metrics.push(request.payload);
+    
+    // Keep last 100 requests per tab
+    if (metrics.length > 100) metrics.shift();
+    return;
+  }
+
+  // Handle popup request for current tab metrics
+  if (request.action === 'getTabMetrics') {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      if (tabs[0]) {
+        const metrics = tabMetrics.get(tabs[0].id) || [];
+        sendResponse({ success: true, metrics, url: tabs[0].url });
+      } else {
+        sendResponse({ success: false, error: 'No active tab' });
+      }
+    });
+    return true; // Keep channel open for async response
+  }
+
   console.log('Background received message:', request);
   
   if (request.action === 'runFullTest') {

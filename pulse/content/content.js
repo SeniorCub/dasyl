@@ -26,3 +26,17 @@ window.addEventListener('online', () => {
 window.addEventListener('offline', () => {
   chrome.runtime.sendMessage({ action: 'networkStatus', status: 'offline' });
 });
+
+// Listen for intercepted network requests from inject.js (MAIN world)
+window.addEventListener('message', (event) => {
+  // Only accept messages from the same window
+  if (event.source !== window) return;
+  
+  if (event.data && event.data.type === 'DASYL_PULSE_METRIC') {
+    // Forward the metric to the background script
+    chrome.runtime.sendMessage({
+      action: 'recordRequest',
+      payload: event.data.payload
+    });
+  }
+});
