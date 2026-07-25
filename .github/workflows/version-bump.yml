@@ -44,13 +44,19 @@ jobs:
       - name: Bump version
         id: bump
         run: |
+          cd cli
           OLD_VERSION=$(node -p "require('./package.json').version")
-          npm version ${{ inputs.version_type }} -m "chore: Bump version to %s"
+          npm version ${{ inputs.version_type }} -m "chore: Bump CLI version to %s"
           NEW_VERSION=$(node -p "require('./package.json').version")
           
           echo "old_version=$OLD_VERSION" >> $GITHUB_OUTPUT
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Commit version bump
+        run: |
+          git add cli/package.json cli/package-lock.json
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.new_version }}" || echo "No changes to commit"
       
       - name: Push changes
         run: |

@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies and build
         run: |
-          cd docs
+          cd web
           npm install
           npm run build
 
@@ -33,7 +33,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./docs/dist/
+          local-dir: ./web/dist/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
           exclude: |
             **/.git*

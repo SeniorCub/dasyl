@@ -25,12 +25,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
       
       - name: Install dependencies
+        working-directory: ./cli
         run: npm ci
       
       - name: Verify package
+        working-directory: ./cli
         run: npm pack --dry-run
       
       - name: Check for syntax errors
+        working-directory: ./cli
         run: node bin/index.js --version
   
   lint:
@@ -46,19 +49,21 @@ jobs:
           node-version: '20'
       
       - name: Install dependencies
+        working-directory: ./cli
         run: npm ci
       
       - name: Check package.json
+        working-directory: ./cli
         run: |
           if ! jq empty package.json; then
             echo "Invalid package.json"
             exit 1
-            fi
-            echo "package.json is valid"
+          fi
+          echo "package.json is valid"
 
       - name: Check for required files
         run: |
-          files=("README.md" "LICENSE" "package.json" "bin/index.js")
+          files=("cli/package.json" "cli/bin/index.js")
           for file in "${files[@]}"; do
             if [ ! -f "$file" ]; then
               echo "Missing required file: $file"
