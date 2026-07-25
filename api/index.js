@@ -5,8 +5,12 @@ const connectDB = require('./config/db');
 
 // Import routes
 const authRoutes = require('./routes/auth');
+const oauthRoutes = require('./routes/oauth');
+const adminRoutes = require('./routes/admin');
 const telemetryRoutes = require('./routes/telemetry');
 const leaderboardRoutes = require('./routes/leaderboard');
+const passport = require('./config/passport');
+const session = require('express-session');
 
 const app = express();
 
@@ -16,6 +20,15 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// Initialize Passport and Session
+app.use(session({
+  secret: process.env.JWT_SECRET || 'fallback-secret-for-development',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Connect to Database
 connectDB();
@@ -27,6 +40,8 @@ app.get('/', (req, res) => {
 
 // Mount Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/oauth', oauthRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/telemetry', telemetryRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 

@@ -628,6 +628,8 @@ dasyl node-ts my-api   <span class="c-comment"># TypeScript</span></code></pre>
         </p>
         <p class="footer__meta">
           ISC License &nbsp;.&nbsp;
+          <a href="/privacy">Privacy Policy</a> &nbsp;.&nbsp;
+          <a href="/terms">Terms of Service</a> &nbsp;.&nbsp;
           <a href="https://github.com/SeniorCub/dasyl" target="_blank" rel="noopener">GitHub</a>
           &nbsp;.&nbsp;
           <a href="https://www.npmjs.com/package/dasyl" target="_blank" rel="noopener">npm</a>
