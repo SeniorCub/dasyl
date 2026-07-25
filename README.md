@@ -1,6 +1,4 @@
-# dasile -> dasyl
-
-*From Dasile (to create / release)*
+# Dasyl Ecosystem
 
 ```
      _                 _ 
@@ -17,254 +15,89 @@
 ![downloads](https://img.shields.io/npm/dw/dasyl)
 ![license](https://img.shields.io/npm/l/dasyl)
 ![CI](https://github.com/SeniorCub/dasyl/actions/workflows/ci.yml/badge.svg)
-![Publish](https://github.com/SeniorCub/dasyl/actions/workflows/publish.yml/badge.svg)
 ![Deploy](https://github.com/SeniorCub/dasyl/actions/workflows/deploy-cpanel.yml/badge.svg)
 
 **Live site:** [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
 
+---
+
 ## Create. Configure. Release.
 
-**Dasyl** is a fast, opinionated CLI for creating, configuring, and releasing modern development projects in seconds.
+**Dasyl** is shifting from a simple CLI into a full **API-first Developer SaaS Ecosystem**. 
 
-From web apps to APIs and full stacks, Dasyl removes repetitive setup so you can focus on building.
+From web apps to APIs and full stacks, Dasyl removes repetitive setup so you can focus on building, while instantly providing runtime intelligence and deployment tracking.
 
-## Features
+---
 
-- **Quick Scaffolding** - Create projects with a single command
-- **Auto Installation** - Optionally install dependencies automatically
-- **Git Integration** - Initialize Git repo with first commit
-- **IDE Support** - Open in VS Code automatically
-- **TypeScript Support** - Choose between JavaScript or TypeScript
-- **Shortcuts** - Fast commands for common project types
+## 🏗️ The API-First Architecture (Phase 1 Focus)
 
-## Installation
+Since we are moving to an API-first architecture, the repository is split into three main clients that all authenticate against a single unified backend. 
+
+### 1. The Backend (`/server`)
+This is the Vercel-deployed Serverless Express API. It is the "brain" of the ecosystem.
+```text
+server/
+├── index.js          # The Express entry point (Routes for Auth, Telemetry, Leaderboard)
+├── models/           # MongoDB Mongoose schemas (User.js)
+└── package.json      # Backend dependencies (uuid, express, mongoose, etc.)
+```
+**Current Focus:** Building out `models/User.js`, setting up JWT authentication, and creating endpoints like `/api/auth/login` and `/api/auth/me`.
+
+### 2. The CLI Client (`/bin` & `/lib`)
+This is the NPM package codebase that runs on the developer's local machine.
+```text
+bin/
+└── index.js          # The entry point that parses commands (dasyl login, dasyl create)
+
+lib/
+├── telemetry.js      # Sends usage data to the backend
+├── frontend-generator.js # Scaffolds React/Vue
+└── ...               # Other generators
+```
+**Current Focus:** Updating `bin/index.js` to support new commands (`dasyl login`, `dasyl whoami`) and writing logic to save their API token to `~/.dasyl/config.json`. Updating `telemetry.js` to send their API token in the `Authorization` header so the backend can track usage.
+
+### 3. The Web Dashboard (`/docs`)
+This is the Vite/React frontend deployed to cPanel (soon to be the SaaS Dashboard).
+```text
+docs/
+├── index.html        
+├── vite.config.js    
+└── src/              # React components, pages, and styles
+```
+**Current Focus:** Adding a Login/Register page and a user Dashboard view where developers can generate their CLI API token and track their "Builds this month".
+
+### 4. Dasyl Pulse (`/pulse`)
+The Chrome Extension providing Developer / QA Runtime Intelligence.
+```text
+pulse/
+├── background/       # Service worker (Tracks per-tab state)
+├── content/          # inject.js and content.js (Intercepts fetch/xhr)
+└── popup/            # HTML/JS for the dashboard UI
+```
+*Pulse silently monitors page requests to detect failures, analyze latency, and flag performance issues.*
+
+---
+
+## 🚀 CLI Installation & Usage
 
 ```bash
 npm install -g dasyl
 ```
 
-## Usage
-
 ### Interactive Mode
-
 Simply run `dasyl` to start the interactive project creator:
-
 ```bash
 dasyl
 ```
 
 ### Quick Shortcuts
-
 Create projects instantly with shortcuts:
-
 ```bash
-# Create React app
-dasyl react my-app
-
-# Create Node.js Express API (JavaScript)
-dasyl node my-api
-
-# Scaffold into current empty folder
-dasyl node ./
-
-# Create Node.js Express API (TypeScript)
-dasyl node-ts my-api
-
-# Create Laravel project
-dasyl laravel my-laravel-app
-
-# Create Expo Mobile app
-dasyl mobile my-mobile-app
+dasyl react my-app            # Create React app
+dasyl node my-api             # Create Node.js Express API (JavaScript)
+dasyl node-ts my-api          # Create Node.js Express API (TypeScript)
+dasyl laravel my-laravel-app  # Create Laravel project
+dasyl mobile my-mobile-app    # Create Expo Mobile app
 ```
 
-### Commands
-
-- `dasyl` - Interactive project creator
-- `dasyl <type> <name>` - Quick create with shortcuts
-- `dasyl -h` or `dasyl --help` - Show help
-- `dasyl -v` or `dasyl --version` - Show version
-
-### Available Project Types
-
-#### Frontend
-- **React/Vue/Svelte** - Modern frontend frameworks via Vite
-- [v] **Optional Tailwind CSS** - Automatic setup and configuration
-
-#### Backend
-- **Node.js Express** - REST API boilerplate with JavaScript
-- **Node.js Express (TypeScript)** - REST API boilerplate with TypeScript
-#### Laravel
-- PHP Framework for modern web applications
-- [v] **PHP-Aware Scaffolding** - Automatically selects Laravel 11, 12, or 13 based on local PHP version.
-- [v] API Scaffolding - Automatically runs `php artisan install:api`
-- [v] Static Analysis - Integrated **PHPStan** and **Larastan**
-- [v] Code Styling - Integrated **Laravel Pint**
-- [v] Custom Test Command - Includes `php artisan run:test` out of the box
-
-#### Mobile
-- **Expo + Nativewind** - Cross-platform mobile apps with Tailwind CSS
-- [v] **Expo** latest version
-- [v] **Nativewind** pre-configured
-- [v] **Reanimated & Safe Area Context**
-- [v] **Babel & Metro** pre-configured
-- [v] Instant project scaffolding
-
-### Node.js Project Features
-
-When creating a Node.js project, you get:
-
-- [v] Express.js setup with middleware
-- [v] **Code Quality** - Integrated **ESLint** and **Prettier**
-- [v] **Linting Scripts** - `npm run lint`, `npm run lint:fix`, and `npm run format`
-- [v] MongoDB integration ready
-- [v] Environment configuration (.env)
-- [v] Error handling middleware
-- [v] Authentication routes boilerplate
-- [v] User model with validation
-- [v] Organized folder structure
-- [v] Structure choice: basic or modern modules
-- [v] TypeScript support (optional)
-
-### Laravel Project Features
-
-When creating a Laravel project, you get:
-
-- [v] **Full API Setup** - Ready-to-go API scaffolding
-- [v] **Code Quality** - Pre-configured **PHPStan** (level 5)
-- [v] **Auto-Formatting** - Pre-configured **Laravel Pint**
-- [v] **run:test Command** - A single command to run analysis and styling:
-  ```bash
-  php artisan run:test
-  ```
-
-### Post-Creation Options
-
-After scaffolding, Dasyl can:
-- **Install dependencies automatically**
-- **Initialize Git repository with initial commit**
-- **Open project in VS Code**
-
-## Examples
-
-### Create a TypeScript API
-
-```bash
-dasyl node-ts my-api
-# Automatically creates src/ folder with TypeScript configs
-```
-
-### Create a React App
-
-```bash
-dasyl react my-react-app
-# Uses Vite for fast development
-```
-
-### Interactive Mode with Full Control
-
-```bash
-dasyl
-# Follow prompts to:
-# - Choose project type
-# - Select language (JS/TS for Node.js)
-# - Select Node.js folder structure (basic/modern)
-# - Auto-install dependencies
-# - Initialize Git
-# - Open in VS Code
-```
-
-### Choose a Node.js Structure from CLI
-
-```bash
-dasyl node my-api --structure modern
-dasyl node-ts my-api --structure basic
-```
-
-## Project Structure (Node.js)
-
-### JavaScript
-```
-my-api/
-|-- bin/
-|-- config/
-|   |-- database.js
-|   |-- middleware.js
-|   \-- routes.js
-|-- controllers/
-|   |-- authController.js
-|   \-- userController.js
-|-- middleware/
-|   |-- auth.js
-|   |-- errorHandler.js
-|   \-- security.js
-|-- models/
-|   \-- User.js
-|-- routes/
-|   |-- authRoutes.js
-|   \-- userRoutes.js
-|-- utils/
-|-- public/
-|-- uploads/
-|-- .env
-|-- .gitignore
-|-- package.json
-\-- server.js
-```
-
-### TypeScript
-```
-my-api/
-|-- src/
-|   |-- bin/
-|   |-- config/
-|   |-- controllers/
-|   |-- middleware/
-|   |-- models/
-|   |-- routes/
-|   |-- utils/
-|   \-- server.ts
-|-- dist/           # Compiled output
-|-- public/
-|-- uploads/
-|-- .env
-|-- .gitignore
-|-- tsconfig.json
-\-- package.json
-```
-
-## 🏆 Community Leaderboard & Telemetry
-
-Dasyl now features a global leaderboard to track which developers are scaffolding the most projects! 
-By using Dasyl, you can join the community, rack up points, and compete on the public leaderboard.
-
-### Authentication
-To participate in the leaderboard, Dasyl requires a quick one-time authentication.
-You can create your account and get on the board by running:
-```bash
-dasyl login
-```
-Alternatively, if you run a scaffolding command without being authenticated, Dasyl will automatically prompt you to choose a username!
-
-### Telemetry (How it Works)
-- **What is tracked:** Only a single ping containing your unique user token is sent upon the *successful* scaffolding of a project.
-- **What is NOT tracked:** Your project names, source code, environment variables, directories, or any other personally identifiable information are **never** tracked.
-- **Where to view:** The public leaderboard can be viewed on our upcoming community website!
-
-## Versioning
-
-This project uses [Semantic Versioning](https://semver.org/).
-
-## Contributing
-
-Contributions are welcome! Please see the [contributing guidelines](CONTRIBUTING.md) for more information.
-
-## About the Creator
-
-**Dasyl** was created by **Farinde Reuben Ifeoluwa** ([@SeniorCub](https://github.com/SeniorCub)).
-
-- GitHub: [github.com/SeniorCub](https://github.com/SeniorCub)
-- Website: [dasyl.seniorcub.name.ng](https://dasyl.seniorcub.name.ng)
-
-## License
-
-This project is licensed under the ISC License. See the [LICENSE](LICENSE) file for details.
+*(Note: Advanced CLI auth commands like `dasyl login`, `dasyl whoami`, and `dasyl plan` are currently under development in Phase 1).*
