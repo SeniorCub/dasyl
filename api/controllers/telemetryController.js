@@ -1,23 +1,52 @@
 const User = require('../models/User');
+const Subscription = require('../models/Subscription');
 
 exports.track = async (req, res) => {
   try {
-    const { userId } = req.body;
-    if (!userId) return res.status(400).json({ error: 'userId is required' });
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Unauthorized. Missing Bearer token' });
+    }
 
-    const user = await User.findOneAndUpdate(
-      { userId },
+    const apiToken = authHeader.split(' ')[1];
+    if (!apiToken) {
+      return res.status(401).json({ error: 'Unauthorized. Empty Bearer token' });
+    }
+
+    // Find User by API Token
+    const user = await User.findOne({ apiToken });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Increment Gamification Metrics
+    user.score += 1;
+    user.lastActive = new Date();
+    
+    // Check Streak logic (simple implementation: +1 if lastActive was today/yesterday)
+    // For now we just naively increment it, we can harden streak logic later
+    user.streak += 1; 
+    
+    await user.save();
+
+    // Increment Subscription Limits
+    const subscription = await Subscription.findOneAndUpdate(
+      { userId: user._id },
       { 
-        $inc: { score: 1 },
-        $set: { lastActive: new Date() }
+        $inc: { buildsThisMonth: 1, totalProjects: 1 }
       },
       { new: true }
     );
 
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!subscription) {
+       // Failsafe in case they registered before the Subscription schema existed
+       const newSub = new Subscription({ userId: user._id, buildsThisMonth: 1, totalProjects: 1 });
+       await newSub.save();
+    }
 
-    res.json({ success: true, score: user.score });
+    res.json({ success: true, score: user.score, buildsThisMonth: subscription ? subscription.buildsThisMonth : 1 });
   } catch (error) {
+    console.error('Telemetry error:', error);
     res.status(500).json({ error: 'Server error during tracking' });
   }
 };

@@ -92,9 +92,10 @@ console.log(chalk.cyan.bold('Fast, opinionated CLI for modern development\n'));
   const command = args[0];
   const projectName = args[1];
 
-  // Placeholder for Phase 1 Login
+  // Real Login Flow
   if (command === 'login') {
-    console.log(chalk.blue('Login command coming in Phase 1...'));
+    const { handleLogin } = await import('../lib/commands/login.js');
+    await handleLogin();
     process.exit(0);
   }
 
