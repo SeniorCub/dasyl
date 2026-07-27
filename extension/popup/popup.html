@@ -13,12 +13,28 @@
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <div class="header">
+    <!-- AUTH VIEW -->
+    <div id="authView" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 20px;">
+        <div class="logo" style="margin-bottom: 20px; font-size: 16px;">DASYL PULSE</div>
+        <p style="font-size: 11px; color: var(--text-dim); text-align: center; margin-bottom: 15px;">
+            Enter your API Token from the Dasyl Dashboard to connect this extension.
+        </p>
+        <form id="authForm" style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+            <input type="password" id="apiTokenInput" placeholder="dsl_..." required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-dark); color: #fff; outline: none; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+            <button type="submit" style="width: 100%; padding: 8px; border-radius: 4px; border: none; background: #3b82f6; color: #fff; font-weight: 600; cursor: pointer; font-size: 11px;">Connect</button>
+            <div id="authError" style="color: #ff3366; font-size: 10px; text-align: center; display: none;"></div>
+        </form>
+    </div>
+
+    <!-- APP VIEW -->
+    <div id="appView" style="display: none; height: 100%; display: flex; flex-direction: column;">
+        <div class="header">
         <div>
             <div class="logo">DASYL PULSE</div>
             <p style="font-size: 9px; color: var(--text-dim); margin-top: 2px;">Runtime Intelligence</p>
         </div>
         <div id="statusBadge" class="status-badge status-excellent">Active</div>
+        <button id="logoutBtn" style="background: none; border: 1px solid var(--border-color); color: var(--text-dim); padding: 3px 6px; border-radius: 3px; font-size: 9px; cursor: pointer; margin-left: auto;">Logout</button>
     </div>
 
     <div class="site-info" style="padding: 10px 15px; border-bottom: 1px solid var(--border-color);">
@@ -70,6 +86,8 @@
         </div>
     </div>
 
-    <script src="popup.js"></script>
+    </div>
+    
+    <script type="module" src="popup.js"></script>
 </body>
 </html>

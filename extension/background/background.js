@@ -1,32 +1,14 @@
-// Dasyl Net - Background Service Worker
+import { SpeedTestEngine } from '../utils/speedTest.js';
+import * as storage from './storage.js';
+import * as api from './api.js';
 
 // Catch any unhandled rejections globally
 self.addEventListener('unhandledrejection', event => {
   console.error('Unhandled background promise rejection:', event.reason);
 });
 
-console.log('Background: Loading speedTest.js...');
-try {
-  // Use absolute path from extension root for reliability
-  importScripts('../utils/speedTest.js');
-  console.log('Background: speedTest.js loaded. Global SpeedTestEngine:', typeof SpeedTestEngine);
-} catch (e) {
-  console.error('Background: Failed to importScripts:', e);
-}
-
 const ALARM_NAME = 'network-check';
-let engine;
-
-try {
-  if (typeof SpeedTestEngine !== 'undefined') {
-    engine = new SpeedTestEngine();
-    console.log('Dasyl Pulse Engine Initialized');
-  } else {
-    console.error('Background: SpeedTestEngine class is not defined after import');
-  }
-} catch (e) {
-  console.error('Background: Failed to initialize SpeedTestEngine:', e);
-}
+let engine = new SpeedTestEngine();
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Dasyl Pulse Installed');
@@ -52,11 +34,9 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 async function checkConnection() {
   if (!navigator.onLine) {
-    updateStatus('Offline');
+    chrome.storage.local.set({ currentStatus: 'Offline' });
     return;
   }
-
-  if (!engine) return;
 
   try {
     const latencyData = await engine.measureLatency(3);
@@ -70,21 +50,14 @@ async function checkConnection() {
   }
 }
 
-function updateStatus(status) {
-  chrome.storage.local.set({ currentStatus: status });
-}
-
-// Tab metrics store
-const tabMetrics = new Map();
-
 chrome.tabs.onRemoved.addListener((tabId) => {
-  tabMetrics.delete(tabId);
+  storage.clearTab(tabId);
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   // Clear metrics when a page refreshes
   if (changeInfo.status === 'loading' && changeInfo.url) {
-    tabMetrics.set(tabId, []);
+    storage.initTab(tabId);
   }
 });
 
@@ -92,14 +65,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // Handle runtime intelligence metrics
   if (request.action === 'recordRequest' && sender.tab) {
     const tabId = sender.tab.id;
-    if (!tabMetrics.has(tabId)) {
-      tabMetrics.set(tabId, []);
-    }
-    const metrics = tabMetrics.get(tabId);
-    metrics.push(request.payload);
+    storage.addMetric(tabId, request.payload);
     
-    // Keep last 100 requests per tab
-    if (metrics.length > 100) metrics.shift();
+    // Periodically push to server (in a real app you might batch this)
+    if (request.payload && request.payload.status >= 400) {
+      api.pushTelemetry([request.payload]); // push errors immediately
+    }
     return;
   }
 
@@ -107,7 +78,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'getTabMetrics') {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       if (tabs[0]) {
-        const metrics = tabMetrics.get(tabs[0].id) || [];
+        const metrics = storage.getMetrics(tabs[0].id);
         sendResponse({ success: true, metrics, url: tabs[0].url });
       } else {
         sendResponse({ success: false, error: 'No active tab' });
@@ -115,21 +86,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
     return true; // Keep channel open for async response
   }
-
-  console.log('Background received message:', request);
   
   if (request.action === 'runFullTest') {
-    if (!engine) {
-      console.error('Background: Cannot run test, engine not initialized');
-      sendResponse({ success: false, error: 'Engine not initialized. Please reload the extension.' });
-      return;
-    }
-
     engine.runFullTest((msg) => {
       chrome.runtime.sendMessage({ action: 'testProgress', message: msg }).catch(() => {});
     }).then(results => {
-      console.log('Test completed successfully:', results);
       saveResult(results);
+      api.pushTelemetry([results]); // optionally push full test to backend
       sendResponse({ success: true, results });
     }).catch(err => {
       console.error('Background test error:', err);

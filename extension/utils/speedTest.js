@@ -3,7 +3,7 @@
  * Accurately measures download, upload, latency (unloaded/loaded), and jitter.
  */
 
-class SpeedTestEngine {
+export class SpeedTestEngine {
   constructor() {
     this.testEndpoints = {
       latency: 'https://1.1.1.1/cdn-cgi/trace',
