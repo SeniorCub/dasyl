@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   apiToken: { type: String, unique: true }, // The CLI token
   
   // Gamification & Identity
+  username: { type: String, unique: true, sparse: true },
   score: { type: Number, default: 0 },
   streak: { type: Number, default: 0 },
   lastActive: { type: Date, default: Date.now }

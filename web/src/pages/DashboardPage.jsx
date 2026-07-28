@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles.css';
@@ -10,6 +10,9 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const [copied, setCopied] = useState(false);
+  const [usernameInput, setUsernameInput] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const queryClient = useQueryClient();
 
   if (!token) {
     navigate('/login');
@@ -37,6 +40,28 @@ export default function DashboardPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const usernameMutation = useMutation({
+    mutationFn: async (username) => {
+      const res = await axios.post(`${API_URL}/api/auth/username`, { username }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['me']);
+      setUsernameError('');
+    },
+    onError: (err) => {
+      setUsernameError(err.response?.data?.error || 'Failed to set username');
+    }
+  });
+
+  const handleSetUsername = (e) => {
+    e.preventDefault();
+    if (!usernameInput.trim()) return;
+    usernameMutation.mutate(usernameInput);
+  };
+
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: 'var(--color-bg)' }}>
@@ -59,6 +84,37 @@ export default function DashboardPage() {
 
   const { user, subscription } = data;
 
+  if (user && !user.username) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: 'var(--color-bg)' }}>
+        <div style={{ backgroundColor: 'var(--color-card-bg)', padding: 'var(--space-8)', borderRadius: 'var(--radius)', border: '1px solid var(--color-border)', width: '100%', maxWidth: '400px' }}>
+          <h2 className="section__title" style={{ fontSize: '1.5rem', marginBottom: 'var(--space-2)' }}>Choose a Username</h2>
+          <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--space-6)', fontSize: '0.9rem' }}>Welcome to Dasyl! What should we call you on the leaderboard?</p>
+          
+          <form onSubmit={handleSetUsername} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+            <input 
+              type="text" 
+              placeholder="e.g. seniorcub" 
+              value={usernameInput}
+              onChange={(e) => setUsernameInput(e.target.value)}
+              style={{ width: '100%', padding: 'var(--space-3) var(--space-4)', backgroundColor: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', color: 'var(--color-text)', outline: 'none' }}
+              autoFocus
+            />
+            {usernameError && <p style={{ color: 'var(--color-red)', fontSize: '0.8rem' }}>{usernameError}</p>}
+            <button 
+              type="submit" 
+              className="btn btn--primary" 
+              style={{ width: '100%' }}
+              disabled={usernameMutation.isLoading}
+            >
+              {usernameMutation.isLoading ? 'Saving...' : 'Continue'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <header className="site-header">
@@ -68,7 +124,7 @@ export default function DashboardPage() {
             <span className="logo-badge">{subscription.tier === 'pro' ? 'PRO' : 'CLI'}</span>
           </a>
           <div style={{ display: 'flex', gap: 'var(--space-6)', alignItems: 'center' }}>
-            <span style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>{user.email}</span>
+            <span style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>@{user.username || user.email.split('@')[0]}</span>
             <button onClick={handleLogout} className="btn btn--outline btn--sm">
               Log Out
             </button>
@@ -82,7 +138,7 @@ export default function DashboardPage() {
             <div className="section__header" style={{ textAlign: 'left', marginBottom: 'var(--space-12)', maxWidth: '800px', marginInline: '0' }}>
               <p className="hero__eyebrow" style={{ marginBottom: 'var(--space-2)' }}>Dashboard</p>
               <h1 className="hero__title" style={{ fontSize: '3.5rem' }}>
-                Welcome back,<br /><span className="gradient-text">Developer.</span>
+                Welcome back,<br /><span className="gradient-text">@{user.username}</span>
               </h1>
               <p className="hero__desc" style={{ marginTop: 'var(--space-4)' }}>
                 Here is your project scaffolding and runtime intelligence overview.

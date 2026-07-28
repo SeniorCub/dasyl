@@ -105,6 +105,37 @@ exports.me = async (req, res) => {
     res.json({ user, subscription });
   } catch (error) {
     console.error('Me error:', error);
-    res.status(500).json({ error: 'Server error fetching profile' });
+    res.status(500).json({ error: 'Server error fetching user' });
+  }
+};
+
+exports.updateUsername = async (req, res) => {
+  try {
+    const { username } = req.body;
+    
+    if (!username || typeof username !== 'string') {
+      return res.status(400).json({ error: 'Username is required' });
+    }
+
+    const cleanUsername = username.trim().toLowerCase();
+
+    // Check if taken
+    const existing = await User.findOne({ username: cleanUsername });
+    if (existing && existing._id.toString() !== req.userId) {
+      return res.status(400).json({ error: 'Username is already taken' });
+    }
+
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.username = cleanUsername;
+    await user.save();
+
+    res.json({ success: true, username: user.username });
+  } catch (error) {
+    console.error('Update username error:', error);
+    res.status(500).json({ error: 'Server error updating username' });
   }
 };
