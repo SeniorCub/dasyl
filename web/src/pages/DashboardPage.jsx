@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaTerminal, FaCode, FaFireAlt, FaCopy, FaCheckCircle, FaUserCircle, FaSignOutAlt, FaRocket } from 'react-icons/fa';
 import '../styles.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://dasyl.seniorcub.name.ng';
@@ -40,29 +39,17 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <div className="loader"></div>
-        <style>{`
-          .loader {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: var(--color-primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-          }
-          @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        `}</style>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: 'var(--color-bg)' }}>
+        <p style={{ color: 'var(--color-text-muted)' }}>Loading dashboard...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
-        <FaSignOutAlt size={48} style={{ color: 'var(--color-primary)' }} className="mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Session Expired</h2>
-        <p className="mb-6" style={{ color: 'var(--color-text-muted)' }}>Please log in again to access your dashboard.</p>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: 'var(--color-bg)' }}>
+        <h2 className="section__title" style={{ marginBottom: 'var(--space-4)' }}>Session Expired</h2>
+        <p className="section__subtitle" style={{ marginBottom: 'var(--space-8)' }}>Please log in again to access your dashboard.</p>
         <button onClick={handleLogout} className="btn btn--primary">
           Back to Login
         </button>
@@ -71,183 +58,120 @@ export default function DashboardPage() {
   }
 
   const { user, subscription } = data;
-  const progressPercent = Math.min((subscription.buildsThisMonth / subscription.buildLimit) * 100, 100);
 
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
-      
-      {/* Top Navigation */}
-      <nav style={{ borderBottom: '1px solid var(--color-border)', backgroundColor: 'rgba(13, 13, 13, 0.8)', backdropFilter: 'blur(10px)' }} className="sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary)' }}>
-              <FaTerminal className="text-white text-sm" />
-            </div>
-            <span className="font-bold text-xl tracking-tight">dasyl</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-full" style={{ backgroundColor: 'var(--color-bg-elevated)', color: 'var(--color-text-muted)', border: '1px solid var(--color-border)' }}>
-              <FaUserCircle size={16} />
-              {user.email}
-            </div>
-            <button 
-              onClick={handleLogout} 
-              className="transition-colors"
-              style={{ color: 'var(--color-text-muted)' }}
-              onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-text)'}
-              onMouseOut={(e) => e.currentTarget.style.color = 'var(--color-text-muted)'}
-              title="Logout"
-            >
-              <FaSignOutAlt size={18} />
+    <>
+      <header className="site-header">
+        <nav className="nav container" style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <a href="#" className="nav__logo" style={{ pointerEvents: 'none' }}>
+            <span className="logo-text">dasyl</span>
+            <span className="logo-badge">{subscription.tier === 'pro' ? 'PRO' : 'CLI'}</span>
+          </a>
+          <div style={{ display: 'flex', gap: 'var(--space-6)', alignItems: 'center' }}>
+            <span style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>{user.email}</span>
+            <button onClick={handleLogout} className="btn btn--outline btn--sm">
+              Log Out
             </button>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-6 py-10">
-        
-        {/* Welcome Hero */}
-        <header className="mb-10 animate-fade-in-up">
-          <p style={{ color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dashboard</p>
-          <h1 className="text-4xl font-extrabold tracking-tight mt-1 mb-2">
-            Welcome back, Developer.
-          </h1>
-          <p style={{ color: 'var(--color-text-muted)' }} className="text-lg">Here is your project scaffolding and runtime intelligence overview.</p>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Left Column (Stats) */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
+      <main style={{ paddingBottom: 'var(--space-24)' }}>
+        <section className="hero" style={{ padding: 'var(--space-12) 0', minHeight: 'auto', display: 'block' }}>
+          <div className="container hero__inner" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+            <div className="section__header" style={{ textAlign: 'left', marginBottom: 'var(--space-12)', maxWidth: '800px', marginInline: '0' }}>
+              <p className="hero__eyebrow" style={{ marginBottom: 'var(--space-2)' }}>Dashboard</p>
+              <h1 className="hero__title" style={{ fontSize: '3.5rem' }}>
+                Welcome back,<br /><span className="gradient-text">Developer.</span>
+              </h1>
+              <p className="hero__desc" style={{ marginTop: 'var(--space-4)' }}>
+                Here is your project scaffolding and runtime intelligence overview.
+              </p>
+            </div>
             
-            {/* Usage Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="features__grid" style={{ width: '100%', marginBottom: 'var(--space-12)' }}>
               
-              {/* Builds Card */}
-              <div className="p-6 rounded-xl border relative overflow-hidden group" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}>
-                <div className="absolute top-0 right-0 p-4 opacity-5 transform group-hover:scale-110 transition-transform duration-500 text-white">
-                  <FaRocket size={80} />
+              <article className="feature-card">
+                <div className="feature-card__icon" style={{ color: 'var(--color-primary)' }}>[>]</div>
+                <h3>Monthly Scaffolds</h3>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
+                  <span style={{ fontSize: '3rem', fontWeight: 'bold', color: 'var(--color-text)', lineHeight: 1 }}>{subscription.buildsThisMonth}</span>
+                  <span style={{ color: 'var(--color-text-muted)' }}>/ {subscription.buildLimit} limit</span>
                 </div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded border" style={{ backgroundColor: 'rgba(255, 34, 0, 0.1)', borderColor: 'rgba(255, 34, 0, 0.2)', color: 'var(--color-primary)' }}>
-                    <FaCode size={18} />
-                  </div>
-                  <h3 className="font-semibold" style={{ color: 'var(--color-text)' }}>Monthly Scaffolds</h3>
-                </div>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-5xl font-black">{subscription.buildsThisMonth}</span>
-                  <span className="font-medium" style={{ color: 'var(--color-text-dim)' }}>/ {subscription.buildLimit} limit</span>
-                </div>
-                {/* Progress Bar */}
-                <div className="w-full rounded-full h-2.5" style={{ backgroundColor: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)' }}>
-                  <div 
-                    className="h-2.5 rounded-full transition-all duration-1000 ease-out" 
-                    style={{ width: `${progressPercent}%`, backgroundColor: 'var(--color-primary)', boxShadow: '0 0 10px rgba(255,34,0,0.5)' }}
-                  ></div>
-                </div>
-              </div>
+              </article>
 
-              {/* Streak Card */}
-              <div className="p-6 rounded-xl border relative overflow-hidden group" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}>
-                <div className="absolute top-0 right-0 p-4 opacity-5 transform group-hover:rotate-12 transition-transform duration-500 text-white">
-                  <FaFireAlt size={80} />
+              <article className="feature-card">
+                <div className="feature-card__icon" style={{ color: 'var(--color-yellow)' }}>[!]</div>
+                <h3>Activity Streak</h3>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
+                  <span style={{ fontSize: '3rem', fontWeight: 'bold', color: 'var(--color-text)', lineHeight: 1 }}>{user.streak}</span>
+                  <span style={{ color: 'var(--color-text-muted)', textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.05em' }}>Days</span>
                 </div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded border" style={{ backgroundColor: 'rgba(255, 204, 0, 0.1)', borderColor: 'rgba(255, 204, 0, 0.2)', color: 'var(--color-yellow)' }}>
-                    <FaFireAlt size={18} />
-                  </div>
-                  <h3 className="font-semibold" style={{ color: 'var(--color-text)' }}>Activity Streak</h3>
+              </article>
+
+              <article className="feature-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className="feature-card__icon" style={{ color: 'var(--color-green)' }}>[#]</div>
+                <h3>Runtime Intelligence</h3>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: 'var(--space-4)', padding: 'var(--space-4)', border: '1px dashed var(--color-border)', borderRadius: 'var(--radius)' }}>
+                  <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', textAlign: 'center' }}>No Active Telemetry.<br/>Run a Dasyl scaffolding command to see live metrics.</p>
                 </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-black drop-shadow-md">{user.streak}</span>
-                  <span className="font-medium uppercase tracking-wider text-sm" style={{ color: 'var(--color-text-dim)' }}>Days</span>
-                </div>
-                <p className="mt-4 text-sm" style={{ color: 'var(--color-text-muted)' }}>Scaffold consistently to maintain your developer streak!</p>
-              </div>
+              </article>
 
             </div>
 
-            {/* Quick Setup / CLI */}
-            <div className="p-8 rounded-xl border" style={{ backgroundColor: 'var(--color-bg-surface)', borderColor: 'var(--color-border)' }}>
-              <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
-                <FaTerminal style={{ color: 'var(--color-primary)' }} /> CLI Integration
-              </h3>
-              <p className="mb-6 text-sm" style={{ color: 'var(--color-text-muted)' }}>Authenticate your local terminal to securely push telemetry data and unlock premium templates.</p>
-              
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 rounded border font-mono text-sm relative group" style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
-                  <div className="select-none" style={{ color: 'var(--color-text-dim)' }}>$</div>
-                  <div style={{ color: 'var(--color-green)' }} className="flex-1">dasyl login</div>
+            <div style={{ width: '100%', maxWidth: '800px' }}>
+              <div className="section__header" style={{ textAlign: 'left', marginBottom: 'var(--space-6)' }}>
+                <h2 className="section__title" style={{ fontSize: '2rem' }}>CLI Integration</h2>
+                <p className="section__subtitle" style={{ marginTop: 'var(--space-2)' }}>
+                  Authenticate your local terminal to securely push telemetry data and unlock templates.
+                </p>
+              </div>
+
+              <div className="terminal terminal--static" style={{ width: '100%' }}>
+                <div className="terminal__bar">
+                  <span className="dot dot--red"></span>
+                  <span className="dot dot--yellow"></span>
+                  <span className="dot dot--green"></span>
+                  <span className="terminal__title">bash</span>
                 </div>
-                
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs uppercase tracking-wider font-semibold" style={{ color: 'var(--color-text-dim)' }}>Your API Token</label>
-                  <div className="flex items-center gap-2 p-2 pl-4 rounded border relative transition-all" style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
-                    <input 
-                      type="text" 
-                      readOnly 
-                      value={user.apiToken} 
-                      className="bg-transparent border-none outline-none flex-1 font-mono text-sm tracking-wider"
-                      style={{ color: 'var(--color-text)' }}
-                    />
-                    <button 
-                      onClick={() => copyToClipboard(user.apiToken)}
-                      className={`flex items-center justify-center gap-2 px-4 py-2 rounded text-sm font-medium transition-all duration-200`}
-                      style={{ 
-                        backgroundColor: copied ? 'rgba(0, 255, 136, 0.1)' : 'var(--color-bg-elevated)', 
-                        color: copied ? 'var(--color-green)' : 'var(--color-text)', 
-                        border: `1px solid ${copied ? 'rgba(0, 255, 136, 0.3)' : 'var(--color-border)'}` 
-                      }}
-                    >
-                      {copied ? <><FaCheckCircle /> Copied</> : <><FaCopy /> Copy</>}
-                    </button>
+                <div className="terminal__body" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+                  
+                  <div className="terminal-line">
+                    <span className="terminal-prompt">$</span>
+                    <span className="terminal-cmd">dasyl login</span>
                   </div>
+
+                  <div>
+                    <p style={{ color: 'var(--color-text-dim)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 'var(--space-2)' }}>Your API Token</p>
+                    <div className="terminal-line" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(0,0,0,0.3)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-sm)' }}>
+                      <span style={{ color: 'var(--color-green)', fontFamily: 'var(--font-mono)' }}>{user.apiToken}</span>
+                      <button 
+                        onClick={() => copyToClipboard(user.apiToken)}
+                        className={copied ? 'btn btn--primary btn--sm' : 'btn btn--outline btn--sm'}
+                        style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem' }}
+                      >
+                        {copied ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
-
+            
           </div>
-
-          {/* Right Column (Info/Pulse) */}
-          <div className="flex flex-col gap-6">
-            <div className="p-6 rounded-xl border h-full flex flex-col" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}>
-              <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-primary)' }}></span>
-                Runtime Intelligence
-              </h3>
-              
-              <div className="flex-1 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed rounded" style={{ borderColor: 'var(--color-border)' }}>
-                <FaSignOutAlt className="mb-4 rotate-90" size={40} style={{ color: 'var(--color-text-dim)' }} />
-                <h4 className="font-medium mb-2">No Active Telemetry</h4>
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Run a Dasyl scaffolding command or install the Pulse Extension to see live metrics here.</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        </section>
       </main>
 
-      {/* Minimalistic Footer */}
-      <footer className="mt-12 py-8" style={{ borderTop: '1px solid var(--color-border)' }}>
-        <div className="container mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm" style={{ color: 'var(--color-text-dim)' }}>
+      <footer className="site-footer" style={{ borderTop: '1px solid var(--color-border)', padding: 'var(--space-8) 0', marginTop: 'auto' }}>
+        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--color-text-muted)' }}>
           <p>© 2026 Dasyl Engine. All rights reserved.</p>
-          <div className="flex gap-6">
-            <a href="/privacy" style={{ color: 'var(--color-text-dim)' }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-text)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--color-text-dim)'} className="transition">Privacy Policy</a>
-            <a href="/terms" style={{ color: 'var(--color-text-dim)' }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-text)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--color-text-dim)'} className="transition">Terms of Service</a>
+          <div style={{ display: 'flex', gap: 'var(--space-6)' }}>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
           </div>
         </div>
       </footer>
-
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up {
-          animation: fadeInUp 0.6s ease-out forwards;
-        }
-      `}</style>
-    </div>
+    </>
   );
 }
