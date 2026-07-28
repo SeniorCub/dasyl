@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   githubId: { type: String, sparse: true, unique: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   apiToken: { type: String, unique: true }, // The CLI token
+  apiTokenExpires: { type: Date }, // Token expiry date
   
   // Gamification & Identity
   username: { type: String, unique: true, sparse: true },

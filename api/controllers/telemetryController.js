@@ -13,10 +13,13 @@ exports.track = async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized. Empty Bearer token' });
     }
 
-    // Find User by API Token
     const user = await User.findOne({ apiToken });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (user.apiTokenExpires && new Date() > user.apiTokenExpires) {
+      return res.status(401).json({ error: 'API Token has expired. Please generate a new one in the dashboard.' });
     }
 
     // Increment Gamification Metrics
@@ -66,6 +69,10 @@ exports.verify = async (req, res) => {
     const user = await User.findOne({ apiToken });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (user.apiTokenExpires && new Date() > user.apiTokenExpires) {
+      return res.status(401).json({ error: 'API Token has expired. Please generate a new one in the dashboard.' });
     }
 
     res.json({ success: true, email: user.email });

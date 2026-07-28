@@ -39,10 +39,14 @@ const handleOAuthLogin = async (email, providerId, providerField, done) => {
 
     // Otherwise, create a new user
     const apiToken = 'dsl_' + uuidv4().replace(/-/g, '');
+    const apiTokenExpires = new Date();
+    apiTokenExpires.setDate(apiTokenExpires.getDate() + 30); // Default 30 days
+
     user = new User({
       email,
       [providerField]: providerId,
-      apiToken
+      apiToken,
+      apiTokenExpires
     });
     await user.save();
 

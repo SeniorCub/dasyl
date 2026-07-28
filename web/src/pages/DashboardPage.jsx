@@ -12,6 +12,7 @@ export default function DashboardPage() {
   const [copied, setCopied] = useState(false);
   const [usernameInput, setUsernameInput] = useState('');
   const [usernameError, setUsernameError] = useState('');
+  const [expiryDays, setExpiryDays] = useState('30');
   const queryClient = useQueryClient();
 
   if (!token) {
@@ -60,6 +61,24 @@ export default function DashboardPage() {
     e.preventDefault();
     if (!usernameInput.trim()) return;
     usernameMutation.mutate(usernameInput);
+  };
+
+  const tokenMutation = useMutation({
+    mutationFn: async (days) => {
+      const res = await axios.post(`${API_URL}/api/auth/token`, { days }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['me']);
+    }
+  });
+
+  const handleRegenerateToken = () => {
+    if (window.confirm('This will invalidate your current token. Update your CLI with `dasyl login`. Continue?')) {
+      tokenMutation.mutate(expiryDays);
+    }
   };
 
   if (isLoading) {
@@ -198,7 +217,15 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <p style={{ color: 'var(--color-text-dim)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 'var(--space-2)' }}>Your API Token</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)' }}>
+                      <p style={{ color: 'var(--color-text-dim)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Your API Token
+                      </p>
+                      <p style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>
+                        Expires: {user.apiTokenExpires ? new Date(user.apiTokenExpires).toLocaleDateString() : 'Never'}
+                      </p>
+                    </div>
+                    
                     <div className="terminal-line" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(0,0,0,0.3)', padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-sm)' }}>
                       <span style={{ color: 'var(--color-green)', fontFamily: 'var(--font-mono)' }}>{user.apiToken}</span>
                       <button 
@@ -207,6 +234,25 @@ export default function DashboardPage() {
                         style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem' }}
                       >
                         {copied ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
+                      <select 
+                        value={expiryDays}
+                        onChange={(e) => setExpiryDays(e.target.value)}
+                        style={{ padding: '0.25rem 0.5rem', backgroundColor: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', color: 'var(--color-text)', fontSize: '0.8rem', outline: 'none' }}
+                      >
+                        <option value="14">14 Days</option>
+                        <option value="30">30 Days</option>
+                      </select>
+                      <button 
+                        onClick={handleRegenerateToken}
+                        className="btn btn--outline btn--sm" 
+                        style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem' }}
+                        disabled={tokenMutation.isLoading}
+                      >
+                        {tokenMutation.isLoading ? 'Generating...' : 'Regenerate'}
                       </button>
                     </div>
                   </div>

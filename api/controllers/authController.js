@@ -139,3 +139,31 @@ exports.updateUsername = async (req, res) => {
     res.status(500).json({ error: 'Server error updating username' });
   }
 };
+
+exports.regenerateToken = async (req, res) => {
+  try {
+    const { days } = req.body;
+    const daysInt = parseInt(days, 10);
+    
+    if (![14, 30].includes(daysInt)) {
+      return res.status(400).json({ error: 'Invalid expiry. Must be 14 or 30 days.' });
+    }
+
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.apiToken = 'dsl_' + uuidv4().replace(/-/g, '');
+    const expiry = new Date();
+    expiry.setDate(expiry.getDate() + daysInt);
+    user.apiTokenExpires = expiry;
+
+    await user.save();
+
+    res.json({ success: true, apiToken: user.apiToken, apiTokenExpires: user.apiTokenExpires });
+  } catch (error) {
+    console.error('Regenerate token error:', error);
+    res.status(500).json({ error: 'Server error generating token' });
+  }
+};
