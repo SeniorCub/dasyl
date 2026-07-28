@@ -10,13 +10,12 @@ const subscriptionSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to set a renewal date 30 days from now if not set
-subscriptionSchema.pre('save', function(next) {
+subscriptionSchema.pre('save', function() {
   if (!this.renewalDate) {
     const nextMonth = new Date();
     nextMonth.setDate(nextMonth.getDate() + 30);
     this.renewalDate = nextMonth;
   }
-  next();
 });
 
 module.exports = mongoose.model('Subscription', subscriptionSchema);
