@@ -31,7 +31,19 @@ export async function handleLogin() {
   ]);
 
   try {
-    // Ideally we would hit /api/auth/me here to verify the token, but for now we just save it.
+    // Fetch user details from the API
+    let email = 'Developer';
+    try {
+      const res = await axios.get(`${API_URL}/api/telemetry/verify`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data.success && res.data.email) {
+        email = res.data.email;
+      }
+    } catch (err) {
+      console.log(chalk.yellow('\n[!] Could not verify token with server, but saving locally anyway.'));
+    }
+
     if (!fs.existsSync(DASYL_DIR)) {
       fs.mkdirSync(DASYL_DIR, { recursive: true });
     }
@@ -42,9 +54,10 @@ export async function handleLogin() {
     }
 
     config.apiToken = token;
+    config.email = email;
     fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
 
-    console.log(chalk.green('\n[✓] Successfully authenticated! You are ready to build.'));
+    console.log(chalk.green(`\n[✓] Successfully authenticated as ${email}! You are ready to build.`));
   } catch (error) {
     console.log(chalk.red(`\n[x] Error saving token: ${error.message}`));
   }
@@ -56,4 +69,12 @@ export function getApiToken() {
     return config.apiToken;
   }
   return null;
+}
+
+export function getUserEmail() {
+  if (fs.existsSync(CONFIG_PATH)) {
+    const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
+    return config.email || 'Developer';
+  }
+  return 'Developer';
 }

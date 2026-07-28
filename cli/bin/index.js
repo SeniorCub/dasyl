@@ -102,6 +102,10 @@ console.log(chalk.cyan.bold('Fast, opinionated CLI for modern development\n'));
   // Ensure telemetry passes
   await requireAuthentication();
 
+  const { getUserEmail } = await import('../lib/commands/login.js');
+  const email = getUserEmail();
+  console.log(chalk.green(`Welcome back, ${email}! 🚀\n`));
+
   if (['react', 'vue', 'svelte', 'node', 'node-ts', 'laravel', 'mobile', 'new', 'create'].includes(command) || !command) {
     await handleCreate(command, projectName, cliFlags);
   } else {
