@@ -9,11 +9,11 @@ const DASYL_DIR = path.join(os.homedir(), '.dasyl');
 const CONFIG_PATH = path.join(DASYL_DIR, 'config.json');
 
 // Get the API URL from environment variable or default to local/production
-const API_URL = process.env.DASYL_API_URL || 'https://dasyl.seniorcub.name.ng';
+const API_URL = process.env.DASYL_API_URL || 'https://dasyl-ten.vercel.app';
 
 export async function handleLogin() {
   console.log(chalk.cyan.bold('\nAuthenticate with Dasyl 🚀'));
-  console.log(chalk.gray('Get your API Token from: ') + chalk.underline('https://dasyl.seniorcub.name.ng/dashboard\n'));
+  console.log(chalk.gray('Get your API Token from: ') + chalk.underline('https://dasyl-ten.vercel.app/dashboard\n'));
 
   const { token } = await inquirer.prompt([
     {

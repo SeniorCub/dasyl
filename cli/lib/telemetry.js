@@ -4,8 +4,7 @@ import os from 'os';
 import axios from 'axios';
 import chalk from 'chalk';
 import { getApiToken, handleLogin } from './commands/login.js';
-
-const API_BASE_URL = process.env.DASYL_API_URL || 'https://dasyl.seniorcub.name.ng/api';
+const API_BASE_URL = process.env.DASYL_API_URL || 'https://dasyl-ten.vercel.app/api';
 
 export async function requireAuthentication() {
   const token = getApiToken();

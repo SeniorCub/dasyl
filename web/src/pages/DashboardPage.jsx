@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://dasyl.seniorcub.name.ng';
+const API_URL = import.meta.env.VITE_API_URL || 'https://dasyl-ten.vercel.app';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
