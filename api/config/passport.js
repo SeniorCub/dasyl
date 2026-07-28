@@ -5,6 +5,9 @@ const { v4: uuidv4 } = require('uuid');
 const User = require('../models/User');
 const Subscription = require('../models/Subscription');
 
+const BACKEND_URL = process.env.BACKEND_URL || 'https://dasyl-ten.vercel.app';
+
+
 // Serialize/Deserialize not strictly needed if we only use passport for the handshake, 
 // but we'll include it to prevent passport errors if session is used.
 passport.serializeUser((user, done) => {
@@ -57,7 +60,7 @@ const handleOAuthLogin = async (email, providerId, providerField, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID || 'dummy-google-client-id',
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'dummy-google-client-secret',
-    callbackURL: '/api/oauth/google/callback'
+    callbackURL: `${BACKEND_URL}/api/oauth/google/callback`
   },
   async (accessToken, refreshToken, profile, done) => {
     const email = profile.emails[0].value;
@@ -70,7 +73,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID || 'dummy-github-client-id',
     clientSecret: process.env.GITHUB_CLIENT_SECRET || 'dummy-github-client-secret',
-    callbackURL: '/api/oauth/github/callback',
+    callbackURL: `${BACKEND_URL}/api/oauth/github/callback`,
     scope: ['user:email']
   },
   async (accessToken, refreshToken, profile, done) => {
