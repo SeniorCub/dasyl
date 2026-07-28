@@ -92,7 +92,7 @@ export default function DashboardPage() {
             <div className="features__grid" style={{ width: '100%', marginBottom: 'var(--space-12)' }}>
               
               <article className="feature-card">
-                <div className="feature-card__icon" style={{ color: 'var(--color-primary)' }}>[>]</div>
+                <div className="feature-card__icon" style={{ color: 'var(--color-primary)' }}>[&gt;]</div>
                 <h3>Monthly Scaffolds</h3>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
                   <span style={{ fontSize: '3rem', fontWeight: 'bold', color: 'var(--color-text)', lineHeight: 1 }}>{subscription.buildsThisMonth}</span>
