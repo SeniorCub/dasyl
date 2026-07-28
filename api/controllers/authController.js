@@ -94,8 +94,14 @@ exports.me = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     
-    const subscription = await Subscription.findOne({ userId: user._id });
+    let subscription = await Subscription.findOne({ userId: user._id });
     
+    // Auto-heal: If user has no subscription (due to past errors), create one now.
+    if (!subscription) {
+      subscription = new Subscription({ userId: user._id });
+      await subscription.save();
+    }
+
     res.json({ user, subscription });
   } catch (error) {
     console.error('Me error:', error);
